@@ -1,0 +1,367 @@
+@layout('admin.master')
+@section('body')
+<div id="root_app" class="container">
+<div class="row">
+    <h2 class="col-sm-12 page-header">จัดการผู้ใช้</h2>
+    <div class="tch-panel-control row">
+    <div class="col-sm-6">
+        <form @submit.prevent="search_users($event)">
+        <div class="input-group">
+            <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ชื่อ, ตำแหน่ง, " />
+            <span class="input-group-btn">
+                <button class="btn btn-default">ค้นหา <i class="fa fa-search"></i></butotn>
+            <span>
+        </div>
+        </form>
+    </div>
+    <div class="col-sm-6 text-right">
+        <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-user-plus text-success"></i> เพิ่มผู้ใช้</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="tch-shadow-sm  panel panel-default">
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>Username</th>
+                            <th>ตำแหน่ง</th>
+                            <th>อีเมลล์</th>
+                            <th>สถานะ</th>
+                            <th>แก้ไข</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="users.length > 0">
+                            <tr v-for="(user, index) in users" :key="index">
+                                <td class="text-center">@{{ ++index }}</td>
+                                <td>@{{ user.full_name }}</td>
+                                <td>@{{ user.username }}</td>
+                                <td>@{{ user.role.role_name }}</td>
+                                <td>@{{ user.email }}</td>
+                                <td><button
+                                    :data-status="user.status == 'A' ? 'D' : 'A'"
+                                    :data-id="user.user_id"
+                                    @click="update_status($event)"
+                                    :class="['btn', 'btn-xs', user.status == 'A' ? 'btn-success' : 'btn-danger']">
+                                    <i class="fas fa-sync-alt"></i> @{{ user.status == 'A' ? 'ใช้งาน' : 'ไม่ใช้งาน' }}</button>
+                                </td>
+                                <td><button @click="on_clik_edit($event)" :data-id="user.user_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div id="add_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">เพิ่มผู้ใช้</h4>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="add_user_submit($event)" class="form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="username" name="username" v-validate="'required'" type="text" class="form-control" placeholder="ชื่อผู้ใช้" />
+                    <p v-if="errors.has('username')" class="help-text text-danger">@{{ errors.first('username') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="password" name="password" v-validate="'required'" type="password" class="form-control" placeholder="รหัสผ่าน" />
+                    <p v-if="errors.has('password')" class="help-text text-danger">@{{ errors.first('password') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="confirm password" name="password_confirm" v-validate="'required|confirmed:password'" type="password" placeholder="ยืนยันรหัสผ่าน" class="form-control" />
+                    <p v-if="errors.has('password_confirm')" class="help-text text-danger">@{{ errors.first('password_confirm') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="email" name="email" v-validate="'required|email'" type="text" class="form-control" placeholder="อีเมลล์" />
+                    <p v-if="errors.has('email')" class="help-text text-danger">@{{ errors.first('email') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="full name" name="full_name" v-validate="'required'" type="text" class="form-control" placeholder="ชื่อ-นามสกุล" />
+                    <p v-if="errors.has('full_name')" class="help-text text-danger">@{{ errors.first('full_name') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select @change="on_select_role($event)" v-validate="'required|not_in:-1'" class="form-control" name="role">
+                        <option value="-1">เลือกตำแหน่งผู้ใช้</option>
+                        <option v-for="(role, index) in roles" :key="index" :value="role.role_id" >@{{ role.role_name }}</option>
+                    </select>
+                    <p v-if="errors.has('role')" class="help-text text-danger">@{{ errors.first('role') }}</p>
+                </div>
+            </div>
+            <div v-if="is_teacher" class="form-group">
+                <div class="col-sm-12">
+                <input data-vv-as="teacher code" name="code" v-validate="" type="text" class="form-control" placeholder="ชื่อย่อ (สำหรับอาจารย์เท่านั้น)" />
+                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="add_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#add_button').click()" class="btn btn-success"><i class="fas fa-user-plus"></i> เพิ่มผู้ใช้</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+
+
+
+
+
+<div id="update_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">แก้ไขผู้ใช้</h4>
+      </div>
+      <div v-if="item != null" class="modal-body">
+        <form @submit.prevent="update_user_submit($event)" class="form form-horizontal">
+            <input type="hidden" name="id" :value="item.user_id" />
+            <input type="hidden" name="role" :value="item.role_id" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input disabled v-model="item.username" data-vv-as="username" name="username" v-validate="'required'" type="text" class="form-control" placeholder="ชื่อผู้ใช้" />
+                    <p v-if="errors.has('username')" class="help-text text-danger">@{{ errors.first('username') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="password" name="password" type="password" class="form-control" placeholder="รหัสผ่าน" />
+                    <p v-if="errors.has('password')" class="help-text text-danger">@{{ errors.first('password') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="confirm password" name="password_confirm" v-validate="'confirmed:password'" type="password" placeholder="ยืนยันรหัสผ่าน" class="form-control" />
+                    <p v-if="errors.has('password_confirm')" class="help-text text-danger">@{{ errors.first('password_confirm') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input v-model="item.email" data-vv-as="email" name="email" v-validate="'required|email'" type="text" class="form-control" placeholder="อีเมลล์" />
+                    <p v-if="errors.has('email')" class="help-text text-danger">@{{ errors.first('email') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input v-model="item.full_name" data-vv-as="full name" name="full_name" v-validate="'required'" type="text" class="form-control" placeholder="ชื่อ-นามสกุล" />
+                    <p v-if="errors.has('full_name')" class="help-text text-danger">@{{ errors.first('full_name') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input class="form-control" type="text" disabled :value="item.role.role_name" />
+                </div>
+            </div>
+            <div v-if="item.role_id == 1" class="form-group">
+                <div class="col-sm-12">
+                <input data-vv-as="teacher code" name="code" v-model="item.teacher.teacher_code" v-validate="" type="text" class="form-control" placeholder="ชื่อย่อ (สำหรับอาจารย์เท่านั้น)" />
+                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="edit_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#edit_button').click()" class="btn btn-success">แก้ไขข้อมูล</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+@endsection
+@section('script')
+<script>
+
+
+
+
+    var ROLES = JSON.parse('{{{ roles }}}');
+
+    Vue.use(VeeValidate);
+
+    var root_app = new Vue({
+        el: '#root_app',
+        data: function() {
+            return {
+                users: [],
+                roles: ROLES,
+                is_teacher: false
+            };
+        },
+        computed: {
+            _selected_item_edit: function() {
+                return this.users.find()
+            }
+        },
+        methods: {
+            on_clik_edit: function(evt) {
+                console.log("user_id", evt.currentTarget.dataset.id);
+                this.$emit('edit', evt.currentTarget.dataset.id);
+            },
+            on_select_role: function(evt) {
+                this.is_teacher = evt.target.value == 1;
+            },
+            search_users: function(evt) {
+              evt.preventDefault();
+                var self = this;
+                axios.get('{{ route("admin_user_search") }}?search=' + evt.target.search.value).then(function(res) {
+                  var data = res.data;
+                  if(data.is_error) {
+                    console.log(data.error_message);
+                    return window.swal("Error", data.error_message);
+                  }
+                  self.users = data.data;
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    return window.swal("Error", error.toString());
+                });
+            },
+            fetch_users: function() {
+                var self = this;
+                NProgress.start();
+                axios.get('{{ route("admin_user_all") }}').then(function(res) {
+                    NProgress.done();
+                    console.log(res);
+                    var data = res.data;
+                    if(data.is_error) {
+                        window.swal("Error", data.error_message, "error");
+                        console.log(data.error_message);
+                        return;
+                    }
+                    self.users = data.data;
+                    $('#add_modal').modal('hide');
+                });
+            },
+            update_status: function(evt) {
+                var self = this;
+                var status = evt.currentTarget.dataset.status;
+                var id = evt.currentTarget.dataset.id;
+                axios.post('{{ route("admin_user_update_status") }}', { id: id, status: status })
+                .then(function(res) {
+                    var data = res.data;
+                    if(data.is_error) {
+                        console.log(data.error_message);
+                        return window.swal("Error", data.error_message, "error");
+                    }
+                    window.swal("Success", "อัพเดทสถานะเรียบร้อยแล้ว", "success");
+                    self.fetch_users();
+                }).catch(function(error) {
+                    console.log(error);
+                    window.swal("Error", data.error_message, "error");
+                });
+            },
+            add_user_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) {
+                       return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+                    }
+                    var data = new FormData(evt.target);
+                    axios.post('{{ route("admin_add_user") }}', data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            window.swal("Error", data.error_message, "error");
+                            return console.log(data.error_message);
+                        }
+                        window.swal("Success", "เพิ่มผู้ใช้เรียบร้อยแล้ว", "success");
+                        self.fetch_users();
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            this.fetch_users();
+            this.$nextTick(function() {
+                update_modal.$on('updated', function() {
+                    self.fetch_users();
+                });
+            })
+        }
+    });
+
+
+
+
+
+
+    var update_modal = new Vue({
+        el: '#update_modal',
+        data: function() {
+            return {
+                item: null,
+                roles: ROLES
+            }
+        },
+        methods: {
+            update_user_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
+                    var data = new FormData(evt.target);
+                    axios.post("{{ route('admin_update_user') }}", data).then(function(res) {
+                        var data = res.data;
+                        if(data.is_error) {
+                            console.log(data.error_message);
+                            return window.swal("Error", data.error_message, "error");
+                        }
+                        window.swal("Success", "อัพเดทเรียบร้อยแล้ว", "success");
+                        $('#update_modal').modal('hide');
+                        self.$emit('updated');
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            root_app.$on('edit', function(user_id) {
+                self.item = root_app.$data.users.find(function(user) {
+                    console.log(user);
+                    return user.user_id == user_id;
+                });
+                console.log(self.item);
+                $('#update_modal').modal('show');
+            });
+        }
+
+    })
+
+</script>
+
+
+@endsection

@@ -6,17 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    @include('style')
     @!section('style')
 </head>
 
 <body>
-    <div class="container-fluid">
-        @!section('header') 
-        @!section('nav')
-        <div class="container">
-            @!section('body')
-        </div>
-    </div>
+    
+    @include('admin.header')
+    @include('admin.nav')
+
+
+    @!section('header') 
+    @!section('admin.nav')
+    @!section('body')
+    @include('script')
     @!section('script')
 </body>
 

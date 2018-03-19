@@ -11,6 +11,14 @@ class User extends Model {
         return 'user_id';
     }
 
+    teacher() {
+        return this.hasOne('App/Models/Teacher', 'user_id', 'user_id');
+    }
+
+    role() {
+        return this.belongsTo('App/Models/Role', 'role_id', 'role_id');
+    }
+
     static boot() {
         super.boot()
 

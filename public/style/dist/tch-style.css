@@ -1,6 +1,9 @@
 body {
   background-color: whitesmoke; }
 
+.tch-btn {
+  color: white; }
+
 .tch-btn-primary {
   background-color: #009933;
   color: white; }
@@ -13,6 +16,9 @@ body {
 
 .tch-shadow-lg {
   box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.1); }
+
+.tch-shadow-sm {
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1); }
 
 .tch-link {
   cursor: pointer;
@@ -27,10 +33,13 @@ body {
 .tch-link-light:hover {
   color: white; }
 
-.tch-header {
+.tch-header, .tch-header-dark {
   background-color: #009933;
   line-height: 100px;
   color: white; }
+
+.tch-header-dark {
+  background-color: rgba(0, 0, 0, 0.8); }
 
 .tch-nav {
   border-radius: 0px;
@@ -40,11 +49,12 @@ body {
 
 .tch-nav li a {
   padding: 2em;
-  color: rgba(0, 0, 0, 0.8); }
+  color: rgba(0, 0, 0, 0.6); }
 
 .tch-nav li a:hover {
   background: none;
-  box-shadow: inset 100px 100px 0 rgba(0, 0, 0, 0.1); }
+  box-shadow: inset 100px 100px 0 rgba(0, 0, 0, 0.1);
+  color: black; }
 
 .tch-nav li.active {
   background-color: #009933; }
@@ -70,7 +80,7 @@ body {
   box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.1); }
 
 @media (max-width: 768px) {
-  .tch-header {
+  .tch-header, .tch-header-dark {
     line-height: 50px; }
 
   .tch-nav li a {
