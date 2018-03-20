@@ -27,6 +27,7 @@
     "@adonisjs/session": "^1.0.20",
     "@adonisjs/shield": "^1.0.6",
     "@adonisjs/validator": "^5.0.3",
+    "luxon": "^0.5.8",
     "mysql": "^2.15.0"
   },
   "devDependencies": {},

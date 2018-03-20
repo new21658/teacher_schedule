@@ -281,7 +281,7 @@
                     self.fetch_users();
                 }).catch(function(error) {
                     console.log(error);
-                    window.swal("Error", data.error_message, "error");
+                    window.swal("Error", error, "error");
                 });
             },
             add_user_submit: function(evt) {
@@ -335,6 +335,7 @@
                     if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
                     var data = new FormData(evt.target);
                     axios.post("{{ route('admin_update_user') }}", data).then(function(res) {
+                        console.log(res);
                         var data = res.data;
                         if(data.is_error) {
                             console.log(data.error_message);

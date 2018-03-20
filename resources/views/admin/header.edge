@@ -6,7 +6,7 @@
         </div>
         <div class="col-sm-6">
             <p class="text-right">
-                <span>สวัสดี! คุณมานพ ณ กรุงธน &nbsp;&nbsp;&nbsp;<a class="tch-link tch-link-light">Logout</a></span>
+                <span>สวัสดี! คุณ {{ auth.user.full_name }} &nbsp;&nbsp;&nbsp;<a href="{{ route('logout') }}" class="tch-link tch-link-light">ออกจากระบบ</a></span>
             </p>
         </div>
     </div>
