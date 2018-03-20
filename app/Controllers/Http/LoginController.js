@@ -4,7 +4,7 @@ var { json_res, json_res_error } = use("App/Utils/Response");
 
 class LoginController {
 
-    index({ request, view }) {
+    index({ request, view, response }) {
         return view.render('sign');
     }
 
@@ -12,16 +12,33 @@ class LoginController {
         var { request, auth } = ctx;
         var username = request.input('username');
         var password = request.input('password');
+        var self = this;
         try {
             await auth.attempt(username, password);
-            return json_res("success");
+            var redirect_to = await this.redirectTo(auth);
+            return json_res({
+              redirect_to: redirect_to
+            });
         } catch (ex) {
             return json_res_error(ex.toString());
         }
 
     }
-    redirectTo(auth) {
 
+    async logout({ auth, response }) {
+      try{
+        await auth.logout();
+        response.redirect('/');
+      } catch(ex) {
+        response.redirect('/');
+      }
+
+
+    }
+
+    async redirectTo(auth) {
+      var user = await auth.getUser();
+       return auth.getUser().role_id == 1 ? '/' : '/admin';
     }
 
 }

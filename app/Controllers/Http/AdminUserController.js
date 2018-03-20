@@ -47,7 +47,7 @@ class AdminUserController {
     }
 
     async addUser({ request }) {
-        // return json_res(request.all());
+        // return json_res(request.input('password'));
         try{
             var validation = await validate(request.all(), {
                 username: "required|unique:users,username",
@@ -56,7 +56,6 @@ class AdminUserController {
                 full_name: 'required',
                 role: 'required'
             });
-
             if(validation.fails()) {
                 var message = validation.messages()[0].message;
                 if(message == message.indexOf('unique') != -1) {
@@ -66,7 +65,7 @@ class AdminUserController {
             }
                 var user = new User() ;
                 user.username = request.input('username');
-                user.password = await Hash.make(request.input('password'));
+                user.password = await Hash.make(request.input('password').trim());
                 user.email = request.input('email');
                 user.full_name = request.input('full_name');
                 user.role_id = request.input('role');
@@ -79,6 +78,8 @@ class AdminUserController {
                     teacher.teacher_code = request.input('code');
                     teacher.user_id = user.user_id;
                     await teacher.save();
+                    user.teacher_id = teacher.teacher_id;
+                    await user.save();
                 }
 
                 return json_res("User Added");
@@ -90,6 +91,7 @@ class AdminUserController {
     }
 
     async updateUser({ request }) {
+        return json_res(request.all());
         try{
             var validation = await validate(request.all(), {
                 id: 'required',
@@ -103,7 +105,7 @@ class AdminUserController {
             }
                 var user = await User.find(request.input('id'));
                 if(request.input('password')) {
-                    user.password = await Hash.make(request.input('password'));
+                    user.password = await Hash.make(request.input('password').trim());
                 }
                 user.email = request.input('email');
                 user.full_name = request.input('full_name');

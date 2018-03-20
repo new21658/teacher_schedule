@@ -1,0 +1,293 @@
+@layout('admin.master')
+@section('body')
+<div id="root_app" class="container">
+<div class="row">
+    <h2 class="col-sm-12 page-header">จัดการวิชา</h2>
+    <div class="tch-panel-control row">
+    <div class="col-sm-6">
+        <form @submit.prevent="search_items($event)">
+        <div class="input-group">
+            <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ชื่อวิชา " />
+            <span class="input-group-btn">
+                <button class="btn btn-default">ค้นหา <i class="fa fa-search"></i></butotn>
+            <span>
+        </div>
+        </form>
+    </div>
+    <div class="col-sm-6 text-right">
+        <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-book text-success"></i><b>+</b> เพิ่มวิชา</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="tch-shadow-sm  panel panel-default">
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>ชื่อวิชา</th>
+                            <th>รหัสวิชา</th>
+                            <th>สถานะ</th>
+                            <th>แก้ไข</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="items.length > 0">
+                            <tr v-for="(item, index) in items" :key="index">
+                                <td class="text-center">@{{ ++index }}</td>
+                                <td>@{{ item.subject_name }}</td>
+                                <td>@{{ item.subject_code }}</td>
+                                <td><button
+                                    :data-status="item.status == 'A' ? 'D' : 'A'"
+                                    :data-id="item.subject_id"
+                                    @click="update_status($event)"
+                                    :class="['btn', 'btn-xs', item.status == 'A' ? 'btn-success' : 'btn-danger']">
+                                    <i class="fas fa-sync-alt"></i> @{{ item.status == 'A' ? 'ใช้งาน' : 'ไม่ใช้งาน' }}</button>
+                                </td>
+                                <td><button @click="on_clik_edit($event)" :data-id="item.subject_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div id="add_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">เพิ่มวิชา</h4>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="add_item_submit($event)" class="form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="subject name" name="name" v-validate="'required'" type="text" class="form-control" placeholder="ชื่อวิชา" />
+                    <p v-if="errors.has('name')" class="help-text text-danger">@{{ errors.first('name') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="subject code" name="code" v-validate="'required|min:8|max:8'" type="text" class="form-control" placeholder="รหัสวิชา" />
+                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="add_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#add_button').click()" class="btn btn-success"><i class="fas fa-book"></i><b>+</b> เพิ่มวิชา</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+</div>
+
+
+
+
+
+
+<div id="update_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">แก้ไขวิชา</h4>
+      </div>
+      <div v-if="item != null" class="modal-body">
+        <form @submit.prevent="update_item_submit($event)" class="form form-horizontal">
+            <input type="hidden" name="id" :value="item.subject_id" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input v-model="item.subject_name" data-vv-as="name" name="name" v-validate="'required'" type="text" class="form-control" placeholder="ชื่อวิชา้" />
+                    <p v-if="errors.has('name')" class="help-text text-danger">@{{ errors.first('name') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input v-model="item.subject_code" data-vv-as="code" name="code" v-validate="'required|min:8|max:8'" type="text" class="form-control" placeholder="รหัสวิชา" />
+                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="edit_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#edit_button').click()" class="btn btn-success">แก้ไขข้อมูล</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+@endsection
+@section('script')
+<script>
+
+
+
+
+    Vue.use(VeeValidate);
+
+    var root_app = new Vue({
+        el: '#root_app',
+        data: function() {
+            return {
+                items: []
+            };
+        },
+        methods: {
+            on_clik_edit: function(evt) {
+                console.log("item_id", evt.currentTarget.dataset.id);
+                this.$emit('edit', evt.currentTarget.dataset.id);
+            },
+            on_select_role: function(evt) {
+                this.is_teacher = evt.target.value == 1;
+            },
+            search_items: function(evt) {
+              evt.preventDefault();
+                var self = this;
+                axios.get('{{ route("admin_subject_search") }}?search=' + evt.target.search.value).then(function(res) {
+                  var data = res.data;
+                  if(data.is_error) {
+                    console.log(data.error_message);
+                    return window.swal("Error", data.error_message);
+                  }
+                  self.items = data.data;
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    return window.swal("Error", error.toString());
+                });
+            },
+            fetch_items: function() {
+                var self = this;
+                NProgress.start();
+                axios.get('{{ route("admin_subject_all") }}').then(function(res) {
+                    NProgress.done();
+                    console.log(res);
+                    var data = res.data;
+                    if(data.is_error) {
+                        window.swal("Error", data.error_message, "error");
+                        console.log(data.error_message);
+                        return;
+                    }
+                    self.items = data.data;
+                });
+            },
+            update_status: function(evt) {
+                var self = this;
+                var status = evt.currentTarget.dataset.status;
+                var id = evt.currentTarget.dataset.id;
+                axios.post('{{ route("admin_subject_update_status") }}', { id: id, status: status })
+                .then(function(res) {
+                    var data = res.data;
+                    if(data.is_error) {
+                        console.log(data.error_message);
+                        return window.swal("Error", data.error_message, "error");
+                    }
+                    window.swal("Success", "อัพเดทสถานะเรียบร้อยแล้ว", "success");
+                    self.fetch_items();
+                }).catch(function(error) {
+                    console.log(error);
+                    window.swal("Error", error, "error");
+                });
+            },
+            add_item_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) {
+                       return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+                    }
+                    var data = new FormData(evt.target);
+                    axios.post('{{ route("admin_add_subject") }}', data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            window.swal("Error", data.error_message, "error");
+                            return console.log(data.error_message);
+                        }
+                        window.swal("Success", "เพิ่มวิชาเรียบร้อยแล้ว", "success");
+                        $('#add_modal').modal('hide');
+                        self.fetch_items();
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            this.fetch_items();
+            this.$nextTick(function() {
+                update_modal.$on('updated', function() {
+                    self.fetch_items();
+                });
+            })
+        }
+    });
+
+
+
+
+
+
+    var update_modal = new Vue({
+        el: '#update_modal',
+        data: function() {
+            return {
+                item: null
+            }
+        },
+        methods: {
+            update_item_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
+                    var data = new FormData(evt.target);
+                    axios.post("{{ route('admin_update_subject') }}", data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            console.log(data.error_message);
+                            return window.swal("Error", data.error_message, "error");
+                        }
+                        window.swal("Success", "อัพเดทเรียบร้อยแล้ว", "success");
+                        $('#update_modal').modal('hide');
+                        self.$emit('updated');
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            root_app.$on('edit', function(id) {
+                self.item = root_app.$data.items.find(function(_item) {
+                    console.log(_item);
+                    return _item.subject_id == id;
+                });
+                console.log(self.item);
+                $('#update_modal').modal('show');
+            });
+        }
+
+    })
+
+</script>
+
+
+@endsection

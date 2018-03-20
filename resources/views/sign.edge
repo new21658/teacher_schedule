@@ -7,7 +7,8 @@
             <h3>Teacher <color class="tch-text-primary">Schedule</color></h3>
             <hr/>
             <form @submit.prevent="submit($event)" class="form form-horizontal">
-                <div class="form-group">                 
+                {{ csrfField() }}
+                <div class="form-group">
                     <input ref="inp_username" v-validate="'required'" type="text" class="form-control" name="username" placeholder="Username" />
                     <p v-if="errors.has('username')" class="help-text text-danger">@{{ errors.first('username') }}</p>
                 </div>
@@ -23,7 +24,7 @@
                 </div>
             </form>
         </div>
-    </div> 
+    </div>
         </div>
     </div>
 @endsection
@@ -48,12 +49,13 @@
                          return self.$refs['inp_username'].focus();
                     }
                     var data = new FormData(evt.target);
-                    axios.post('login', data,).then(function(res) {
+                    axios.post('{{ route("login") }}', data).then(function(res) {
                         console.log(res);
                         var data = res.data;
                         if(data.is_error) {
-                            self.username_invalid = true;
+                            return self.username_invalid = true;
                         }
+                        return window.location.replace(data.data.redirect_to);
                     })
                 });
 

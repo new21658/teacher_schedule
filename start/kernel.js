@@ -36,7 +36,10 @@ const globalMiddleware = [
 |
 */
 const namedMiddleware = {
-    auth: 'Adonis/Middleware/Auth'
+    auth: 'Adonis/Middleware/Auth',
+    detectUser:'App/Middleware/UserDetector',
+    detectAdmin: 'App/Middleware/AdminDetector',
+    redirectIfLoggedIn: 'App/Middleware/RedirectIfLoggedIn'
 }
 
 /*
