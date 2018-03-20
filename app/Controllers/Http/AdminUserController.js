@@ -47,7 +47,8 @@ class AdminUserController {
     }
 
     async addUser({ request }) {
-        // return json_res(request.input('password'));
+        // var password = await Hash.make(request.input('password').trim())
+        // return json_res(password);
         try{
             var validation = await validate(request.all(), {
                 username: "required|unique:users,username",
@@ -64,8 +65,8 @@ class AdminUserController {
                 return json_res_error(message);
             }
                 var user = new User() ;
-                user.username = request.input('username');
-                user.password = await Hash.make(request.input('password').trim());
+                user.username = request.input('username').trim();
+                user.password = request.input('password').trim();
                 user.email = request.input('email');
                 user.full_name = request.input('full_name');
                 user.role_id = request.input('role');
@@ -91,7 +92,6 @@ class AdminUserController {
     }
 
     async updateUser({ request }) {
-        return json_res(request.all());
         try{
             var validation = await validate(request.all(), {
                 id: 'required',

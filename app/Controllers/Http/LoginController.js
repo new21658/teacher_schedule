@@ -10,12 +10,13 @@ class LoginController {
 
     async login(ctx) {
         var { request, auth } = ctx;
-        var username = request.input('username');
-        var password = request.input('password');
+        var username = request.input('username').trim();
+        var password = request.input('password').trim();
+        // return json_res_error(password);
         var self = this;
         try {
             await auth.attempt(username, password);
-            var redirect_to = await this.redirectTo(auth);
+            var redirect_to = await self.redirectTo(auth);
             return json_res({
               redirect_to: redirect_to
             });
