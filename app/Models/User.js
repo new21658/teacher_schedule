@@ -19,6 +19,15 @@ class User extends Model {
         return this.belongsTo('App/Models/Role', 'role_id', 'role_id');
     }
 
+    static async isActivate(username) {
+        let user = await User.query().where(function() {
+          this.where('username', '=', username);
+          this.andWhere('status', '=', 'A');
+        }).first();
+        if(!user) throw new Exception("This user not activated");
+        return true;
+    };
+
     static boot() {
         super.boot()
 

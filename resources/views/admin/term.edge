@@ -43,7 +43,7 @@
                                 <td>@{{ item.register_end }}</td>
                                 <td><button
                                     :data-status="item.status == 'A' ? 'D' : 'A'"
-                                    :data-id="item.study_room_id"
+                                    :data-id="item.term_id"
                                     @click="update_status($event)"
                                     :class="['btn', 'btn-xs', item.status == 'A' ? 'btn-success' : 'btn-danger']">
                                     <i class="fas fa-sync-alt"></i> @{{ item.status == 'A' ? 'ใช้งาน' : 'ไม่ใช้งาน' }}</button>
@@ -132,7 +132,7 @@
       </div>
       <div v-if="item != null" class="modal-body">
         <form @submit.prevent="update_item_submit($event)" class="form form-horizontal">
-            <input type="hidden" name="id" :value="item.study_room_id" />
+            <input type="hidden" name="id" :value="item.term_id" />
             <div class="form-group">
                 <div class="col-sm-12">
                     <select v-validate="'required|not_in:-1'" name="year" class="form-control">
@@ -232,7 +232,7 @@
             },
             search_items: function(evt) {
                 var self = this;
-                axios.get('{{ route("admin_study_room_search") }}?search=' + evt.target.search.value).then(function(res) {
+                axios.get('{{ route("admin_term_search") }}?search=' + evt.target.search.value).then(function(res) {
                   var data = res.data;
                   if(data.is_error) {
                     console.log(data.error_message);
@@ -264,9 +264,10 @@
                 var self = this;
                 var status = evt.currentTarget.dataset.status;
                 var id = evt.currentTarget.dataset.id;
-                axios.post('{{ route("admin_update_status_study_room") }}', { id: id, status: status })
+                axios.post('{{ route("admin_update_status_term") }}', { id: id, status: status })
                 .then(function(res) {
                     var data = res.data;
+                    console.log(res);
                     if(data.is_error) {
                         console.log(data.error_message);
                         return window.swal("Error", data.error_message, "error");
@@ -317,6 +318,9 @@
         mounted: function() {
           console.log("mounted");
           initDatePicker();
+        },
+        updated: function() {
+          initDatePicker();
         }
     });
 
@@ -339,7 +343,7 @@
                 this.$validator.validateAll().then(function(passed) {
                     if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
                     var data = new FormData(evt.target);
-                    axios.post("{{ route('admin_update_study_room') }}", data).then(function(res) {
+                    axios.post("{{ route('admin_update_term') }}", data).then(function(res) {
                         console.log(res);
                         var data = res.data;
                         if(data.is_error) {
@@ -366,9 +370,12 @@
         },
         mounted: function() {
           initDatePicker();
+        },
+        updated: function() {
+          initDatePicker();
         }
 
-    })
+        });
 
 </script>
 

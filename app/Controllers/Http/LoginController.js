@@ -1,6 +1,7 @@
 'use strict'
 
 var { json_res, json_res_error } = use("App/Utils/Response");
+var User = use("App/Models/User");
 
 class LoginController {
 
@@ -15,6 +16,8 @@ class LoginController {
         // return json_res_error(password);
         var self = this;
         try {
+            // check if user is activated
+            await User.isActivate(username);
             await auth.attempt(username, password);
             var redirect_to = await self.redirectTo(auth);
             return json_res({

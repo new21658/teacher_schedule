@@ -45,7 +45,10 @@ Route.group(function() {
 
     Route.get('/term', 'AdminTermController.index').as('admin_term');
     Route.get('/term_all', 'AdminTermController.termAll').as('admin_term_all');
+    Route.get('/term_search', 'AdminTermController.termSearch').as('admin_term_search');
     Route.post('/term_add', 'AdminTermController.addTerm').as('admin_add_term');
+    Route.post('/term_update', 'AdminTermController.updateTerm').as('admin_update_term');
+    Route.post('/term_update_status', 'AdminTermController.updateStatusTerm').as('admin_update_status_term');
 
 }).middleware(['detectAdmin']).prefix('/admin');
 
