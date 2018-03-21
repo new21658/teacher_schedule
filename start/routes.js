@@ -50,6 +50,14 @@ Route.group(function() {
     Route.post('/term_update', 'AdminTermController.updateTerm').as('admin_update_term');
     Route.post('/term_update_status', 'AdminTermController.updateStatusTerm').as('admin_update_status_term');
 
+    Route.get('/student_group', 'AdminStudentGroupController.index').as('admin_student_group');
+    Route.get('/student_group_all', 'AdminStudentGroupController.studentGroupAll').as('admin_student_group_all');
+    Route.get('/student_group_search', 'AdminStudentGroupController.studentGroupSearch').as('admin_student_group_search');
+    Route.post('/student_group_add', 'AdminStudentGroupController.addStudentGroup').as('admin_add_student_group');
+    Route.post('/student_group_update', 'AdminStudentGroupController.updateStudentGroup').as('admin_update_student_group');
+    Route.post('/student_group_update_status', 'AdminStudentGroupController.updateStatusStudentGroup').as('admin_update_status_student_group');
+
+
 }).middleware(['detectAdmin']).prefix('/admin');
 
 Route.get('/', async({ view }) => {
