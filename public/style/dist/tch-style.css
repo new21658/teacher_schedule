@@ -1,6 +1,9 @@
 body {
   background-color: whitesmoke; }
 
+.navbar {
+  border: 0px !important; }
+
 .tch-btn {
   color: white; }
 

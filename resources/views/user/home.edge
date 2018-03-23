@@ -5,17 +5,33 @@
     .highlight-table {
         position: absolute;
         z-index: 99;
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 153, 51, 0.3);
+        top: 0 !important;
+        left: 0 !important;
     }
     .schedule {
-        width: 100%;
+        width: 1140px;
+        min-width: 1140px;
+        margin: 0 auto;
+        padding: 1em 0 1em 0;
+    }
+    .schedule-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+    }
+    .schedule-row div {
+        flex-grow: 0;
+        flex-shrink: 0; 
     }
     .schedule-col-h {
-        box-sizing: border-box;
-        float: left;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        padding: 1em;
+        /*box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);*/
+        padding: 0.7em;
         font-weight: bold;
+    }
+    .schedule-col {
+       box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+        padding: 0.7em;
     }
 </style>
 <div id="app_root"></div>
@@ -65,15 +81,25 @@
 
 
 <script type="text/x-template" id="schedule_table_template">
-    <div class="schedule_table table-responsive" style="margin-top: 20px; position: relative;">
-        <!--<div class="schedule">
-            <div class="row">
-                <div class="schedule-col-h">วัน</div>
-                <div class="schedule-col-h text-center"
+    <div class="table-responsive schedule_table" style="margin-top: 20px; position: relative;">
+        <div ref="schedule" class="schedule" style="position: inherit;">
+            <div class="schedule-row">
+                <div class="schedule-col-h text-center" :style="{width: width_title_col + 'px'}">วัน</div>
+                <div :style="{ 'width': width_el + 'px' }" class="schedule-col-h text-center"
                 v-for="(intl, i) in time_interval_list" :key="i">@{{ intl.start.toFormat('HH:mm') }}</div>
             </div>
-        </div> -->
-        <table id="schedule-table" class="table table-bordered" style="position: inherit;">
+                <div class="schedule-row" style="position: inherit;"  v-for="(day, day_index) in days" :key="day_index">
+                    <div class="schedule-col-h" :style="{ 'width': width_title_col + 'px' }">@{{ day }}</div>
+                    <div 
+                        class="schedule-col highlight-table"
+                        v-for="(c, i) in couses" 
+                        data-toggle="tooltip" data-placement="top" :title="c.start_time.toFormat('HH:mm') + '-' + c.end_time.toFormat('HH:mm')"
+                        v-if="c.date.weekday == (day_index+1)"
+                        v-bind:style="{ 'width': cal_time_width(c.start_time, c.end_time) + 'px', 'margin-left': cal_time_offset(c.start_time) + 'px' }">@{{  cal_time_offset(c.start_time) + 'px' }}</div>
+                    <div class="schedule-col" v-for="n in (time_interval_list.length)" :key="n" :style="'flex-basis:' + width_el + 'px;'" ></div>
+                </div>
+        </div>
+        <!--<table id="schedule-table" class="table table-bordered" style="position: inherit;">
             <thead>
                <tr>
                     <th class="text-center">
@@ -92,7 +118,7 @@
                     <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" v-for="n in (time_interval_list.length - 1)" :key="n" :style="'width:' + width_el + 'px;'" class="text-center" ></td>
                 </tr>
             </tbody>
-        </table>
+        </table> -->
     </div>
 </script>
 <script type="text/x-tempalte">
@@ -151,6 +177,10 @@
 <script>
     Vue.use(VeeValidate);
 
+    function initJquery() {
+        $('[data-toggle="tooltip"]').tooltip()
+    }
+
     var schedule_table = Vue.component("schedule-table", {
         template: "#schedule_table_template",
         data: function() {
@@ -196,29 +226,32 @@
             }
         },
         computed: {
-            width_el: function(){ return 60; },
+            width_title_col: function(){ return 70; },
             interal_width: function(){ return 60}, // minutes
             start_time: function(){ return luxon.DateTime.fromObject({ hours: 6 }); },
             end_time: function(){ return luxon.DateTime.fromObject({  hours: 23, minutes: 59 }); },
-            width_of_table: function() {
-                return this.width_el * this.time_interval_list.length;
+            width_el: function(){ 
+                return 60; 
             },
             time_interval_list: function() {
                 var dt = luxon.DateTime;
                 var interval = luxon.Interval.fromDateTimes(this.start_time, this.end_time);
                 var interval_list = interval.splitBy({ minutes: this.interal_width });
                 return interval_list;
+            },
+            width_of_table: function() {
+                return this.width_el * this.time_interval_list.length;
             }
         },
         methods: {
-            get_exact_width_el: function() {
-
-            },
             cal_time_width: function(start, end) {
+                //console.log('cal_time_width', start.toFormat('HH:mm') +'-'+ end.toFormat('HH:mm'), 'width_in_px:' + this.cal_px_from_minutes(((end - start) / 1000) / 60));
                 return this.cal_px_from_minutes(((end - start) / 1000) / 60);
             },
             cal_time_offset: function(start) {
-                return this.cal_px_from_minutes(((start - this.start_time) / 1000) / 60);
+                //console.log('cal_time_offset', start.toFormat('HH:mm'), 'offset_in_px:' + (this.width_title_col + this.cal_px_from_minutes(((start - this.start_time) / 1000) / 60)));
+                //console.log(((start - this.start_time) / 1000) / 60);
+                return this.width_title_col + this.cal_px_from_minutes(((start - this.start_time) / 1000) / 60);
             },
             cal_px_from_minutes: function(m) {
                 return (m / 60) * 60;
@@ -226,6 +259,9 @@
             cal_px_to_percent: function(px) {
                 return (px / this.width_of_table) * 100;
             }
+        },
+        mounted: function() {
+            initJquery();
         }
     });
 
@@ -238,6 +274,11 @@
                 term_selected: null,
             }
         },
+        mounted: function(){
+            this.$nextTick(function() {
+                initJquery();
+            });
+        }
 
     }); 
 

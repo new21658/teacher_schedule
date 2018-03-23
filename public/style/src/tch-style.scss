@@ -5,6 +5,12 @@ body {
 $color_primary: #009933;
 $color_yellow: #ff9900;
 $color_dark: rgba(0, 0, 0, 0.8);
+
+// reset bootstrap
+.navbar {
+    border: 0px !important;
+}
+
 // button
 .tch-btn {
     color: white;
