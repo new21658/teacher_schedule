@@ -11,11 +11,13 @@ class UserDetector {
       console.log("UserDetector:user loggedIn");
       if(user.role_id != 1) {
         return response.redirect("/admin");
+      } else {
+        await next();
       }
-      await next();
+
     } catch(ex) {
       response.route('login_page');
-      await next();
+      // await next();
     }
   }
 }

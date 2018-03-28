@@ -5,6 +5,7 @@
   "description": "The fullstack application boilerplate for Adonisjs",
   "main": "index.js",
   "scripts": {
+    "build": "next build",
     "start": "node server.js",
     "test": "node ace test"
   },
@@ -27,9 +28,13 @@
     "@adonisjs/session": "^1.0.20",
     "@adonisjs/shield": "^1.0.6",
     "@adonisjs/validator": "^5.0.3",
+    "@zeit/next-css": "^0.1.5",
     "flow-bin": "^0.68.0",
     "luxon": "^0.5.8",
-    "mysql": "^2.15.0"
+    "mysql": "^2.15.0",
+    "next": "^5.1.0",
+    "react": "",
+    "react-dom": ""
   },
   "devDependencies": {},
   "autoload": {
