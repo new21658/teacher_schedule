@@ -2,62 +2,48 @@
 
 @section('body')
 <style>
-    .highlight-table {
-        position: absolute;
-        z-index: 99;
-        background-color: rgba(0, 153, 51, 0.3);
-        top: 0 !important;
-        left: 0 !important;
-    }
-    .schedule {
-        width: 1140px;
-        min-width: 1140px;
-        margin: 0 auto;
-        padding: 1em 0 1em 0;
-    }
-    .schedule-row {
-        display: flex;
-        flex-direction: row;
-        justify-content: start;
-    }
-    .schedule-row div {
-        flex-grow: 0;
-        flex-shrink: 0; 
-    }
-    .schedule-col-h {
-        /*box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);*/
-        padding: 0.7em;
-        font-weight: bold;
-    }
-    .schedule-col {
-       box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
-        padding: 0.7em;
-    }
+
 </style>
+
+
 <div id="app_root"></div>
+
+
 <script id="app_root_template" type="text/x-template">
 <div class="tch-body container">
+        <control-panel 
+            :on_select_term="on_select_term"
+            :on_select_room="on_select_room" 
+            :term_selected="term_selected"
+        />
+    <div class="row">
+        <div class="col-sm-12">
+            <schedule-table />
+        </div>
+    </div>
+
+    <add-modal />
+</div>
+</script>
+
+
+<script type="text/x-template" id="control_panel_template">
     <div class="tch-bg-dark tch-panel-control row">
         <div class="col-sm-10">
             <div class="form form-inline">
                 <div class="form-group">
                     <label class="label-control">ปีการศึกษา</label>
-                    <select class="form-control">
-                        <option>เลือกปีการศึกษา</option>
+                    <select @change="_on_select_term($event)"  class="form-control">
+                        <option value="-1">เลือกปีการศึกษา</option>
+                        <option v-for="(term, index) in terms" :key="index" :value="term.term_id">
+                            @{{ 'ปี ' + term.term_year + " เทอม " + term.term }}
+                        </option>
                     </select>    
                 </div>
                 <div class="form-group">
-                    <select class="form-control">
-                        <option>เทอมที่</option>
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <select class="form-control">
+                    <select @change="_on_select_room($event)" class="form-control">
                         <option>ห้อง</option>
-                        <option>1</option>
-                        <option>2</option>
+                        <option v-for="(room, index) in rooms" :key="index" :value="room.study_room_id" >@{{ room.study_room_code }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -67,18 +53,10 @@
         </div>
         <div class="col-sm-2 text-right">
             <button data-toggle="modal" data-target="#add_modal" class="btn btn-success">
-                                    <i class="fa fa-plus-circle"></i> เพิ่ม</button>
+            <i class="fa fa-plus-circle"></i> เพิ่ม</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <schedule-table />
-        </div>
-    </div>
-</div>
 </script>
-
-
 
 <script type="text/x-template" id="schedule_table_template">
     <div class="table-responsive schedule_table" style="margin-top: 20px; position: relative;">
@@ -99,32 +77,9 @@
                     <div class="schedule-col" v-for="n in (time_interval_list.length)" :key="n" :style="'flex-basis:' + width_el + 'px;'" ></div>
                 </div>
         </div>
-        <!--<table id="schedule-table" class="table table-bordered" style="position: inherit;">
-            <thead>
-               <tr>
-                    <th class="text-center">
-                        วัน
-                    </th>
-                    <th v-for="(intl, i) in time_interval_list" :key="i">@{{ intl.start.toFormat('HH:mm') }}</th>
-                </tr>
-            </thead>
-            <tbody style="position: inherit;">
-                <tr style="position: inherit;"  v-for="(day, day_index) in days" :key="day_index" style="width: 100px;">
-                    <th style="width: 100px;">@{{ day }}</th>
-                    <div v-for="(c, i) in couses" 
-                        v-if="c.date.weekday == (day_index+1)"
-                        v-bind:style="{ 'width': cal_px_to_percent(cal_time_width(c.start_time, c.end_time)) + '%', 'margin-left': cal_px_to_percent(cal_time_offset(c.start_time)) + '%' }" class="highlight-table">@{{  cal_time_offset(c.start_time) + 'px' }}</div>
-                    
-                    <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" v-for="n in (time_interval_list.length - 1)" :key="n" :style="'width:' + width_el + 'px;'" class="text-center" ></td>
-                </tr>
-            </tbody>
-        </table> -->
     </div>
 </script>
-<script type="text/x-tempalte">
-
-</script>
-
+<script id="add_modal_template" type="text/x-template">
 <div  id="add_modal" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog animated fadeIn modal-md" role="document">
     <div class="modal-content">
@@ -134,28 +89,23 @@
               เพิ่มคอร์ส
           </h3>
             <div style="padding-left: 20px; padding-right: 20px;" class="form form-horizontal">
-            <!--<div class="form-group">               
-                <select class="form-control">
-                    <option>เลือกวิชา</option>
-                </select>                    
-                </div>
-            <div class="form-group">
-                <select class="form-control">
-                    <option>เลือกกลุ่ม</option>
-                </select>
-            </div> -->
                 <div class="form-group">
                     <select class="form-control">
-                        <option>ห้อง</option>
-                        <option>1</option>
-                        <option>2</option>
+                        <option value="-1">เลือกเทอม</option>
+                        <option v-for="(term, index) in terms" :value="term.term_id">@{{ 'ปี ' +  term.term_year + ' เทอม ' + term.term }}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="วันที่" />
+                    <select class="form-control">
+                        <option value="-1">เลือกห้อง</option>
+                        <option v-for="(room, index) in rooms" :value="room.study_room_id">@{{ room.study_room_code }}</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="เวลา" />
+                    <input class="date-picker form-control" type="text" placeholder="วันที่" />
+                </div>
+                <div class="form-group">
+                    <input class="time-picker form-control" type="text" placeholder="เวลา" />
                 </div>
                <div class="text-right form-group">
                     <button onclick="$('#add_modal').modal('hide')" class="btn btn-default">ปิด</button>
@@ -167,19 +117,86 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+</script>
+
+
 @endsection
 @section('style')
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" />
+<link rel="stylesheet" type="text/css" href="{{ assetsUrl('style/dist/bootstrap-datetimepicker.min.css') }}" />
 @endsection
 @section('script')
+<script src="{{ assetsUrl('script/dist/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="https://momentjs.com/downloads/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
 <script>
+
+
+    var ROOMS = {{{ rooms }}};
+    var TERMS = {{{ terms }}}
+
     Vue.use(VeeValidate);
 
     function initJquery() {
-        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip();
+        $('.date-picker').datepicker({
+            format: 'dd-mm-yyyy'
+        });
+        $('.time-picker').datetimepicker({
+            pickDate: false
+        });
     }
+
+    var add_modal = Vue.component('add-modal', {
+        template: '#add_modal_template',
+        data: function() {
+            return {
+                rooms: ROOMS,
+                terms: TERMS
+            }
+        },
+        mounted: function() {
+            initJquery();
+        }
+    })
+
+    var control_panel = Vue.component('control-panel', {
+        template: '#control_panel_template',
+        props: {
+            on_select_term: Function,
+            on_select_room: Function,
+            term_selected: String
+        },
+        data: function() {
+            return {
+                rooms: ROOMS,
+                terms: TERMS
+            }
+        },
+        computed: {
+            /*years: function() {
+                return  TERMS.map(function(term) {
+                    return term.term_year;
+                });
+            },
+            terms: function() {
+                var self = this;
+                return TERMS.filter(function(term) {
+                    return term.term_year == self.year_selected;
+                });
+            }*/
+        },
+        methods: {
+            _on_select_term: function(evt) {
+                console.log("term", evt.target.value);
+                this.on_select_term(evt.target.value);
+            },
+            _on_select_room: function(evt) {
+                console.log("room", evt.target.value);
+                this.on_select_room(evt.target.value);
+            }
+        }
+    })
 
     var schedule_table = Vue.component("schedule-table", {
         template: "#schedule_table_template",
@@ -189,7 +206,7 @@
              couses: [
                     {
                         date: luxon.DateTime.local(),
-                        start_time: luxon.DateTime.fromObject({ hours: 7 }),
+                        start_time: luxon.DateTime.fromObject({ hours: 7, minute: 15 }),
                         end_time: luxon.DateTime.fromObject({ hours: 11 })
                     },
                                        {
@@ -226,7 +243,7 @@
             }
         },
         computed: {
-            width_title_col: function(){ return 70; },
+            width_title_col: function(){ return 60; },
             interal_width: function(){ return 60}, // minutes
             start_time: function(){ return luxon.DateTime.fromObject({ hours: 6 }); },
             end_time: function(){ return luxon.DateTime.fromObject({  hours: 23, minutes: 59 }); },
@@ -270,9 +287,17 @@
         template: "#app_root_template",
         data: function() {
             return {
-                year_selected: null,
                 term_selected: null,
+                room_selected: null
             }
+        },
+        methods: {
+            on_select_term: function(term) {
+                this.term_selected = term;
+            },
+            on_select_room: function(room) {
+                this.room_selected = room;
+            },
         },
         mounted: function(){
             this.$nextTick(function() {

@@ -62,9 +62,7 @@ Route.group(function() {
     Route.get('/student_group', 'AdminStudentGroupController.index').as('admin_student_group');
 }).middleware(['detectAdmin']).prefix('/admin');
 
-Route.get('/', async({ view }) => {
-    return view.render('user.home');
-}).as('user_index').middleware(['detectUser']);
+Route.get('/', 'HomeController.index').as('user_index').middleware(['detectUser']);
 
 
 
