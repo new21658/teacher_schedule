@@ -27,6 +27,9 @@ nextApp.prepare().then(function() {
         Route.get('/logout', 'LoginController.logout').as('logout');
         
         Route.group(function() {
+
+            Route.get('/user_data', 'UserController.user_data').as('user_data');
+
             Route.get('/user_all', 'AdminUserController.userAll').as('admin_user_all');
             Route.get('/user_search', 'AdminUserController.userSearch').as('admin_user_search');
             Route.post('/user_add', 'AdminUserController.addUser').as('admin_add_user');

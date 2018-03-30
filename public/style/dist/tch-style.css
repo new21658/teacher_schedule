@@ -59,10 +59,8 @@ body {
   box-shadow: inset 100px 100px 0 rgba(0, 0, 0, 0.1);
   color: black; }
 
-.tch-nav li.active {
-  background-color: #009933; }
-
 .tch-nav li.active a {
+  background-color: #009933 !important;
   color: white !important; }
 
 .tch-navbar-toggle span {
@@ -95,6 +93,7 @@ body {
   padding: 1em 0 1em 0; }
 
 .schedule-row {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: start; }
@@ -110,6 +109,7 @@ body {
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
   padding: 0.7em;
   font-weight: bold;
+  text-align: center;
   background-color: whitesmoke; }
 
 .schedule-col {
