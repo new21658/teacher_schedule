@@ -3,6 +3,7 @@ import { Grid, Row, Col,   } from "react-bootstrap";
 import { DateTime, Interval } from "luxon";
 
 import ControlPanel from "./ControlPanel";
+import AddPanel from "./AddPanel";
 import Table from "./Table";
 import AddModal from "./AddModal";
 
@@ -72,9 +73,11 @@ class Schedule extends Component {
         return (
             <div>
                 <div className="panel panel-default">
+                    <div className="panel-heading"><h1>ตารางสอน</h1></div>
                     <div className="panel-body">
                     <AddModal hideAddModal={this.hideAddModal} toggleModal={this.toggleModal} show={this.state.showAddModal} />
                     <ControlPanel toggleModal={this.toggleModal} selectTerm={this.props.selectTerm} terms={this.props.terms} />
+                    <AddPanel days={this.days} />
                     <Table
                         startTime={this.startTime}
                         endTime={this.endTime} 

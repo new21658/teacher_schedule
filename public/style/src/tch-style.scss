@@ -6,6 +6,12 @@ $color_primary: #009933;
 $color_yellow: #ff9900;
 $color_dark: rgba(0, 0, 0, 0.8);
 
+$schedule_width: 1140px;
+
+.container {
+    width: 90%;
+}
+
 // reset bootstrap
 .navbar {
     border: 0px !important;
@@ -95,8 +101,10 @@ $color_dark: rgba(0, 0, 0, 0.8);
 }
 
 .tch-panel-control {
+    max-width: $schedule_width;
     padding-top: 1.3em;
     padding-bottom: 1.3em;
+    margin: 0 auto;
 }
 
 .tch-bg-dark {
@@ -123,10 +131,9 @@ $color_dark: rgba(0, 0, 0, 0.8);
     padding: 5px;
 }
 .schedule {
-    width: 100%;
-    min-width: 1140px;
+    width: $schedule_width;
     margin: 0 auto;
-    padding: 1em 0 1em 0;
+    padding: 0em 0 1em 0;
 }
 .schedule-row {
     position: relative;

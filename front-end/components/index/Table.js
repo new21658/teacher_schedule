@@ -70,8 +70,8 @@ const Table = (props) => {
 
     return (
         <div className="row">
-            <div className="col-sm-12">
-                <div className="table-responsive schedule">
+            <div className="table-responsive col-sm-12">
+                <div className="schedule">
                     <div className="schedule-row">
                         <div className="schedule-col-h" style={{ width: width + "px" }}>T/D</div>
                         { mapTimes }

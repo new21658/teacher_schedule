@@ -1,6 +1,9 @@
 body {
   background-color: whitesmoke; }
 
+.container {
+  width: 90%; }
+
 .navbar {
   border: 0px !important; }
 
@@ -67,8 +70,10 @@ body {
   background-color: black; }
 
 .tch-panel-control {
+  max-width: 1140px;
   padding-top: 1.3em;
-  padding-bottom: 1.3em; }
+  padding-bottom: 1.3em;
+  margin: 0 auto; }
 
 .tch-bg-dark {
   background-color: rgba(0, 0, 0, 0.1); }
@@ -90,10 +95,9 @@ body {
   padding: 5px; }
 
 .schedule {
-  width: 100%;
-  min-width: 1140px;
+  width: 1140px;
   margin: 0 auto;
-  padding: 1em 0 1em 0; }
+  padding: 0em 0 1em 0; }
 
 .schedule-row {
   position: relative;

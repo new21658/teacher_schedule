@@ -20,6 +20,7 @@ const selectTerm = (evt) => {
     return (
         <div className="tch-panel-control row">
                     {/* <div className="col-sm-1"><strong>ค้นหา</strong></div> */}
+                    <h2 className="col-sm-12">ค้นหา</h2>
                     <div className="col-sm-6">
                         <select onChange={selectTerm} className="form-control">
                             <option value={-1}>กรุณาเลือกเทอม</option>
@@ -27,9 +28,9 @@ const selectTerm = (evt) => {
                         </select>
                     </div>
                     {/* <div className="col-sm-1"><button className="btn btn-primary">ค้นหา</button></div> */}
-                    <div className="col-sm-6 text-right">
-                        <button onClick={props.toggleModal} className="btn btn-success">จองตาราง</button>
-                    </div>
+                    {/* // <div className="col-sm-6 text-right">
+                    //     <button onClick={props.toggleModal} className="btn btn-success">จองตาราง</button>
+                    // </div> */}
         </div>
     );
 

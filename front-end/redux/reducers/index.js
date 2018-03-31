@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { RECEIVE_USER } from "../actions/userAction";
 import { RECEIVE_TERM } from "../actions/termAction";
 import { SELECT_TERM } from "../actions/scheduleAction";
+import { RECEIVE_ROOM } from "../actions/roomAction"
 
 let user = (state={}, action) => {
     console.log("user action:", action);
@@ -39,10 +40,19 @@ let courses = (state=[], action) => {
     return state;
 }
 
+let rooms = (state=[], action) => {
+    switch(action.type) {
+        case RECEIVE_ROOM : return action.payload;
+        default: return state;
+    }
+    return state;
+}
+
 
 export default combineReducers({
     user: user,
     terms: terms,
     courses: courses,
+    rooms: rooms,
     schedule: schedule
 });

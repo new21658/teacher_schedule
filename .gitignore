@@ -1,6 +1,9 @@
 # Node modules
 node_modules
 
+# Next
+.next
+
 # Adonis directory for storing tmp files
 tmp
 
