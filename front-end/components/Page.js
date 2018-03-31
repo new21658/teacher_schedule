@@ -27,6 +27,7 @@ const wrapper = (Content) => {
                             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
                             <link rel="stylesheet" href="/_next/static/style.css" />
                             <link rel="stylesheet" href="/style/dist/tch-style.css" />
+                            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous" />
                         </Head>
                         <Header { ...this.props } />
                         <Menu { ...this.props } />

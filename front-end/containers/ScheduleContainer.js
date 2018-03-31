@@ -5,7 +5,8 @@ import { selectTerm } from "../redux/actions/scheduleAction";
 const mapStateToProps = (state) => {
     return {
         terms: state.terms,
-        courses: state.courses
+        courses: state.courses,
+        rooms: state.rooms
     }
 }
 

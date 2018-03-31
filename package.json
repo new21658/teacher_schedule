@@ -5,7 +5,8 @@
   "description": "The fullstack application boilerplate for Adonisjs",
   "main": "index.js",
   "scripts": {
-    "build": "next build",
+    "build": "cd front-end && next build && cd ..",
+    "dev": "node server.js",
     "start": "node server.js",
     "test": "node ace test"
   },

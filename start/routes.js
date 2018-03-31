@@ -16,7 +16,7 @@
 const Route = use('Route')
 const Subject = use('App/Models/Subject');
 const next = use('next');
-const nextApp = next({ dev: true,  dir: './front-end'});
+const nextApp = next({ dev: process.env.NODE_ENV === 'development',  dir: './front-end'});
 const handle = nextApp.getRequestHandler();
 
 nextApp.prepare().then(function() {

@@ -11,27 +11,13 @@ const Table = (props) => {
     
     const mapTimeToPx = (start, end) => {
         let diff = end - start; // return timestamps
-        console.log("-----diff------", diff)
         diff = mapTimstampToMinute(diff);
-        // const startPx = start.minute;
-        // const endPx = end.minute;
-        // const diff = startPx - endPx;
         return diff;
     }
 
     const mapOffsetTime = (start) => {
-        console.log("---------mapOffsetTime-----------", width + startTime.minute + start.minute);
         return width + mapTimstampToMinute(start - startTime);
     }
-
-    // const mapCourses = props.courses.map((course, index) => {
-    //     const widthPx = mapTimeToPx(course.start_time, course.end_time);
-    //     return (
-    //         <div style={{ width: widthPx }} className="highlight-table">
-    //             { course.start_time.toFormat('HH:mm') }
-    //         </div>
-    //     );
-    // });
 
     const mapTimes = props.intervals.map((inv, index) => {
         return (
@@ -54,7 +40,7 @@ const Table = (props) => {
                     props.courses.map((course, _index) => {
                         const widthPx = mapTimeToPx(course.start_time, course.end_time);
                         const dayOfWeek = index + 1;
-                        const shouldRender = course.date.weekday == dayOfWeek;
+                        const shouldRender = course.day == dayOfWeek;
                         return (
                             shouldRender ?
                             <div key={_index} style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className="highlight-table">
