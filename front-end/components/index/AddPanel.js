@@ -77,7 +77,7 @@ export default class AddPanel extends Component {
                             {
                                 this.props.days.map((day, index) => {
                                     return (
-                                        <option value={index+1}>{ day }</option>
+                                        <option key={index} value={index+1}>{ day }</option>
                                     )
                                 })
                             }

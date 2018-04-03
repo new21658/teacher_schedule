@@ -30,6 +30,14 @@ nextApp.prepare().then(function() {
 
             Route.get('/user_data', 'UserController.user_data').as('user_data');
 
+            Route.get('/course_all', 'AdminCourseController.courseAll').as('admin_course_all');
+            Route.get('/course_all_with_not_approved', 'AdminCourseController.courseAllWithNotApproved').as('admin_course_all_with_not_approved');
+            Route.get('/course_by_term/:id', 'AdminCourseController.courseByTerm').as('admin_course_by_term');
+            Route.post('/course_add', 'AdminCourseController.addCourse').as('admin_add_course');
+            Route.post('/course_update', 'AdminCourseController.updateCourse').as('admin_update_course');
+            Route.post('/course_approve', 'AdminCourseController.approveCourse').as('admin_course_approve_course');
+            Route.post('/course_uodate_status', 'AdminCourseController.updateStatus').as('admin_course_update_status');
+
             Route.get('/user_all', 'AdminUserController.userAll').as('admin_user_all');
             Route.get('/user_search', 'AdminUserController.userSearch').as('admin_user_search');
             Route.post('/user_add', 'AdminUserController.addUser').as('admin_add_user');
@@ -64,6 +72,7 @@ nextApp.prepare().then(function() {
         
         Route.group(function() {
             Route.get('/', 'AdminHomeController.index').as('admin_index');
+            Route.get('/course', 'AdminCourseController.index').as('admin_course');
             Route.get('/user', 'AdminUserController.index').as('admin_user');
             Route.get('/subject', 'AdminSubjectController.index').as('admin_subject');
             Route.get('/study_room', 'AdminStudyRoomController.index').as('admin_study_room');

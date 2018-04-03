@@ -69,11 +69,13 @@ body {
 .tch-navbar-toggle span {
   background-color: black; }
 
-.tch-panel-control {
-  max-width: 1140px;
+.tch-panel-control-fluid, .tch-panel-control {
   padding-top: 1.3em;
   padding-bottom: 1.3em;
   margin: 0 auto; }
+
+.tch-panel-control {
+  max-width: 1140px; }
 
 .tch-bg-dark {
   background-color: rgba(0, 0, 0, 0.1); }

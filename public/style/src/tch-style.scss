@@ -100,12 +100,18 @@ $schedule_width: 1140px;
     background-color: black;
 }
 
-.tch-panel-control {
-    max-width: $schedule_width;
+.tch-panel-control-fluid {
     padding-top: 1.3em;
     padding-bottom: 1.3em;
     margin: 0 auto;
 }
+
+.tch-panel-control {
+    @extend .tch-panel-control-fluid;
+    max-width: $schedule_width;
+}
+
+
 
 .tch-bg-dark {
     background-color: rgba(0, 0, 0, 0.1);

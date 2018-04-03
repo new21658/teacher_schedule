@@ -1,0 +1,454 @@
+@layout('admin.master')
+@section('body')
+<div id="root_app" class="container">
+<div class="row">
+    <h2 class="col-sm-12 page-header">จัดการตารางสอน</h2>
+    <div class="tch-panel-control-fluid row">
+    <div class="col-sm-3">
+        <div class="input-group">
+            <span class="input-group-addon">เทอม</span>
+            <select @change="on_select_term($event)" class="form-control">
+                <option value="-1">เลือกเทอม</option>
+                <option v-for="(term, index) in terms" :value="term.term_id" >@{{ 'ปี ' + (parseInt(term.term_year) + 543) + " เทอม " + term.term }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <form @submit.prevent="search_items($event)">
+        <div class="input-group">
+            <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ... " />
+            <span class="input-group-btn">
+                <button class="btn btn-default">ค้นหา <i class="fa fa-search"></i></butotn>
+            <span>
+        </div>
+        </form>
+    </div>
+    <div class="col-sm-6 text-right">
+        <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-plus-circle text-success"></i> เพิ่ม</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="tch-shadow-sm  panel panel-default">
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>สถานะ</th>
+                            <th>เทอม</th>
+                            <th>รหัสวิชา</th>
+                            <th>ชื่อวิชา</th>
+                            <th>ผู้สอน</th>
+                            <th>กลุ่ม</th>
+                            <th>วัน</th>
+                            <th>เวลา</th>
+                            <th>ห้อง</th>
+                            <th>ลบ</th>
+                            <th>แก้ไข</th>
+                            <th>Approve</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="items.length > 0">
+                            <tr v-for="(item, index) in course_with_not_approved" :key="index">
+                                <td class="text-center">@{{ ++index }}</td>
+                                <td><span :class="['label', item.valid ? 'label-success' : 'label-default']">@{{ item.valid ? 'ตอบรับแล้ว' : 'รอการตอบรับ' }}</span></td>
+                                <td>@{{ "ปี " + (parseInt(item.term.term_year) + 543) + " เทอม " + item.term.term }}</td>
+                                <td>@{{ item.subject.subject_code }}</td>
+                                <td>@{{ item.subject.subject_name }}</td>
+                                <td>@{{ item.teacher.teacher_code }}</td>
+                                <td>@{{ item.group.student_group_name }}</td>
+                                <td>@{{ item.day || 'รอ' }}</td>
+                                <td>@{{ item.start_time ? item.start_time + " - " + item.end_time : 'รอ' }}</td>
+                                <td>@{{ item.room && item.room.study_room_code || 'รอ' }}</td>
+                                <td><button
+                                    :data-status="item.status == 'A' ? 'D' : 'A'"
+                                    :data-id="item.course_id"
+                                    @click="update_status($event)"
+                                    class="btn btn-xs btn-danger">
+                                    <i class="fas fa-trash-alt"></i> @{{ item.status == 'A' ? 'ลบ' : '' }}</button>
+                                </td>
+                                <td><button @click="on_clik_edit($event)" :data-id="item.course_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
+                                <td>
+                                    <button @click="on_click_approve($event)" :disabled="!item.valid" :data-id="item.course_id"  class="btn btn-sm btn-success">Approve</button>
+                                </td>
+                            </tr>
+                        </template>
+                        <template v-else>
+                            <tr>
+                                <td colspan="12" class="text-center text-muted">ไม่พบข้อมูล</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div id="add_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">เพิ่มคอร์ส</h4>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="add_item_submit($event)" class="form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="term" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกเทอมการศึกษา</option>
+                        <option 
+                            v-for="(item, index) in terms" 
+                            :key="index" 
+                            :value="item.term_id" 
+                            :selected="selected_term == item.term_id">
+                            @{{ 'ปี ' + item.term_year + " เทอม " + item.term }}</option>
+                    </select>
+                    <p v-if="errors.has('term')" class="help-text text-danger">@{{ errors.first('term') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="teacher" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกอาจารย์</option>
+                        <option 
+                            v-for="(item, index) in teachers" 
+                            :key="index" 
+                            :value="item.teacher_id" >
+                            @{{ item.teacher_name + " (" + item.teacher_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="subject" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกวิชา</option>
+                        <option 
+                            v-for="(item, index) in subjects" 
+                            :key="index" 
+                            :value="item.subject_id" >
+                            @{{ item.subject_name + " (" + item.subject_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('subject')" class="help-text text-danger">@{{ errors.first('subject') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="group" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกกลุ่ม</option>
+                        <option 
+                            v-for="(item, index) in groups" 
+                            :key="index" 
+                            :value="item.student_group_id" >
+                            @{{ item.student_group_name }}</option>
+                    </select>
+                    <p v-if="errors.has('group')" class="help-text text-danger">@{{ errors.first('group') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="add_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#add_button').click()" class="btn btn-success"><b>+</b> เพิ่มคอร์ส</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+</div>
+
+
+
+
+
+
+<div id="update_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">แก้ไขคอร์ส</h4>
+      </div>
+      <div v-if="item != null" class="modal-body">
+        <form @submit.prevent="update_item_submit($event)" class="form form-horizontal">
+            <input type="hidden" name="id" :value="item.course_id" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="term" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกเทอมการศึกษา</option>
+                        <option 
+                            v-for="(_item, index) in terms" 
+                            :key="index" 
+                            :value="_item.term_id" 
+                            :selected="_item.term_id == item.term.term_id">
+                            @{{ 'ปี ' + _item.term_year + " เทอม " + _item.term }}</option>
+                    </select>
+                    <p v-if="errors.has('term')" class="help-text text-danger">@{{ errors.first('term') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="teacher" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกอาจารย์</option>
+                        <option 
+                            v-for="(_item, index) in teachers" 
+                            :key="index" 
+                            :value="_item.teacher_id" 
+                            :selected="_item.teacher_id == item.teacher.teacher_id">
+                            @{{ _item.teacher_name + " (" + _item.teacher_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="subject" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกวิชา</option>
+                        <option 
+                            v-for="(_item, index) in subjects" 
+                            :key="index" 
+                            :value="_item.subject_id" 
+                            :selected="_item.subject_id == item.subject.subject_id">
+                            @{{ _item.subject_name + " (" + _item.subject_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('subject')" class="help-text text-danger">@{{ errors.first('subject') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select name="group" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกกลุ่ม</option>
+                        <option 
+                            v-for="(_item, index) in groups" 
+                            :key="index" 
+                            :value="_item.student_group_id" 
+                            :selected="_item.student_group_id == item.group.student_group_id" >
+                            @{{ _item.student_group_name }}</option>
+                    </select>
+                    <p v-if="errors.has('group')" class="help-text text-danger">@{{ errors.first('group') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="edit_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#edit_button').click()" class="btn btn-success">แก้ไขข้อมูล</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+@endsection
+@section('script')
+<script>
+
+    window.TERMS = {{{ terms }}}
+    window.TEACHERS = {{{ teachers }}}
+    window.SUBJECTS = {{{ subjects }}}
+    window.GROUPS = {{{ groups }}}
+
+    Vue.use(VeeValidate);
+
+    var root_app = new Vue({
+        el: '#root_app',
+        data: function() {
+            return {
+                selected_term: -1,
+                terms: TERMS,
+                teachers: TEACHERS,
+                subjects: SUBJECTS,
+                groups: GROUPS,
+                items: []
+            };
+        },
+        computed: {
+            course_with_not_approved: function() {
+                return this.items.filter((item) => item.approved == 0);
+            }
+        },
+        methods: {
+            on_select_term: function(evt) {
+                var id = evt.target.value;
+                if(id == -1) return;
+                this.selected_term = id;
+                this.fetch_items();
+            },
+            on_clik_edit: function(evt) {
+                console.log("item_id", evt.currentTarget.dataset.id);
+                this.$emit('edit', evt.currentTarget.dataset.id);
+            },
+            on_select_role: function(evt) {
+                this.is_teacher = evt.target.value == 1;
+            },
+            search_items: function(evt) {
+              evt.preventDefault();
+                var self = this;
+                axios.get('{{ route("admin_subject_search") }}?search=' + evt.target.search.value).then(function(res) {
+                  var data = res.data;
+                  if(data.is_error) {
+                    console.log(data.error_message);
+                    return window.swal("Error", data.error_message);
+                  }
+                  self.items = data.data;
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    return window.swal("Error", error.toString());
+                });
+            },
+            fetch_items: function() {
+                var self = this;
+                NProgress.start();
+                axios.get('/api/course_by_term/' + this.selected_term).then(function(res) {
+                    NProgress.done();
+                    console.log(res);
+                    var data = res.data;
+                    if(data.is_error) {
+                        window.swal("Error", data.error_message, "error");
+                        console.log(data.error_message);
+                        return;
+                    }
+                    self.items = data.data;
+                });
+            },
+            update_status: function(evt) {
+                var self = this;
+                var status = evt.currentTarget.dataset.status;
+                var id = evt.currentTarget.dataset.id;
+                var confirmed = window.confirm("คุณต้องการลบคอร์สหรือไม่");
+                if(!confirmed) return; 
+                axios.post('{{ route("admin_course_update_status") }}', { id: id, status: status })
+                .then(function(res) {
+                    var data = res.data;
+                    if(data.is_error) {
+                        console.log(data.error_message);
+                        return window.swal("Error", data.error_message, "error");
+                    }
+                    window.swal("Success", "อัพเดทสถานะเรียบร้อยแล้ว", "success");
+                    self.fetch_items();
+                }).catch(function(error) {
+                    console.log(error);
+                    window.swal("Error", error, "error");
+                });
+            },
+            on_click_approve: function(evt) {
+                var self = this;
+                var status = evt.currentTarget.dataset.status;
+                var id = evt.currentTarget.dataset.id;
+                var confirmed = window.confirm("คุณต้องการ Approve คอร์สนี้หรือไม่");
+                if(!confirmed) return; 
+                axios.post('{{ route("admin_course_approve_course") }}', { id: id })
+                .then(function(res) {
+                    var data = res.data;
+                    if(data.is_error) {
+                        console.log(data.error_message);
+                        return window.swal("Error", data.error_message, "error");
+                    }
+                    window.swal("Success", "Approve เรียบร้อยแล้ว", "success");
+                    self.fetch_items();
+                }).catch(function(error) {
+                    console.log(error);
+                    window.swal("Error", error, "error");
+                });
+            },
+            add_item_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) {
+                       return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+                    }
+                    var data = new FormData(evt.target);
+                    axios.post('{{ route("admin_add_course") }}', data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            window.swal("Error", data.error_message, "error");
+                            return console.log(data.error_message);
+                        }
+                        window.swal("Success", "เพิ่มคอร์สเรียบร้อยแล้ว", "success");
+                        $('#add_modal').modal('hide');
+                        self.fetch_items();
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            this.fetch_items();
+            this.$nextTick(function() {
+                update_modal.$on('updated', function() {
+                    self.fetch_items();
+                });
+            })
+        }
+    });
+
+
+
+
+
+
+    var update_modal = new Vue({
+        el: '#update_modal',
+        data: function() {
+            return {
+                item: null,
+                terms: TERMS,
+                teachers: TEACHERS,
+                subjects: SUBJECTS,
+                groups: GROUPS,
+            }
+        },
+        methods: {
+            update_item_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
+                    var data = new FormData(evt.target);
+                    axios.post("{{ route('admin_update_course') }}", data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            console.log(data.error_message);
+                            return window.swal("Error", data.error_message, "error");
+                        }
+                        window.swal("Success", "อัพเดทเรียบร้อยแล้ว", "success");
+                        $('#update_modal').modal('hide');
+                        self.$emit('updated');
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            root_app.$on('edit', function(id) {
+                self.item = Object.assign({}, root_app.$data.items.find(function(_item) {
+                    console.log(_item);
+                    return _item.course_id == id;
+                }));
+                console.log(self.item);
+                $('#update_modal').modal('show');
+            });
+        }
+
+    })
+
+</script>
+
+
+@endsection

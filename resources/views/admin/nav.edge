@@ -15,6 +15,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="{{ route('admin_index') == request.url() ? 'active' : '' }}"><a href="{{ route('admin_index') }}">หน้าแรก <span class="sr-only">(current)</span></a></li>
+        <li class="{{ route('admin_course') == request.url() ? 'active' : '' }}"><a href="{{ route('admin_course') }}"><i class="fas fa-table"></i> จัดการตารางสอน</a></li>
         <li class="{{ route('admin_user') == request.url() ? 'active' : '' }}"><a href="{{ route('admin_user') }}"><i class="fas fa-user"></i> จัดการผู้ใช้</a></li>
         <li class="{{ route('admin_subject') == request.url() ? 'active' : '' }}"><a href="{{ route('admin_subject') }}"><i class="fas fa-book"></i> จัดการวิชา</a></li>
         <li class="{{ route('admin_study_room') == request.url() ? 'active' : '' }}"><a href="{{ route('admin_study_room') }}"><i class="far fa-window-maximize"></i> จัดการห้องเรียน</a></li>
