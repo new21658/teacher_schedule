@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import "rc-time-picker/assets/index.css";
 import TimePicker from 'rc-time-picker';
 import moment from "moment"
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 export default class AddPanel extends Component {
     constructor(props) {
@@ -26,15 +26,45 @@ export default class AddPanel extends Component {
 
     render() {
 
-        const toMoment = (timeStr) => {
-            return moment(timeStr, 'HH:mm');
+        const isDaySelected = (day, matchedDay) => {
+            return day == matchedDay;
         }
 
-        const mapTimeList = this.props.timeList.map((time, index) => {
+        const isSelectedStartTime = (timeString, matchedInvTime) => {
+            return timeString == matchedInvTime.start.toFormat('HH:mm');
+        }
+        const isSelectedEndTime = (timeString, matchedInvTime) => {
+            return timeString == matchedInvTime.end.toFormat('HH:mm');
+        }
+
+        console.log('AddPanel\'s props', this.props);
+
+        const mapDaysList = this.props.days.map((day, index) => (
+            <option selected={isDaySelected(this.props.schedule.daySelected, index+1)} key={index} value={index+1}>{ day }</option>)
+        );
+
+        const mapStartTimeList = this.props.timeList.map((time, index) => {
             return (
-                <option key={index}>{time.toFormat('HH:mm')}</option>
+                <option 
+                    selected={isSelectedStartTime(this.props.schedule.startTimeSelected, time)}
+                    key={index} 
+                    value={time.start.toFormat('HH:mm')}>{time.start.toFormat('HH:mm')}</option>
             );
         });
+
+        const mapEndTimeList = this.props.timeList.map((time, index) => {
+            return (
+                <option 
+                    selected={isSelectedEndTime(this.props.schedule.endTimeSelected, time)}
+                    key={index} 
+                    value={time.end.toFormat('HH:mm')}>{time.end.toFormat('HH:mm')}</option>
+            );
+        });
+
+        const mapSubjects = this.props.subjects.map((subject, index) => (
+            <option key={index} value={subject.subject_id}>{ subject.subject_name + " (" + subject.subject_code + ")" }</option>
+        ));
+        
 
 
         return (
@@ -46,13 +76,14 @@ export default class AddPanel extends Component {
                             <div className="form-group">
                                 <select className="form-control">
                                     <option>เลือกวิชา</option>
+                                    { mapSubjects }
                                 </select>
                             </div>
                         </div>
                         <div className="col-sm-6 text-right">
                             <label style={{minWidth: "50px"}} className="label-control"></label>
                             <div className="form-group">
-                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จองห้อง</button>
+                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จองคอร์ส</button>
                             </div>
                         </div>
                     </div>
@@ -74,13 +105,7 @@ export default class AddPanel extends Component {
                             <label style={{minWidth: "50px"}} className="label-control">วัน</label>
                             <select className="form-control">
                                 <option value={-1}>กรุณาเลือกวัน</option>
-                            {
-                                this.props.days.map((day, index) => {
-                                    return (
-                                        <option key={index} value={index+1}>{ day }</option>
-                                    )
-                                })
-                            }
+                                { mapDaysList }
                             </select>
                         </div>
                         <div className="col-sm-4">
@@ -88,16 +113,12 @@ export default class AddPanel extends Component {
                             <div className="input-group">
                                 <select className="form-control">
                                     <option>เริ่ม</option>
-                                    {
-                                        mapTimeList
-                                    }
+                                    { mapStartTimeList }
                                 </select>
                                 <span className="input-group-addon">ถึง</span>
                                 <select className="form-control">
                                     <option>สิ้นสุด</option>
-                                    {
-                                        mapTimeList
-                                    }
+                                    { mapEndTimeList }
                                 </select>
                             </div>
                         </div>

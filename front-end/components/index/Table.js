@@ -27,9 +27,22 @@ const Table = (props) => {
         );
     })
 
+    const onSelectTime = (evt) => {
+        props.selectTime(evt.target.dataset.day, evt.target.dataset.start_time, evt.target.dataset.end_time);
+    }
+
     const mapDays = props.days.map((day, index) => {
-        const emptyBox = props.intervals.map((item, index) => {
-            return (<div key={index} className="schedule-col" style={{ width: width + "px" }}></div>)
+        const dayOfWeek = index + 1;
+        const emptyBox = props.intervals.map((inv, index) => {
+            return (
+                    <div
+                        onClick={onSelectTime}
+                        data-day={dayOfWeek}
+                        data-start_time={inv.start.toFormat('HH:mm')} 
+                        data-end_time={inv.end.toFormat('HH:mm')} 
+                        key={index}  
+                        className="schedule-col" style={{ width: width + "px" }}></div>
+                    )
         });
         return (
             <div key={index} className="schedule-row">
@@ -39,11 +52,12 @@ const Table = (props) => {
                 {
                     props.courses.map((course, _index) => {
                         const widthPx = mapTimeToPx(course.start_time, course.end_time);
-                        const dayOfWeek = index + 1;
                         const shouldRender = course.day == dayOfWeek;
                         return (
                             shouldRender ?
-                            <div key={_index} style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className="highlight-table">
+                            <div 
+                                key={_index} 
+                                style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className="highlight-table">
                                 { course.start_time.toFormat('HH:mm') }
                             </div> : null
                         );

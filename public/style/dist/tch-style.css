@@ -114,18 +114,19 @@ body {
   flex-grow: 0;
   flex-shrink: 0; }
 
-.schedule-col-h {
+.schedule-col, .schedule-col-h {
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
   padding: 0.7em;
+  cursor: pointer; }
+  .schedule-col:active, .schedule-col-h:active {
+    background-color: #009933; }
+
+.schedule-col-h {
   font-weight: bold;
   text-align: center;
   background-color: whitesmoke; }
 
-.schedule-col {
-  box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
-  padding: 0.7em; }
-
-.schedule-col:hover {
+.schedule-col:hover, .schedule-col-h:hover {
   box-shadow: inset 100px 100px rgba(0, 0, 0, 0.05); }
 
 @media (max-width: 768px) {

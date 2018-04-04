@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Grid, Row, Col,   } from "react-bootstrap";
 import { DateTime, Interval } from "luxon";
+import axios from "axios";
 
 import ControlPanel from "./ControlPanel";
 import AddPanel from "./AddPanel";
@@ -50,6 +51,7 @@ class Schedule extends Component {
         this.hideAddModal = this.hideAddModal.bind(this);
         this.selectStartTime = this.selectStartTime.bind(this);
         this.selectEndTime = this.selectEndTime.bind(this);
+        this.selectTime = this.selectTime.bind(this);
     }
 
     showAddModal() {
@@ -85,24 +87,38 @@ class Schedule extends Component {
         })
     }
 
+    selectTime(day, start, end) {
+        console.log("select day ", day, "select start ", start, "select end ", end)
+        this.props.selectTime(day, start, end);
+    }
+
 
     render() {
+
+        const subjects = this.props.courses.map((c) => c.subject);
+
         return (
             <div>
                 <div className="panel panel-default">
                     <div className="panel-heading"><h1>ตารางสอน</h1></div>
                     <div className="panel-body">
                     <AddModal hideAddModal={this.hideAddModal} toggleModal={this.toggleModal} show={this.state.showAddModal} />
-                    <ControlPanel toggleModal={this.toggleModal} selectTerm={this.props.selectTerm} terms={this.props.terms} />
+                    <ControlPanel 
+                        toggleModal={this.toggleModal} 
+                        selectTerm={this.props.selectTerm} 
+                        terms={this.props.terms} />
                     <AddPanel 
                         timeList={this.timeList}
                         startTime={this.state.startTime}
                         endTime={this.state.endTime}
                         selectStartTime={this.selectStartTime}
                         selectEndTime={this.selectEndTime}
+                        schedule={this.props.schedule}
                         rooms={this.props.rooms} 
+                        subjects={subjects}
                         days={this.days} />
                     <Table
+                        selectTime={this.selectTime}
                         startTime={this.startTime}
                         endTime={this.endTime} 
                         courses={this.state.courses} 
@@ -113,8 +129,6 @@ class Schedule extends Component {
             </div>
         )
     }
-
-
 }
 
 export default Schedule;

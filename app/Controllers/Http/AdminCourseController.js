@@ -77,6 +77,28 @@ class AdminCourseController {
     }
   }
 
+  async courseByTeacher({ params }) {
+    try {
+      let courses = await Course.query()
+        .with("subject")
+        .with("room")
+        .with("teacher")
+        .with("term")
+        .with("group")
+        .where("courses.status", "=", "A")
+        .andWhere('courses.teacher_id', params.id)
+        .andWhere('courses.teacher_accepted', 0)
+        .andWhere('courses.approved', '=', 0)
+        .fetch();
+
+      courses = withValid(courses.toJSON());
+
+      return json_res(courses);
+    } catch (ex) {
+      return json_res_error(ex.toString());
+    }
+  }
+
   async courseByTerm({ params }) {
     try {
 

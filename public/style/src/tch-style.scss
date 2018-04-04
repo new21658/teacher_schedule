@@ -154,17 +154,23 @@ $schedule_width: 1140px;
     flex-grow: 0;
     flex-shrink: 0; 
 }
-.schedule-col-h {
+
+.schedule-col {
     box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
     padding: 0.7em;
+    cursor: pointer;
+    &:active {
+        background-color: $color_primary;
+    }
+ }
+
+.schedule-col-h {
+    @extend .schedule-col;
     font-weight: bold;
     text-align: center;
     background-color: whitesmoke;
 }
-.schedule-col {
-   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
-    padding: 0.7em;
-}
+
 .schedule-col:hover {
     box-shadow: inset 100px 100px rgba(0, 0, 0, 0.05);
 }

@@ -2,7 +2,7 @@
 @section('body')
 <div id="root_app" class="container">
 <div class="row">
-    <h2 class="col-sm-12 page-header">จัดการตารางสอน</h2>
+    <h2 class="col-sm-12 page-header">จัดการคอร์ส</h2>
     <div class="tch-panel-control-fluid row">
     <div class="col-sm-3">
         <div class="input-group">
@@ -36,7 +36,8 @@
                         <tr>
                             <th class="text-center">ลำดับ</th>
                             <th>สถานะ</th>
-                            <th>เทอม</th>
+                            <th>Approve</th>
+                            <th>ปีการศึกษา</th>
                             <th>รหัสวิชา</th>
                             <th>ชื่อวิชา</th>
                             <th>ผู้สอน</th>
@@ -46,7 +47,6 @@
                             <th>ห้อง</th>
                             <th>ลบ</th>
                             <th>แก้ไข</th>
-                            <th>Approve</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,6 +54,9 @@
                             <tr v-for="(item, index) in course_with_not_approved" :key="index">
                                 <td class="text-center">@{{ ++index }}</td>
                                 <td><span :class="['label', item.valid ? 'label-success' : 'label-default']">@{{ item.valid ? 'ตอบรับแล้ว' : 'รอการตอบรับ' }}</span></td>
+                                <td>
+                                    <button @click="on_click_approve($event)" :disabled="!item.valid" :data-id="item.course_id"  class="btn btn-sm btn-success">Approve</button>
+                                </td>
                                 <td>@{{ "ปี " + (parseInt(item.term.term_year) + 543) + " เทอม " + item.term.term }}</td>
                                 <td>@{{ item.subject.subject_code }}</td>
                                 <td>@{{ item.subject.subject_name }}</td>
@@ -70,9 +73,6 @@
                                     <i class="fas fa-trash-alt"></i> @{{ item.status == 'A' ? 'ลบ' : '' }}</button>
                                 </td>
                                 <td><button @click="on_clik_edit($event)" :data-id="item.course_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
-                                <td>
-                                    <button @click="on_click_approve($event)" :disabled="!item.valid" :data-id="item.course_id"  class="btn btn-sm btn-success">Approve</button>
-                                </td>
                             </tr>
                         </template>
                         <template v-else>

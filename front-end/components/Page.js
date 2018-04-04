@@ -9,6 +9,7 @@ import axios from "axios";
 import { receiveUser } from "../redux/actions/userAction";
 import { receiveTerm } from "../redux/actions/termAction";
 import { receiveRoom } from "../redux/actions/roomAction";
+import { receiveOwnCourses } from "../redux/actions/ownCourseAction";
 
 if(typeof window !== "undefined") {
     window.store = store;
@@ -41,6 +42,13 @@ const wrapper = (Content) => {
                 axios.get('/api/user_data').then(function(res) {
                     const data = res.data.data;
                     store.dispatch(receiveUser(data));
+                    console.log("teacher id: ", data.teacher_id);
+                    if(data.teacher_id !== undefined || data.teacher_id !== null) {
+                        axios.get('/api/course_by_teacher/' + data.teacher_id).then((res) => {
+                            const data = res.data.data;
+                            store.dispatch(receiveOwnCourses(data));
+                        });
+                    }
                 });
                 axios.get('/api/term_all').then((res) => {
                     const data = res.data.data;
@@ -49,7 +57,7 @@ const wrapper = (Content) => {
                 axios.get('/api/study_room_all').then((res) => {
                     const data = res.data.data;
                     store.dispatch(receiveRoom(data));
-                })
+                });
             }
             }
         }
