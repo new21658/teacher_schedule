@@ -108,6 +108,9 @@ class Schedule extends Component {
                         selectTerm={this.props.selectTerm} 
                         terms={this.props.terms} />
                     <AddPanel 
+                        changeDay={this.props.changeDay}
+                        changeStartTime={this.props.changeStartTime}
+                        changeEndTime={this.props.changeEndTime}
                         timeList={this.timeList}
                         startTime={this.state.startTime}
                         endTime={this.state.endTime}
@@ -118,6 +121,7 @@ class Schedule extends Component {
                         subjects={subjects}
                         days={this.days} />
                     <Table
+                        schedule={this.props.schedule}
                         selectTime={this.selectTime}
                         startTime={this.startTime}
                         endTime={this.endTime} 

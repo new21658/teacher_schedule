@@ -31,6 +31,9 @@ $schedule_width: 1140px;
 .tch-text-primary {
     color: $color_primary;
 }
+.tch-text-yellow {
+    color: $color_yellow;
+}
 
 .tch-text-light {
     color: rgba(255, 255, 255, 0.9);
@@ -136,6 +139,10 @@ $schedule_width: 1140px;
     height: 100%;
     padding: 5px;
 }
+.highlight-table-selected {
+    @extend .highlight-table;
+    background-color: $color_yellow;
+}
 .schedule {
     width: $schedule_width;
     margin: 0 auto;
@@ -159,8 +166,12 @@ $schedule_width: 1140px;
     box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
     padding: 0.7em;
     cursor: pointer;
+    background-color: white;
     &:active {
         background-color: $color_primary;
+    }
+    &:focus {
+        background-color: rgba(255, 153, 0, 0.5)
     }
  }
 

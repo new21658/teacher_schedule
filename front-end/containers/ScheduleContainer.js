@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import Schedule from "../components/index/Schedule";
-import { selectTerm, selectTime } from "../redux/actions/scheduleAction";
+import { selectTerm, selectTime, changeDay, changeStartTime, changeEndTime } from "../redux/actions/scheduleAction";
 
 const mapStateToProps = (state) => {
     return {
@@ -19,6 +19,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         selectTime: (day, start, end) => {
             dispatch(selectTime(day, start, end))
+        },
+        changeDay: (day) => {
+            dispatch(changeDay(day))
+        },
+        changeStartTime: (time) => {
+            dispatch(changeStartTime(time))
+        },
+        changeEndTime: (time) => {
+            dispatch(changeEndTime(time))
         }
     }
 }

@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { RECEIVE_USER } from "../actions/userAction";
 import { RECEIVE_TERM } from "../actions/termAction";
-import { SELECT_TERM, SELECT_TIME } from "../actions/scheduleAction";
+import { SELECT_TERM, SELECT_TIME, CHANGE_START_TIME, CHANGE_END_TIME, CHANGE_DAY } from "../actions/scheduleAction";
 import { RECEIVE_ROOM } from "../actions/roomAction"
 import { FETCH_OWN_COURSES, RECEIVE_OWN_COURSES } from "../actions/ownCourseAction"
 
@@ -46,6 +46,9 @@ let schedule = (state={
                  startTimeSelected: action.payload.start, 
                  endTimeSelected: action.payload.end 
                 })
+        case CHANGE_DAY: return Object.assign({}, state, { daySelected: action.payload })
+        case CHANGE_START_TIME: return Object.assign({}, state, { startTimeSelected: action.payload });
+        case CHANGE_END_TIME: return Object.assign({}, state, { endTimeSelected: action.payload });
         default : return state;
     }
     return state;

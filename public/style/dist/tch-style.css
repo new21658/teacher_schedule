@@ -1,139 +1,186 @@
 body {
-  background-color: whitesmoke; }
+  background-color: whitesmoke;
+}
 
 .container {
-  width: 90%; }
+  width: 90%;
+}
 
 .navbar {
-  border: 0px !important; }
+  border: 0px !important;
+}
 
 .tch-btn {
-  color: white; }
+  color: white;
+}
 
 .tch-btn-primary {
   background-color: #009933;
-  color: white; }
+  color: white;
+}
 
 .tch-text-primary {
-  color: #009933; }
+  color: #009933;
+}
+
+.tch-text-yellow {
+  color: #ff9900;
+}
 
 .tch-text-light {
-  color: rgba(255, 255, 255, 0.9); }
+  color: rgba(255, 255, 255, 0.9);
+}
 
 .tch-shadow-lg {
-  box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.1); }
+  box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.1);
+}
 
 .tch-shadow-sm {
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1); }
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+}
 
 .tch-link {
   cursor: pointer;
-  text-decoration: none; }
+  text-decoration: none;
+}
 
 .tch-link:hover {
-  text-decoration: none; }
+  text-decoration: none;
+}
 
 .tch-link-light {
-  color: rgba(255, 255, 255, 0.8); }
+  color: rgba(255, 255, 255, 0.8);
+}
 
 .tch-link-light:hover {
-  color: white; }
+  color: white;
+}
 
 .tch-header, .tch-header-dark {
   background-color: #009933;
   line-height: 100px;
-  color: white; }
+  color: white;
+}
 
 .tch-header-dark {
-  background-color: rgba(0, 0, 0, 0.8); }
+  background-color: rgba(0, 0, 0, 0.8);
+}
 
 .tch-nav {
   border-radius: 0px;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
   background-color: white;
   border-top: 0px solid rgba(0, 0, 0, 0.1);
-  border: 0px; }
+  border: 0px;
+}
 
 .tch-nav li a {
-  color: rgba(0, 0, 0, 0.6); }
+  color: rgba(0, 0, 0, 0.6);
+}
 
 .tch-nav li a:hover {
   background: none;
   box-shadow: inset 100px 100px 0 rgba(0, 0, 0, 0.1);
-  color: black; }
+  color: black;
+}
 
 .tch-nav li.active a {
   background-color: #009933 !important;
-  color: white !important; }
+  color: white !important;
+}
 
 .tch-navbar-toggle span {
-  background-color: black; }
+  background-color: black;
+}
 
 .tch-panel-control-fluid, .tch-panel-control {
   padding-top: 1.3em;
   padding-bottom: 1.3em;
-  margin: 0 auto; }
+  margin: 0 auto;
+}
 
 .tch-panel-control {
-  max-width: 1140px; }
+  max-width: 1140px;
+}
 
 .tch-bg-dark {
-  background-color: rgba(0, 0, 0, 0.1); }
+  background-color: rgba(0, 0, 0, 0.1);
+}
 
 .tch-bg-yellow {
-  background-color: #ff9900; }
+  background-color: #ff9900;
+}
 
 .tch-body {
   background-color: white;
-  box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.1); }
+  box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.1);
+}
 
-.highlight-table {
+.highlight-table, .highlight-table-selected {
   position: absolute;
   z-index: 99;
   background-color: rgba(0, 153, 51, 0.3);
   top: 0 !important;
   left: 0 !important;
   height: 100%;
-  padding: 5px; }
+  padding: 5px;
+}
+
+.highlight-table-selected {
+  background-color: #ff9900;
+}
 
 .schedule {
   width: 1140px;
   margin: 0 auto;
-  padding: 0em 0 1em 0; }
+  padding: 0em 0 1em 0;
+}
 
 .schedule-row {
   position: relative;
   display: flex;
   flex-direction: row;
-  justify-content: start; }
+  justify-content: start;
+}
 
 .schedule-row:hover {
-  background-color: rgba(0, 0, 0, 0.03); }
+  background-color: rgba(0, 0, 0, 0.03);
+}
 
 .schedule-row div {
   flex-grow: 0;
-  flex-shrink: 0; }
+  flex-shrink: 0;
+}
 
 .schedule-col, .schedule-col-h {
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
   padding: 0.7em;
-  cursor: pointer; }
-  .schedule-col:active, .schedule-col-h:active {
-    background-color: #009933; }
+  cursor: pointer;
+  background-color: white;
+}
+.schedule-col:active, .schedule-col-h:active {
+  background-color: #009933;
+}
+.schedule-col:focus, .schedule-col-h:focus {
+  background-color: rgba(255, 153, 0, 0.5);
+}
 
 .schedule-col-h {
   font-weight: bold;
   text-align: center;
-  background-color: whitesmoke; }
+  background-color: whitesmoke;
+}
 
 .schedule-col:hover, .schedule-col-h:hover {
-  box-shadow: inset 100px 100px rgba(0, 0, 0, 0.05); }
+  box-shadow: inset 100px 100px rgba(0, 0, 0, 0.05);
+}
 
 @media (max-width: 768px) {
   .tch-header, .tch-header-dark {
-    line-height: 50px; }
+    line-height: 50px;
+  }
 
   .tch-nav li a {
-    padding: 1.3em; } }
-
-/*# sourceMappingURL=tch-style.css.map */
+    padding: 1.3em;
+  }
+}

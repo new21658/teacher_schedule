@@ -25,6 +25,7 @@ const wrapper = (Content) => {
                     <Provider store={store}>
                     <div>
                         <Head>
+                            <title>Course Scheduling</title>
                             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
                             <link rel="stylesheet" href="/_next/static/style.css" />
                             <link rel="stylesheet" href="/style/dist/tch-style.css" />
