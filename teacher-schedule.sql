@@ -26,18 +26,22 @@ CREATE TABLE IF NOT EXISTS `courses` (
   `status` enum('A','D') COLLATE utf8_unicode_ci DEFAULT 'A',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `teacher_accepted` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table teacher_schedule.courses: ~3 rows (approximately)
+-- Dumping data for table teacher_schedule.courses: ~9 rows (approximately)
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` (`course_id`, `subject_id`, `study_room_id`, `teacher_id`, `term_id`, `start_time`, `end_time`, `day`, `student_group_id`, `approved`, `status`, `created_at`, `updated_at`) VALUES
-	(1, 1, NULL, 8, 2, NULL, NULL, 0, 1, 0, 'D', '2018-04-03 12:09:23', '2018-04-03 12:13:08'),
-	(3, 1, NULL, 8, 2, NULL, NULL, NULL, 1, 0, 'A', '2018-04-03 12:09:23', '2018-04-03 12:09:23'),
-	(4, 1, 1, 8, 2, '2018-04-02 13:14:12', '2018-04-02 13:14:13', 1, 1, 0, 'A', '2018-04-03 12:09:23', '2018-04-03 13:00:47'),
-	(5, 1, NULL, 1, 2, NULL, NULL, NULL, 1, 0, 'A', '2018-04-03 12:09:27', '2018-04-03 12:09:27'),
-	(6, 1, NULL, 8, 2, NULL, NULL, NULL, 1, 0, 'D', '2018-04-03 12:29:17', '2018-04-03 12:31:27'),
-	(7, 2, NULL, 2, 2, NULL, NULL, NULL, 2, 0, 'A', '2018-04-03 12:40:56', '2018-04-03 12:49:03');
+INSERT INTO `courses` (`course_id`, `subject_id`, `study_room_id`, `teacher_id`, `term_id`, `start_time`, `end_time`, `day`, `student_group_id`, `approved`, `status`, `created_at`, `updated_at`, `teacher_accepted`) VALUES
+	(1, 1, NULL, 8, 2, NULL, NULL, 0, 1, 0, 'D', '2018-04-03 12:09:23', '2018-04-03 12:13:08', 0),
+	(3, 1, NULL, 8, 2, NULL, NULL, NULL, 1, 0, 'A', '2018-04-03 12:09:23', '2018-04-03 12:09:23', 0),
+	(4, 1, 1, 8, 2, '2018-04-02 13:14:12', '2018-04-02 13:14:13', 1, 1, 1, 'A', '2018-04-03 12:09:23', '2018-04-03 21:32:16', 1),
+	(5, 1, NULL, 1, 2, NULL, NULL, NULL, 1, 0, 'A', '2018-04-03 12:09:27', '2018-04-03 12:09:27', 0),
+	(6, 1, NULL, 8, 2, NULL, NULL, NULL, 1, 0, 'D', '2018-04-03 12:29:17', '2018-04-03 12:31:27', 0),
+	(7, 2, NULL, 2, 2, NULL, NULL, NULL, 2, 0, 'D', '2018-04-03 12:40:56', '2018-04-03 20:23:10', 0),
+	(8, 1, NULL, 8, 2, NULL, NULL, NULL, 2, 0, 'A', '2018-04-03 20:24:00', '2018-04-03 20:24:00', 0),
+	(9, 2, NULL, 8, 2, NULL, NULL, NULL, 2, 0, 'A', '2018-04-03 20:24:07', '2018-04-03 20:24:07', 0),
+	(10, 2, NULL, 8, 2, NULL, NULL, NULL, 3, 0, 'A', '2018-04-03 20:24:12', '2018-04-03 20:24:12', 0);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 
 -- Dumping structure for table teacher_schedule.roles
@@ -196,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table teacher_schedule.users: ~4 rows (approximately)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `full_name`, `role_id`, `teacher_id`, `status`, `created_at`, `updated_at`) VALUES
-	(12, 'teacher123', '$2a$10$e/Cpvq0TfgQFAMdLvCkTj.sUfUTJLpTtBQhQc4c0.m05W9e22s4zu', 'new_21658777@hotmail.com', 'Onisuka', 1, 0, 'A', '2018-03-19 14:01:45', '2018-04-01 23:12:27'),
+	(12, 'teacher123', '$2a$10$e/Cpvq0TfgQFAMdLvCkTj.sUfUTJLpTtBQhQc4c0.m05W9e22s4zu', 'new_21658777@hotmail.com', 'Onisuka', 1, 8, 'A', '2018-03-19 14:01:45', '2018-04-01 23:12:27'),
 	(13, 'root', '$2a$10$ySS.4nVvM41Gw1xFAOyfnO40ANubOZfvfFZrWziOZ2OGVdZxkbrt2', 'new11439@gmail.com', 'Puvanartvv', 2, 0, 'A', '2018-03-19 15:50:52', '2018-03-19 15:55:50'),
 	(17, 'new21658', '$2a$10$7tFmkiKmcjG0/wIAXBT5BuoCuxV1iG0sEQKrqugeuT.MIIymrnFA2', 'new11439@gmail.com', 'Puvanart', 1, 12, 'A', '2018-03-19 18:11:14', '2018-03-21 10:58:35'),
 	(21, 'user', '$2a$10$3q3Pgbp4UkBL7O/8kpmXM.Y9j8SQa5rlPgnIhIL8vr.zLrjCy8Eb2', 'new11439@gmail.com', 'Puvanart', 1, 16, 'A', '2018-03-20 23:53:07', '2018-03-22 10:58:44');

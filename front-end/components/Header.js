@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = (props) => {
     return (
-        <div className="container-fluid">
+    <div className="container-fluid">
         <div className="row tch-header">
             <div className="col-sm-6">
                     <a className="tch-link" style={{fontSize: '2em' ,color: 'rgba(0, 0, 0, 0.5)'}}><color className="tch-text-light">Course</color> Scheduling</a>

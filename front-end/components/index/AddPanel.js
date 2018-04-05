@@ -14,6 +14,9 @@ export default class AddPanel extends Component {
 
         this.selectStartTime = this.selectStartTime.bind(this);
         this.selectEndTime = this.selectEndTime.bind(this)
+        this.onChangeStartTime = this.onChangeStartTime.bind(this)
+        this.onChangeEndTime = this.onChangeEndTime.bind(this)
+        this.onChangeDay = this.onChangeDay.bind(this)
     }
 
     selectStartTime(moment) {
@@ -22,6 +25,21 @@ export default class AddPanel extends Component {
 
     selectEndTime(moment) {
         this.props.selectEndTime(moment.format("HH:mm"))
+    }
+
+    onChangeDay = (evt) => {
+        this.props.changeDay(evt.target.value)
+    }
+
+    onChangeStartTime = (evt) => {
+        this.props.changeStartTime(evt.target.value)
+    }
+
+    onChangeEndTime = (evt) => {
+        const luxonStartTime = DateTime.fromFormat(this.props.schedule.startTimeSelected, 'HH:mm')
+        const luxonEndTime = DateTime.fromFormat(evt.target.value, 'HH:mm')
+        if(luxonEndTime < luxonStartTime) return alert('End time must after start time'); // end time must greater than start time
+        this.props.changeEndTime(evt.target.value)
     }
 
     render() {
@@ -64,7 +82,9 @@ export default class AddPanel extends Component {
         const mapSubjects = this.props.subjects.map((subject, index) => (
             <option key={index} value={subject.subject_id}>{ subject.subject_name + " (" + subject.subject_code + ")" }</option>
         ));
-        
+
+
+                 
 
 
         return (
@@ -83,14 +103,14 @@ export default class AddPanel extends Component {
                         <div className="col-sm-6 text-right">
                             <label style={{minWidth: "50px"}} className="label-control"></label>
                             <div className="form-group">
-                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จองคอร์ส</button>
+                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-sm-3">
                             <label className="label-control">ห้อง</label>
-                            <select className="form-control">
+                            <select  className="form-control">
                                 <option value={-1}>กรุณาเลือกห้อง</option>
                                 {
                                     this.props.rooms.map((room, index) => {
@@ -103,7 +123,7 @@ export default class AddPanel extends Component {
                         </div>
                         <div className="col-sm-3">
                             <label style={{minWidth: "50px"}} className="label-control">วัน</label>
-                            <select className="form-control">
+                            <select onChange={this.onChangeDay} className="form-control">
                                 <option value={-1}>กรุณาเลือกวัน</option>
                                 { mapDaysList }
                             </select>
@@ -111,12 +131,12 @@ export default class AddPanel extends Component {
                         <div className="col-sm-4">
                             <label style={{minWidth: "50px"}} className="label-control">เวลา</label>
                             <div className="input-group">
-                                <select className="form-control">
+                                <select onChange={this.onChangeStartTime} className="form-control">
                                     <option>เริ่ม</option>
                                     { mapStartTimeList }
                                 </select>
                                 <span className="input-group-addon">ถึง</span>
-                                <select className="form-control">
+                                <select onChange={this.onChangeEndTime} className="form-control">
                                     <option>สิ้นสุด</option>
                                     { mapEndTimeList }
                                 </select>
