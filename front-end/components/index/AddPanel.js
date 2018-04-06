@@ -14,7 +14,10 @@ export default class AddPanel extends Component {
 
         this.selectStartTime = this.selectStartTime.bind(this);
         this.selectEndTime = this.selectEndTime.bind(this)
+<<<<<<< HEAD
         this.isChangeTimeValid = this.isChangeTimeValid.bind(this);
+=======
+>>>>>>> b60f2928bb79097de80aea77356634e3334c3bbb
         this.onChangeStartTime = this.onChangeStartTime.bind(this)
         this.onChangeEndTime = this.onChangeEndTime.bind(this)
         this.onChangeDay = this.onChangeDay.bind(this)
@@ -32,6 +35,7 @@ export default class AddPanel extends Component {
         this.props.changeDay(evt.target.value)
     }
 
+<<<<<<< HEAD
     isChangeTimeValid = (startTime, endTime) => {
         const luxonStartTime = DateTime.fromFormat(startTime, 'HH:mm')
         const luxonEndTime = DateTime.fromFormat(endTime, 'HH:mm')
@@ -40,11 +44,20 @@ export default class AddPanel extends Component {
 
     onChangeStartTime = (evt) => {
         if(!this.isChangeTimeValid(evt.target.value, this.props.schedule.endTimeSelected)) return alert('Start time must before end time');
+=======
+    onChangeStartTime = (evt) => {
+>>>>>>> b60f2928bb79097de80aea77356634e3334c3bbb
         this.props.changeStartTime(evt.target.value)
     }
 
     onChangeEndTime = (evt) => {
+<<<<<<< HEAD
         if(!this.isChangeTimeValid(this.props.schedule.startTimeSelected, evt.target.value)) return alert('End time must after start time');
+=======
+        const luxonStartTime = DateTime.fromFormat(this.props.schedule.startTimeSelected, 'HH:mm')
+        const luxonEndTime = DateTime.fromFormat(evt.target.value, 'HH:mm')
+        if(luxonEndTime < luxonStartTime) return alert('End time must after start time'); // end time must greater than start time
+>>>>>>> b60f2928bb79097de80aea77356634e3334c3bbb
         this.props.changeEndTime(evt.target.value)
     }
 
