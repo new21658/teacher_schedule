@@ -5,7 +5,9 @@ import { selectTerm, selectTime, changeDay, changeStartTime, changeEndTime } fro
 const mapStateToProps = (state) => {
     return {
         terms: state.terms,
-        courses: state.courses,
+        courses: state.courses.filter((c) => {
+            return state.schedule.termSelected == c.term_id
+        }),
         rooms: state.rooms,
         user: state.user,
         schedule: state.schedule

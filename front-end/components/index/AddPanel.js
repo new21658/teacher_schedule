@@ -14,10 +14,7 @@ export default class AddPanel extends Component {
 
         this.selectStartTime = this.selectStartTime.bind(this);
         this.selectEndTime = this.selectEndTime.bind(this)
-<<<<<<< HEAD
         this.isChangeTimeValid = this.isChangeTimeValid.bind(this);
-=======
->>>>>>> b60f2928bb79097de80aea77356634e3334c3bbb
         this.onChangeStartTime = this.onChangeStartTime.bind(this)
         this.onChangeEndTime = this.onChangeEndTime.bind(this)
         this.onChangeDay = this.onChangeDay.bind(this)
@@ -35,8 +32,8 @@ export default class AddPanel extends Component {
         this.props.changeDay(evt.target.value)
     }
 
-<<<<<<< HEAD
     isChangeTimeValid = (startTime, endTime) => {
+        if(startTime==-1 || endTime==-1) return true;
         const luxonStartTime = DateTime.fromFormat(startTime, 'HH:mm')
         const luxonEndTime = DateTime.fromFormat(endTime, 'HH:mm')
         return luxonStartTime < luxonEndTime; // end time must greater than start time
@@ -44,20 +41,11 @@ export default class AddPanel extends Component {
 
     onChangeStartTime = (evt) => {
         if(!this.isChangeTimeValid(evt.target.value, this.props.schedule.endTimeSelected)) return alert('Start time must before end time');
-=======
-    onChangeStartTime = (evt) => {
->>>>>>> b60f2928bb79097de80aea77356634e3334c3bbb
         this.props.changeStartTime(evt.target.value)
     }
 
     onChangeEndTime = (evt) => {
-<<<<<<< HEAD
         if(!this.isChangeTimeValid(this.props.schedule.startTimeSelected, evt.target.value)) return alert('End time must after start time');
-=======
-        const luxonStartTime = DateTime.fromFormat(this.props.schedule.startTimeSelected, 'HH:mm')
-        const luxonEndTime = DateTime.fromFormat(evt.target.value, 'HH:mm')
-        if(luxonEndTime < luxonStartTime) return alert('End time must after start time'); // end time must greater than start time
->>>>>>> b60f2928bb79097de80aea77356634e3334c3bbb
         this.props.changeEndTime(evt.target.value)
     }
 
@@ -102,7 +90,11 @@ export default class AddPanel extends Component {
             <option key={index} value={subject.subject_id}>{ subject.subject_name + " (" + subject.subject_code + ")" }</option>
         ));
 
-
+        const mapRooms = this.props.rooms.map((room, index) => {
+            return (
+                <option key={index} value={room.study_room_id} >{ "ห้อง " + room.study_room_code + ' ประเภท ' + room.study_room_type + " " + room.study_room_location }</option>
+            )
+        })
                  
 
 
@@ -114,7 +106,9 @@ export default class AddPanel extends Component {
                             <label className="label-control">วิชา</label>
                             <div className="form-group">
                                 <select className="form-control">
-                                    <option>เลือกวิชา</option>
+                                    {
+                                      mapSubjects.length < 1 ? <option>ไม่พบวิชา</option> : <option>เลือกวิชา</option>
+                                    }
                                     { mapSubjects }
                                 </select>
                             </div>
@@ -130,14 +124,8 @@ export default class AddPanel extends Component {
                         <div className="col-sm-3">
                             <label className="label-control">ห้อง</label>
                             <select  className="form-control">
-                                <option value={-1}>กรุณาเลือกห้อง</option>
-                                {
-                                    this.props.rooms.map((room, index) => {
-                                        return (
-                                            <option key={index} value={room.study_room_id} >{ "ห้อง " + room.study_room_code + ' ประเภท ' + room.study_room_type + " " + room.study_room_location }</option>
-                                        )
-                                    })
-                                }
+                                { mapRooms.length < 1 ? <option>ไม่พบห้อง</option> : <option value={-1}>กรุณาเลือกห้อง</option> }
+                                { mapRooms }
                             </select>
                         </div>
                         <div className="col-sm-3">
