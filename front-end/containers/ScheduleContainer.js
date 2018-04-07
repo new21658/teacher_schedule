@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Schedule from "../components/index/Schedule";
-import { selectTerm, selectTime, changeDay, changeStartTime, changeEndTime } from "../redux/actions/scheduleAction";
+import { selectTerm, selectTime, changeDay, changeStartTime, changeEndTime, changeCourse } from "../redux/actions/scheduleAction";
+import axios from 'axios'
 
 const mapStateToProps = (state) => {
     return {
@@ -14,7 +15,7 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         selectTerm: (term) => {
             dispatch(selectTerm(term));
@@ -30,6 +31,14 @@ const mapDispatchToProps = (dispatch) => {
         },
         changeEndTime: (time) => {
             dispatch(changeEndTime(time))
+        },
+        changeCourse: (course) => {
+            dispatch(changeCourse(course));
+        },
+        booking: () => {
+            axios.post('/api/course_booking', {
+
+            })
         }
     }
 }

@@ -18,6 +18,7 @@ export default class AddPanel extends Component {
         this.onChangeStartTime = this.onChangeStartTime.bind(this)
         this.onChangeEndTime = this.onChangeEndTime.bind(this)
         this.onChangeDay = this.onChangeDay.bind(this)
+        this.onChangeCourse = this.onChangeCourse.bind(this)
     }
 
     selectStartTime(moment) {
@@ -47,6 +48,10 @@ export default class AddPanel extends Component {
     onChangeEndTime = (evt) => {
         if(!this.isChangeTimeValid(this.props.schedule.startTimeSelected, evt.target.value)) return alert('End time must after start time');
         this.props.changeEndTime(evt.target.value)
+    }
+
+    onChangeCourse = (evt) => {
+        this.props.changeCourse(evt.target.value)
     }
 
     render() {
@@ -87,7 +92,7 @@ export default class AddPanel extends Component {
         });
 
         const mapSubjects = this.props.subjects.map((subject, index) => (
-            <option key={index} value={subject.subject_id}>{ subject.subject_name + " (" + subject.subject_code + ")" }</option>
+            <option key={index} value={subject.course_id}>{ subject.subject_name + " (" + subject.subject_code + ")" }</option>
         ));
 
         const mapRooms = this.props.rooms.map((room, index) => {
@@ -105,7 +110,7 @@ export default class AddPanel extends Component {
                         <div className="col-sm-6">
                             <label className="label-control">วิชา</label>
                             <div className="form-group">
-                                <select className="form-control">
+                                <select onChange={this.onChangeCourse} className="form-control">
                                     {
                                       mapSubjects.length < 1 ? <option>ไม่พบวิชา</option> : <option>เลือกวิชา</option>
                                     }

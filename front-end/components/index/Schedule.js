@@ -95,7 +95,10 @@ class Schedule extends Component {
 
     render() {
 
-        const subjects = this.props.courses.map((c) => c.subject);
+        const subjects = this.props.courses.map((c) => {
+            c.subject.course_id = c.course_id;
+            return c.subject;
+        });
 
         return (
             <div>
@@ -108,6 +111,7 @@ class Schedule extends Component {
                         selectTerm={this.props.selectTerm} 
                         terms={this.props.terms} />
                     <AddPanel 
+                        changeCourse={this.props.changeCourse}
                         changeDay={this.props.changeDay}
                         changeStartTime={this.props.changeStartTime}
                         changeEndTime={this.props.changeEndTime}

@@ -130,6 +130,10 @@ class AdminCourseController {
     }
   }
 
+  /**
+   * 
+   * ADMIN ONLY 
+   */
   async updateCourse({ request }) {
     try {
 
@@ -145,6 +149,29 @@ class AdminCourseController {
       return json_res_error(ex.toString());
     }
   }
+
+  /**
+   * 
+   * TEACHER ONLY
+   */
+
+   async booking({ request }) {
+    try {
+
+      let req = request;
+      let course = await Course.find(request.input('id'));-
+      course.study_room_id = req.input('room');
+      course.day = req.input('day');
+      course.start_time = req.input('start_time');
+      course.end_time = req.input('end_time');
+      await course.save()
+      return json_res('Course Updated')
+    } catch (ex) {
+      return json_res_error(ex.toString());
+    }
+   }
+
+
 
   async approveCourse({ request }) {
     try {

@@ -36,8 +36,9 @@ nextApp.prepare().then(function() {
             Route.get('/course_by_term/:id', 'AdminCourseController.courseByTerm').as('admin_course_by_term');
             Route.post('/course_add', 'AdminCourseController.addCourse').as('admin_add_course');
             Route.post('/course_update', 'AdminCourseController.updateCourse').as('admin_update_course');
+            Route.post('/course_booking', 'AdminCourseController.booking').as('admin_course_booking');
             Route.post('/course_approve', 'AdminCourseController.approveCourse').as('admin_course_approve_course');
-            Route.post('/course_uodate_status', 'AdminCourseController.updateStatus').as('admin_course_update_status');
+            Route.post('/course_update_status', 'AdminCourseController.updateStatus').as('admin_course_update_status');
 
             Route.get('/user_all', 'AdminUserController.userAll').as('admin_user_all');
             Route.get('/user_search', 'AdminUserController.userSearch').as('admin_user_search');

@@ -2,7 +2,8 @@ export const SELECT_TERM = 'SELECT_TERM';
 export const SELECT_TIME = 'SELECT_TIME';
 export const CHANGE_START_TIME ='CHANGE_START_TIME';
 export const CHANGE_END_TIME = 'CHNGE_END_TIME';  
-export const CHANGE_DAY = 'CHANGE_DAY';; 
+export const CHANGE_DAY = 'CHANGE_DAY';
+export const CHANGE_COURSE = 'CHANGE_COURSE'; 
 
 
 export const selectTerm = (term) => {
@@ -37,5 +38,12 @@ export const changeDay = (day) => {
     return {
         type: CHANGE_DAY,
         payload: day
+    }
+}
+
+export const changeCourse = (course) => {
+    return {
+        type: CHANGE_COURSE,
+        payload: course
     }
 }
