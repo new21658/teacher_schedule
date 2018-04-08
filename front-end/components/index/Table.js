@@ -43,7 +43,11 @@ const Table = (props) => {
             return (
                     <OverlayTrigger trigger="focus" key={index}   placement="top" overlay={(
                         <Popover id="popover-positioned-top" >
-                            <strong>คุณได้เลือกเวลา <color className="tch-text-yellow">{  day + ' ' + startFormated + "-" + endFormated}</color> แล้ว</strong>
+                            {
+                                props.schedule.isOverlaps 
+                                ? <strong>เวลา <color className="text-danger">{  day + ' ' + startFormated + "-" + endFormated}</color> ไม่สามารถเลือกได้ กรุณาเลือกเวลาอื่น</strong>
+                                :<strong>คุณได้เลือกเวลา <color className="tch-text-yellow">{  day + ' ' + startFormated + "-" + endFormated}</color> แล้ว</strong>
+                            }
                         </Popover>
                     )}>
                         <div
@@ -77,7 +81,10 @@ const Table = (props) => {
                             <div 
                             key={index} 
                             style={{ width: widthPx, marginLeft: mapOffsetTime(luxonStart) }} 
-                            className="highlight-table-selected">
+                            className={[
+                                "highlight-table-selected",
+                                schedule.isOverlaps ? "active" : ""
+                            ].join(" ")}>
                             { luxonStart.toFormat('HH:mm') }
                             </div>) : null
                         );
@@ -104,6 +111,18 @@ const Table = (props) => {
 
     return (
         <div className="row">
+            {
+                props.schedule.startTimeSelected != -1 ?
+                props.schedule.endTimeSelected != -1 ?
+                props.schedule.daySelected != -1 ?
+                props.schedule.isOverlaps ?
+                (<p className="text-center col-sm-12">
+                    <strong className="text-right text-danger"><i className="fas fa-times-circle"></i> คุณไม่สามารถจองเวลานี้ได้ เนื่องจากถูกจองไว้แล้ว กรุณาเลือกเวลาอื่น</strong>
+                </p>) :
+                (<p className="text-center col-sm-12">
+                    <strong className="text-right text-success"><i className="fas fa-check-circle"></i> คุณสามารถจองเวลานี้ได้</strong>
+                </p>) : null : null : null
+            }
             <div className="table-responsive col-sm-12">
                 <div className="schedule">
                     <div className="schedule-row">

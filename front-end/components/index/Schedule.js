@@ -26,25 +26,25 @@ class Schedule extends Component {
             showAddModal: false,
             startTime: DateTime.local().toFormat("HH:mm"),
             endTime: DateTime.local().plus({ hours: 1 }).toFormat("HH:mm"),
-            courses: (() => {
-                return [
-                    {
-                    start_time: DateTime.fromObject({ hours: 7 }),
-                    end_time: DateTime.fromObject({ hours: 10 }),
-                    day: 1
-                },
-                {
-                    start_time: DateTime.fromObject({ hours: 8 }),
-                    end_time: DateTime.fromObject({ hours: 12, minutes: 30 }),
-                    day: 3
-                },
-                {
-                    start_time: DateTime.fromObject({ hours: 7 }),
-                    end_time: DateTime.fromObject({ hours: 7, minutes: 45 }),
-                    day: 5
-                }
-            ]
-            })()
+            // courses: (() => {
+            //     return [
+            //         {
+            //         start_time: DateTime.fromObject({ hours: 7 }),
+            //         end_time: DateTime.fromObject({ hours: 10 }),
+            //         day: 1
+            //     },
+            //     {
+            //         start_time: DateTime.fromObject({ hours: 8 }),
+            //         end_time: DateTime.fromObject({ hours: 12, minutes: 30 }),
+            //         day: 3
+            //     },
+            //     {
+            //         start_time: DateTime.fromObject({ hours: 7 }),
+            //         end_time: DateTime.fromObject({ hours: 7, minutes: 45 }),
+            //         day: 5
+            //     }
+            // ]
+            // })()
         }
         this.toggleModal = this.toggleModal.bind(this);
         this.showAddModal = this.showAddModal.bind(this);
@@ -95,10 +95,17 @@ class Schedule extends Component {
 
     render() {
 
-        const subjects = this.props.courses.map((c) => {
+        const subjects = this.props.ownCourses.map((c) => {
             c.subject.course_id = c.course_id;
             return c.subject;
         });
+
+        const mapCourses = this.props.courses.length > 0 ? this.props.courses.map((c) => {
+            c = Object.assign({}, c); // copy new obj
+            c.start_time = DateTime.fromFormat(c.start_time, 'HH:mm') || ''
+            c.end_time = DateTime.fromFormat(c.end_time, 'HH:mm') || ''
+            return c;
+        }) : [];
 
         return (
             <div>
@@ -111,6 +118,7 @@ class Schedule extends Component {
                         selectTerm={this.props.selectTerm} 
                         terms={this.props.terms} />
                     <AddPanel 
+                        booking={this.props.booking}
                         changeCourse={this.props.changeCourse}
                         changeDay={this.props.changeDay}
                         changeStartTime={this.props.changeStartTime}
@@ -129,7 +137,7 @@ class Schedule extends Component {
                         selectTime={this.selectTime}
                         startTime={this.startTime}
                         endTime={this.endTime} 
-                        courses={this.state.courses} 
+                        courses={mapCourses} 
                         days={this.days} 
                         intervals={this.intervals} />
                     </div>

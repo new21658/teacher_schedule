@@ -143,6 +143,10 @@ $schedule_width: 1140px;
     @extend .highlight-table;
     background-color: $color_yellow;
 }
+.highlight-table-selected.active {
+    background-color: red;
+    color: white;
+}
 .schedule {
     width: $schedule_width;
     margin: 0 auto;

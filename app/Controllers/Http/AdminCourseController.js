@@ -38,15 +38,21 @@ class AdminCourseController {
     }
   }
 
-  async courseAll() {
+  async courseAll({ request }) {
     try {
+      let query = request.get()
+      let status = query.status || ''
+      let approved = query.approved || '';
+      let term = query.term || '';
       let courses = await Course.query()
         .with("subject")
         .with("room")
         .with("teacher")
         .with("term")
         .with("group")
-        .where("courses.status", "=", "A")
+        .where("courses.status", "like", '%'+status+'%')
+        .andWhere('courses.approved', "like", '%'+approved+'%')
+        .andWhere('courses.term_id', 'like', '%'+term+'%')
         .fetch();
 
       courses = withValid(courses.toJSON());
@@ -57,25 +63,45 @@ class AdminCourseController {
     }
   }
 
-  async courseAllWithNotApproved() {
-    try {
-      let courses = await Course.query()
-        .with("subject")
-        .with("room")
-        .with("teacher")
-        .with("term")
-        .with("group")
-        .where("courses.status", "=", "A")
-        .andWhere('courses.approved', '=', 0)
-        .fetch();
+  // async courseAllWithApproved() {
+  //   try {
+  //     let courses = await Course.query()
+  //       .with("subject")
+  //       .with("room")
+  //       .with("teacher")
+  //       .with("term")
+  //       .with("group")
+  //       .where("courses.status", "=", "A")
+  //       .andWhere('courses.approved', '=', 1)
+  //       .fetch();
 
-      courses = withValid(courses.toJSON());
+  //     courses = withValid(courses.toJSON());
 
-      return json_res(courses);
-    } catch (ex) {
-      return json_res_error(ex.toString());
-    }
-  }
+  //     return json_res(courses);
+  //   } catch (ex) {
+  //     return json_res_error(ex.toString());
+  //   }
+  // }
+
+  // async courseAllWithNotApproved() {
+  //   try {
+  //     let courses = await Course.query()
+  //       .with("subject")
+  //       .with("room")
+  //       .with("teacher")
+  //       .with("term")
+  //       .with("group")
+  //       .where("courses.status", "=", "A")
+  //       .andWhere('courses.approved', '=', 0)
+  //       .fetch();
+
+  //     courses = withValid(courses.toJSON());
+
+  //     return json_res(courses);
+  //   } catch (ex) {
+  //     return json_res_error(ex.toString());
+  //   }
+  // }
 
   async courseByTeacher({ params }) {
     try {
@@ -159,7 +185,7 @@ class AdminCourseController {
     try {
 
       let req = request;
-      let course = await Course.find(request.input('id'));-
+      let course = await Course.find(request.input('id'));
       course.study_room_id = req.input('room');
       course.day = req.input('day');
       course.start_time = req.input('start_time');

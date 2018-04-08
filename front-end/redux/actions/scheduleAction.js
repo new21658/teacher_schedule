@@ -4,6 +4,7 @@ export const CHANGE_START_TIME ='CHANGE_START_TIME';
 export const CHANGE_END_TIME = 'CHNGE_END_TIME';  
 export const CHANGE_DAY = 'CHANGE_DAY';
 export const CHANGE_COURSE = 'CHANGE_COURSE'; 
+export const TRIGGER_TIME_OVERLAPS = 'TRIGGER_TIME_OVERLAPS';
 
 
 export const selectTerm = (term) => {
@@ -45,5 +46,12 @@ export const changeCourse = (course) => {
     return {
         type: CHANGE_COURSE,
         payload: course
+    }
+}
+
+export const triggerTimeOverlaps = (isOverlaps) => {
+    return {
+        type: TRIGGER_TIME_OVERLAPS,
+        payload: isOverlaps
     }
 }

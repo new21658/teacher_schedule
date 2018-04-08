@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
 import { RECEIVE_USER } from "../actions/userAction";
 import { RECEIVE_TERM } from "../actions/termAction";
-import { SELECT_TERM, SELECT_TIME, CHANGE_START_TIME, CHANGE_END_TIME, CHANGE_DAY, CHANGE_COURSE } from "../actions/scheduleAction";
 import { RECEIVE_ROOM } from "../actions/roomAction"
+import { RECEIVE_COURSES } from "../actions/courseAction"
 import { FETCH_OWN_COURSES, RECEIVE_OWN_COURSES } from "../actions/ownCourseAction"
+
+import schedule from "./scheduleReducer"
 
 let user = (state={}, action) => {
     console.log("user action:", action);
@@ -33,30 +35,17 @@ let terms = (state=[], action) => {
     return state;
 }
 
-let schedule = (state={
-    termSelected: -1,
-    daySelected: -1,
-    startTimeSelected: -1,
-    endTimeSelected: -1,
-    courseSelected: -1
-}, action) => {
+
+
+let courses = (state=[], action) => {
     switch(action.type) {
-        case SELECT_TERM : return Object.assign({}, state, { termSelected: action.payload })
-        case SELECT_TIME : return Object.assign({}, state, {
-                 daySelected: action.payload.day, 
-                 startTimeSelected: action.payload.start, 
-                 endTimeSelected: action.payload.end 
-                })
-        case CHANGE_DAY: return Object.assign({}, state, { daySelected: action.payload })
-        case CHANGE_START_TIME: return Object.assign({}, state, { startTimeSelected: action.payload });
-        case CHANGE_END_TIME: return Object.assign({}, state, { endTimeSelected: action.payload });
-        case CHANGE_COURSE: return Object.assign({}, state, { courseSelected: action.payload });
-        default : return state;
+        case RECEIVE_COURSES: return action.payload
+        default: return state;
     }
     return state;
 }
 
-let courses = (state=[], action) => {
+let ownCourses = (state=[], action) => {
     switch(action.type) {
         case RECEIVE_OWN_COURSES: return action.payload
         default: return state;
@@ -77,6 +66,7 @@ export default combineReducers({
     user: user,
     terms: terms,
     courses: courses,
+    ownCourses: ownCourses,
     rooms: rooms,
     schedule: schedule,
     loader: loader

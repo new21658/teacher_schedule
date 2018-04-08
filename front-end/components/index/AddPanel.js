@@ -19,6 +19,7 @@ export default class AddPanel extends Component {
         this.onChangeEndTime = this.onChangeEndTime.bind(this)
         this.onChangeDay = this.onChangeDay.bind(this)
         this.onChangeCourse = this.onChangeCourse.bind(this)
+        this.onBooking = this.onBooking.bind(this)
     }
 
     selectStartTime(moment) {
@@ -54,6 +55,11 @@ export default class AddPanel extends Component {
         this.props.changeCourse(evt.target.value)
     }
 
+    onBooking = (evt) => {
+        evt.preventDefault();
+        this.props.booking()
+    }
+
     render() {
 
         const isDaySelected = (day, matchedDay) => {
@@ -70,13 +76,13 @@ export default class AddPanel extends Component {
         console.log('AddPanel\'s props', this.props);
 
         const mapDaysList = this.props.days.map((day, index) => (
-            <option selected={isDaySelected(this.props.schedule.daySelected, index+1)} key={index} value={index+1}>{ day }</option>)
+            <option 
+                key={index} value={index+1}>{ day }</option>)
         );
 
         const mapStartTimeList = this.props.timeList.map((time, index) => {
             return (
                 <option 
-                    selected={isSelectedStartTime(this.props.schedule.startTimeSelected, time)}
                     key={index} 
                     value={time.start.toFormat('HH:mm')}>{time.start.toFormat('HH:mm')}</option>
             );
@@ -85,7 +91,6 @@ export default class AddPanel extends Component {
         const mapEndTimeList = this.props.timeList.map((time, index) => {
             return (
                 <option 
-                    selected={isSelectedEndTime(this.props.schedule.endTimeSelected, time)}
                     key={index} 
                     value={time.end.toFormat('HH:mm')}>{time.end.toFormat('HH:mm')}</option>
             );
@@ -105,7 +110,7 @@ export default class AddPanel extends Component {
 
         return (
             <div className="panel-container">
-                <form className="form">
+                <form onSubmit={this.onBooking} className="form">
                     <div className="row">
                         <div className="col-sm-6">
                             <label className="label-control">วิชา</label>
@@ -135,7 +140,7 @@ export default class AddPanel extends Component {
                         </div>
                         <div className="col-sm-3">
                             <label style={{minWidth: "50px"}} className="label-control">วัน</label>
-                            <select onChange={this.onChangeDay} className="form-control">
+                            <select value={this.props.schedule.daySelected} onChange={this.onChangeDay} className="form-control">
                                 <option value={-1}>กรุณาเลือกวัน</option>
                                 { mapDaysList }
                             </select>
@@ -143,12 +148,12 @@ export default class AddPanel extends Component {
                         <div className="col-sm-4">
                             <label style={{minWidth: "50px"}} className="label-control">เวลา</label>
                             <div className="input-group">
-                                <select onChange={this.onChangeStartTime} className="form-control">
+                                <select value={this.props.schedule.startTimeSelected} onChange={this.onChangeStartTime} className="form-control">
                                     <option>เริ่ม</option>
                                     { mapStartTimeList }
                                 </select>
                                 <span className="input-group-addon">ถึง</span>
-                                <select onChange={this.onChangeEndTime} className="form-control">
+                                <select value={this.props.schedule.endTimeSelected} onChange={this.onChangeEndTime} className="form-control">
                                     <option>สิ้นสุด</option>
                                     { mapEndTimeList }
                                 </select>

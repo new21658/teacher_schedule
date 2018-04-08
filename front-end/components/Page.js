@@ -10,6 +10,7 @@ import { receiveUser } from "../redux/actions/userAction";
 import { receiveTerm } from "../redux/actions/termAction";
 import { receiveRoom } from "../redux/actions/roomAction";
 import { receiveOwnCourses } from "../redux/actions/ownCourseAction";
+import { receiveCourses } from "../redux/actions/courseAction"
 
 if(typeof window !== "undefined") {
     window.store = store;
