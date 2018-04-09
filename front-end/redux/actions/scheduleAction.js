@@ -4,8 +4,10 @@ export const CHANGE_START_TIME ='CHANGE_START_TIME';
 export const CHANGE_END_TIME = 'CHNGE_END_TIME';  
 export const CHANGE_DAY = 'CHANGE_DAY';
 export const CHANGE_COURSE = 'CHANGE_COURSE'; 
+export const CHANGE_ROOM = 'CHANGE_ROOM';
 export const TRIGGER_TIME_OVERLAPS = 'TRIGGER_TIME_OVERLAPS';
 
+import axios from "axios";
 
 export const selectTerm = (term) => {
     return {
@@ -49,9 +51,51 @@ export const changeCourse = (course) => {
     }
 }
 
+export const changeRoom = (room) => {
+    return {
+        type: CHANGE_ROOM,
+        payload: room
+    }
+}
+
 export const triggerTimeOverlaps = (isOverlaps) => {
     return {
         type: TRIGGER_TIME_OVERLAPS,
         payload: isOverlaps
     }
 }
+
+export const startBooking = () => {
+    return (dispatch, getState) => {
+
+        const  schedule = getState().schedule;
+
+        // return console.log(         
+        //     'course:',schedule.courseSelected,
+        //     'day:', schedule.daySelected,
+        //     'room:', schedule.roomSelected,
+        //     'start_time:', schedule.startTimeSelected,
+        //     'end_time:', schedule.endTimeSelected
+        // );
+
+        axios.post('/api/course_booking', {
+            course: schedule.courseSelected,
+            day: schedule.daySelected,
+            room: schedule.roomSelected,
+            start_time: schedule.startTimeSelected,
+            end_time: schedule.endTimeSelected
+        }).then( res => {
+            console.log(res);
+            const data = res.data.data;
+            window.alert("จองตารางเรียบร้อยแล้ว")
+        }, error => {
+            console.error(error);
+            window.alert("Error " + error.toString());
+        })
+
+    }
+}
+
+// export const booking = (dispatch, course, room, day, start, end) => {
+
+// }

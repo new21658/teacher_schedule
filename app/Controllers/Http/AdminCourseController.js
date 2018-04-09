@@ -6,6 +6,8 @@ const Term = use("App/Models/Term");
 const Teacher = use("App/Models/Teacher");
 const StudentGroup = use("App/Models/StudentGroup");
 const Subject = use("App/Models/Subject");
+const luxon = use("luxon");
+const DateTime = luxon.DateTime;
 
 const withValid = courses => {
   if (!Array.isArray(courses)) {
@@ -165,8 +167,8 @@ class AdminCourseController {
 
       let req = request;
       let course = await Course.find(request.input('id'));
-      course.term_id = req.input('term')
-      course.teacher_id = req.input('teacher');
+      // course.term_id = req.input('term')
+      // course.teacher_id = req.input('teacher');
       course.subject_id = req.input('subject')
       course.student_group_id = req.input('group')
       await course.save()
@@ -183,13 +185,13 @@ class AdminCourseController {
 
    async booking({ request }) {
     try {
-
       let req = request;
-      let course = await Course.find(request.input('id'));
+      let course = await Course.find(request.input('course'));
       course.study_room_id = req.input('room');
       course.day = req.input('day');
-      course.start_time = req.input('start_time');
-      course.end_time = req.input('end_time');
+      course.start_time = DateTime.fromFormat(req.input('start_time'), 'HH:mm').toSQL();
+      course.end_time = DateTime.fromFormat(req.input('end_time'), 'HH:mm').toSQL();
+      course.teacher_accepted = 1;
       await course.save()
       return json_res('Course Updated')
     } catch (ex) {

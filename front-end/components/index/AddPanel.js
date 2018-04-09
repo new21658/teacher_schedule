@@ -19,6 +19,7 @@ export default class AddPanel extends Component {
         this.onChangeEndTime = this.onChangeEndTime.bind(this)
         this.onChangeDay = this.onChangeDay.bind(this)
         this.onChangeCourse = this.onChangeCourse.bind(this)
+        this.onChangeRoom = this.onChangeRoom.bind(this)
         this.onBooking = this.onBooking.bind(this)
     }
 
@@ -57,7 +58,20 @@ export default class AddPanel extends Component {
 
     onBooking = (evt) => {
         evt.preventDefault();
+        if (
+            this.props.schedule.termSelected == -1 ||
+            this.props.schedule.daySelected == -1 ||
+            this.props.schedule.startTimeSelected == -1 ||
+            this.props.schedule.endTimeSelected == -1 ||
+            this.props.schedule.roomSelected == -1 ||
+            this.props.schedule.courseSelected == -1
+          )  return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง");
+        if(this.props.schedule.isOverlaps) return window.alert("เวลานี้ถูกจองแล้ว กรุณาเลือกเวลาอื่น")
         this.props.booking()
+    }
+
+    onChangeRoom = (evt) => {
+        this.props.changeRoom(evt.target.value);
     }
 
     render() {
@@ -133,7 +147,7 @@ export default class AddPanel extends Component {
                     <div className="row">
                         <div className="col-sm-3">
                             <label className="label-control">ห้อง</label>
-                            <select  className="form-control">
+                            <select onChange={this.onChangeRoom}  className="form-control">
                                 { mapRooms.length < 1 ? <option>ไม่พบห้อง</option> : <option value={-1}>กรุณาเลือกห้อง</option> }
                                 { mapRooms }
                             </select>

@@ -119,7 +119,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="teacher" v-validate="'required|not_in:-1'" class="form-control">
+                    <select  name="teacher" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกอาจารย์</option>
                         <option 
                             v-for="(item, index) in teachers" 
@@ -187,7 +187,7 @@
             <input type="hidden" name="id" :value="item.course_id" />
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="term" v-validate="'required|not_in:-1'" class="form-control">
+                    <select disabled name="term" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกเทอมการศึกษา</option>
                         <option 
                             v-for="(_item, index) in terms" 
@@ -201,7 +201,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="teacher" v-validate="'required|not_in:-1'" class="form-control">
+                    <select disabled name="teacher" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกอาจารย์</option>
                         <option 
                             v-for="(_item, index) in teachers" 

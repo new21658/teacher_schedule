@@ -123,6 +123,7 @@ class Schedule extends Component {
                         changeDay={this.props.changeDay}
                         changeStartTime={this.props.changeStartTime}
                         changeEndTime={this.props.changeEndTime}
+                        changeRoom={this.props.changeRoom}
                         timeList={this.timeList}
                         startTime={this.state.startTime}
                         endTime={this.state.endTime}

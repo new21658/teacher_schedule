@@ -1,4 +1,4 @@
-import { Popover, OverlayTrigger } from "react-bootstrap";
+import { Popover, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { DateTime } from "luxon"
 
 const Table = (props) => {
@@ -85,7 +85,7 @@ const Table = (props) => {
                                 "highlight-table-selected",
                                 schedule.isOverlaps ? "active" : ""
                             ].join(" ")}>
-                            { luxonStart.toFormat('HH:mm') }
+                            { luxonStart.toFormat('HH:mm') + "-" + luxonEnd.toFormat('HH:mm') }
                             </div>) : null
                         );
                     })()
@@ -94,13 +94,22 @@ const Table = (props) => {
                     props.courses.map((course, _index) => {
                         const widthPx = mapTimeToPx(course.start_time, course.end_time);
                         const shouldRender = course.day == dayOfWeek;
+                        const tooltip = (
+                            <Tooltip id="tooltip">
+                              <strong>วิชา { course.subject.subject_code }</strong> อาจารย์ { course.teacher.teacher_code }
+                            </Tooltip>
+                          );
+                          
                         return (
                             shouldRender ?
+                            <OverlayTrigger placement="top" overlay={tooltip}>
                             <div 
                                 key={_index} 
                                 style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className="highlight-table">
-                                { course.start_time.toFormat('HH:mm') }
-                            </div> : null
+                                <span>{ course.room.study_room_code }</span>
+                            </div>
+                            </OverlayTrigger>
+                            : null
                         );
                     })
                 }

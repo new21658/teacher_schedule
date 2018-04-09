@@ -5,6 +5,7 @@ import {
     CHANGE_END_TIME, 
     CHANGE_DAY, 
     CHANGE_COURSE,
+    CHANGE_ROOM,
     TRIGGER_TIME_OVERLAPS
 } from "../actions/scheduleAction";
 
@@ -16,6 +17,7 @@ let schedule = (state={
     startTimeSelected: -1,
     endTimeSelected: -1,
     courseSelected: -1,
+    roomSelected: -1,
     isOverlaps: false
 }, action) => {
     switch(action.type) {
@@ -31,6 +33,7 @@ let schedule = (state={
         case CHANGE_DAY: return Object.assign({}, state, { daySelected: action.payload});
         case CHANGE_START_TIME: return Object.assign({}, state, { startTimeSelected: action.payload});
         case CHANGE_END_TIME: return Object.assign({}, state, { endTimeSelected: action.payload});   
+        case CHANGE_ROOM: return Object.assign({}, state, { roomSelected: action.payload })
         case TRIGGER_TIME_OVERLAPS: return Object.assign({}, state, { isOverlaps: action.payload })
         default : return state;
     }

@@ -7,7 +7,9 @@ import {
   changeStartTime,
   changeEndTime,
   changeCourse,
-  triggerTimeOverlaps
+  changeRoom,
+  triggerTimeOverlaps,
+  startBooking
 } from "../redux/actions/scheduleAction";
 import { receiveCourses } from "../redux/actions/courseAction";
 import axios from "axios";
@@ -41,17 +43,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     changeCourse: course => {
       dispatch(changeCourse(course));
     },
-    booking: schedule => {
-      if (
-        schedule.termSelected == -1 ||
-        schedule.daySelected == -1 ||
-        schedule.startTimeSelected == -1 ||
-        schedule.endTimeSelected == -1 ||
-        schedule.courseSelected == -1
-      )
-        return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง");
-      return window.alert("Booking successed");
-      axios.post("/api/course_booking", {});
+    changeRoom: room => {
+      dispatch(changeRoom(room))
     }
   };
 };
@@ -60,9 +53,13 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const schedule = stateProps.schedule;
   const courses = stateProps.courses;
   return Object.assign({}, stateProps, dispatchProps, {
+
+
     booking: () => {
-      dispatchProps.booking(stateProps.schedule);
+      dispatchProps.dispatch(startBooking())
     },
+
+
     selectTime: (day, start, end) => {
       let isOverlaps = false;
       isOverlaps = courses.some(c => {
@@ -73,6 +70,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       dispatchProps.dispatch(triggerTimeOverlaps(isOverlaps));
       dispatchProps.dispatch(selectTime(day, start, end));
     },
+
+
     changeDay: day => {
         let isOverlaps = false;
         if(stateProps.schedule.startTimeSelected != -1 && schedule.startTimeSelected != -1) {
@@ -85,6 +84,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         }
         dispatchProps.dispatch(changeDay(day));
       },
+
+
     changeStartTime: time => {
         let isOverlaps = false;
         if(schedule.daySelected != -1 && schedule.endTimeSelected != -1) {
@@ -98,6 +99,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         }
         dispatchProps.dispatch(changeStartTime(time));
       },
+
+
     changeEndTime: time => {
         let isOverlaps = false;
         if(schedule.daySelected != -1 && schedule.startTimeSelected != -1) {
