@@ -186,6 +186,11 @@ class AdminCourseController {
    async booking({ request }) {
     try {
       let req = request;
+      let course = request.input('course')
+      let room = request.input('room')
+      let day = request.input('day')
+      let start = request.input('start')
+      let end = request.input("end")
       let course = await Course.find(request.input('course'));
       course.study_room_id = req.input('room');
       course.day = req.input('day');

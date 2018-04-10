@@ -36,7 +36,7 @@
                         <tr>
                             <th class="text-center">ลำดับ</th>
                             <th>สถานะ</th>
-                            <th>Approve</th>
+                            <th>อนุมัติ</th>
                             <th>ปีการศึกษา</th>
                             <th>รหัสวิชา</th>
                             <th>ชื่อวิชา</th>
@@ -55,7 +55,7 @@
                                 <td class="text-center">@{{ ++index }}</td>
                                 <td><span :class="['label', item.valid ? 'label-success' : 'label-default']">@{{ item.valid ? 'ตอบรับแล้ว' : 'รอการตอบรับ' }}</span></td>
                                 <td>
-                                    <button @click="on_click_approve($event)" :disabled="!item.valid" :data-id="item.course_id"  class="btn btn-sm btn-success">Approve</button>
+                                    <button @click="on_click_approve($event)" :disabled="!item.valid" :data-id="item.course_id"  class="btn btn-sm btn-success">อนุมัติ</button>
                                 </td>
                                 <td>@{{ "ปี " + (parseInt(item.term.term_year) + 543) + " เทอม " + item.term.term }}</td>
                                 <td>@{{ item.subject.subject_code }}</td>

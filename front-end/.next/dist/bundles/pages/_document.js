@@ -67,28 +67,28 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "../node_modules/next/dist/pages/_document.js":
+/***/ 28:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__("next/document")
+module.exports = __webpack_require__(29);
 
 
 /***/ }),
 
-/***/ 1:
+/***/ 29:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__("../node_modules/next/dist/pages/_document.js");
+module.exports = __webpack_require__(30)
 
 
 /***/ }),
 
-/***/ "next/document":
+/***/ 30:
 /***/ (function(module, exports) {
 
 module.exports = require("next/document");
@@ -96,4 +96,3 @@ module.exports = require("next/document");
 /***/ })
 
 /******/ });
-//# sourceMappingURL=_document.js.map
