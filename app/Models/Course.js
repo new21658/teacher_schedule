@@ -24,17 +24,25 @@ class Course extends Model {
         .fetch();
     }
 
-    static async thisTimeIsAvailable(term, teacher, subject, room, start, end) {
+    static async thisTimeIsAvailable(term, room, day, start, end) {
         return ( await Course.query()
         .where('courses.term_id', '=', term)
-        .where('courses.teacher_id', '=', teacher)
-        .where('courses.subject_id', '=', subject)
         .where('courses.study_room_id', '=', room)
+        .where('courses.day', '=', day)
         .where(function() {
-            this.where(DB.raw("date_format(courses.start_time, '%H:%i') BETWEEN ? AND ?", [start, end]))
-            this.orWhere(DB.raw("date_format(courses.end_time, '%H:%i') BETWEEN ? AND ?", [start, end]))
+            this.where(DB.raw("? BETWEEN date_format(courses.start_time, '%H:%i') AND date_format(courses.end_time, '%H:%i')", [start]))
+            this.orWhere(DB.raw("? BETWEEN date_format(courses.start_time, '%H:%i') AND date_format(courses.end_time, '%H:%i')", [end]))
         }).first()
         ) == null
+
+        // return Course.query()
+        // .where('courses.term_id', '=', term)
+        // .where('courses.study_room_id', '=', room)
+        // .where('courses.day', '=', day)
+        // .where(function() {
+        //     this.where(DB.raw("date_format(courses.start_time, '%H:%i') BETWEEN ? AND ?", [start, end]))
+        //     this.orWhere(DB.raw("date_format(courses.end_time, '%H:%i') BETWEEN ? AND ?", [start, end]))
+        // }).toString()
     }
 
     getStartTime(time) {

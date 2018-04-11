@@ -79,6 +79,7 @@ export const startBooking = () => {
         // );
 
         axios.post('/api/course_booking', {
+            term: schedule.termSelected,
             course: schedule.courseSelected,
             day: schedule.daySelected,
             room: schedule.roomSelected,
