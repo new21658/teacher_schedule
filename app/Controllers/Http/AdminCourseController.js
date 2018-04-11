@@ -22,39 +22,38 @@ const withValid = courses => {
 };
 
 class AdminCourseController {
-    
   async index({ view }) {
-    try{
-    const terms = await Term.all();
-    const teachers = await Teacher.all();
-    const groups = await StudentGroup.all();
-    const subjects = await Subject.all();
-    return view.render("admin/course", { 
-      terms: JSON.stringify(terms),
-      teachers: JSON.stringify(teachers),
-      groups: JSON.stringify(groups),
-      subjects: JSON.stringify(subjects)
-    });
-    } catch(ex) {
-        console.log(ex);
+    try {
+      const terms = await Term.all();
+      const teachers = await Teacher.all();
+      const groups = await StudentGroup.all();
+      const subjects = await Subject.all();
+      return view.render("admin/course", {
+        terms: JSON.stringify(terms),
+        teachers: JSON.stringify(teachers),
+        groups: JSON.stringify(groups),
+        subjects: JSON.stringify(subjects)
+      });
+    } catch (ex) {
+      console.log(ex);
     }
   }
 
   async courseAll({ request }) {
     try {
-      let query = request.get()
-      let status = query.status || ''
-      let approved = query.approved || '';
-      let term = query.term || '';
+      let query = request.get();
+      let status = query.status || "";
+      let approved = query.approved || "";
+      let term = query.term || "";
       let courses = await Course.query()
         .with("subject")
         .with("room")
         .with("teacher")
         .with("term")
         .with("group")
-        .where("courses.status", "like", '%'+status+'%')
-        .andWhere('courses.approved', "like", '%'+approved+'%')
-        .andWhere('courses.term_id', 'like', '%'+term+'%')
+        .where("courses.status", "like", "%" + status + "%")
+        .andWhere("courses.approved", "like", "%" + approved + "%")
+        .andWhere("courses.term_id", "like", "%" + term + "%")
         .fetch();
 
       courses = withValid(courses.toJSON());
@@ -114,9 +113,9 @@ class AdminCourseController {
         .with("term")
         .with("group")
         .where("courses.status", "=", "A")
-        .andWhere('courses.teacher_id', params.id)
-        .andWhere('courses.teacher_accepted', 0)
-        .andWhere('courses.approved', '=', 0)
+        .andWhere("courses.teacher_id", params.id)
+        .andWhere("courses.teacher_accepted", 0)
+        .andWhere("courses.approved", "=", 0)
         .fetch();
 
       courses = withValid(courses.toJSON());
@@ -129,11 +128,9 @@ class AdminCourseController {
 
   async courseByTerm({ params }) {
     try {
-
       let courses = await Course.byTerm(params.id);
       courses = withValid(courses.toJSON());
       return json_res(courses);
-
     } catch (ex) {
       return json_res_error(ex.toString());
     }
@@ -141,95 +138,129 @@ class AdminCourseController {
 
   async addCourse({ request }) {
     try {
-
       let req = request;
       let course = new Course();
-      course.term_id = req.input('term')
-      course.teacher_id = req.input('teacher');
-      course.subject_id = req.input('subject')
-      course.student_group_id = req.input('group')
+      course.term_id = req.input("term");
+      course.teacher_id = req.input("teacher");
+      course.subject_id = req.input("subject");
+      course.student_group_id = req.input("group");
 
-      await course.save()
+      await course.save();
 
-      return json_res('Course Added')
-
+      return json_res("Course Added");
     } catch (ex) {
       return json_res_error(ex.toString());
     }
   }
 
   /**
-   * 
-   * ADMIN ONLY 
+   *
+   * ADMIN ONLY
    */
   async updateCourse({ request }) {
     try {
-
       let req = request;
-      let course = await Course.find(request.input('id'));
-      // course.term_id = req.input('term')
-      // course.teacher_id = req.input('teacher');
-      course.subject_id = req.input('subject')
-      course.student_group_id = req.input('group')
-      await course.save()
-      return json_res('Course Updated')
+
+      let course = await Course.find(request.input("id"));
+
+      course.subject_id = req.input("subject");
+
+      course.student_group_id = req.input("group");
+
+      await course.save();
+
+      return json_res("Course Updated");
     } catch (ex) {
       return json_res_error(ex.toString());
     }
   }
 
   /**
-   * 
+   *
    * TEACHER ONLY
    */
 
-   async booking({ request }) {
+  async booking({ request }) {
+    // return json_res(request.all());
     try {
       let req = request;
-      let course = request.input('course')
-      let room = request.input('room')
-      let day = request.input('day')
-      let start = request.input('start')
-      let end = request.input("end")
-      let course = await Course.find(request.input('course'));
-      course.study_room_id = req.input('room');
-      course.day = req.input('day');
-      course.start_time = DateTime.fromFormat(req.input('start_time'), 'HH:mm').toSQL();
-      course.end_time = DateTime.fromFormat(req.input('end_time'), 'HH:mm').toSQL();
+      let courseId = req.input("course");
+      let term = req.input("term");
+      let room = req.input("room");
+      let day = req.input("day");
+      let start = req.input("start_time");
+      let end = req.input("end_time");
+
+      let thisTimeIsAvailable = await Course.thisTimeIsAvailable(
+        term,
+        room,
+        day,
+        start,
+        end
+      );
+
+      if (!thisTimeIsAvailable)
+        return json_res_error("This time has booked by someone else.");
+
+      let course = await Course.find(courseId);
+
+      course.study_room_id = room
+
+      course.day = day;
+
+      course.start_time = DateTime.fromFormat(
+        start,
+        "HH:mm"
+      ).toSQL();
+
+      course.end_time = DateTime.fromFormat(
+        end,
+        "HH:mm"
+      ).toSQL();
+
       course.teacher_accepted = 1;
-      await course.save()
-      return json_res('Course Updated')
+
+      await course.save();
+
+      return json_res("Course Updated");
+
     } catch (ex) {
+
       return json_res_error(ex.toString());
+
     }
-   }
 
-
+  }
 
   async approveCourse({ request }) {
     try {
-      let req = request
-      let course = await Course.find(request.input('id'))
-      course.approved = 1
-      await course.save()
-      return json_res('Course Approved')
+      let req = request;
+
+      let course = await Course.find(request.input("id"));
+
+      course.approved = 1;
+
+      await course.save();
+
+      return json_res("Course Approved");
     } catch (ex) {
       return json_res_error(ex.toString());
     }
   }
 
-
   async updateStatus({ request }) {
     try {
-        var course = await Course.find(request.input('id'));
-        course.status = request.input('status');
-        await course.save();
-        return json_res("Status updated");
-    } catch(ex) {
-        return json_res_error(ex.toString());
+      var course = await Course.find(request.input("id"));
+
+      course.status = request.input("status");
+
+      await course.save();
+
+      return json_res("Status updated");
+    } catch (ex) {
+      return json_res_error(ex.toString());
     }
   }
-
 }
 
 module.exports = AdminCourseController;

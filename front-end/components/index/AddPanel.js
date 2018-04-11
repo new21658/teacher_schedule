@@ -131,7 +131,7 @@ export default class AddPanel extends Component {
                             <div className="form-group">
                                 <select onChange={this.onChangeCourse} className="form-control">
                                     {
-                                      mapSubjects.length < 1 ? <option>ไม่พบวิชา</option> : <option>เลือกวิชา</option>
+                                      mapSubjects.length < 1 ? <option value="-1">ไม่พบวิชา</option> : <option value="-1">เลือกวิชา</option>
                                     }
                                     { mapSubjects }
                                 </select>
