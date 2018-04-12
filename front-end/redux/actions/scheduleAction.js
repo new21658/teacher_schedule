@@ -9,6 +9,9 @@ export const TRIGGER_TIME_OVERLAPS = 'TRIGGER_TIME_OVERLAPS';
 
 import axios from "axios";
 
+import { fetchCourses } from "./courseAction"
+import { fetchOwnCourses } from "./ownCourseAction"
+
 export const selectTerm = (term) => {
     return {
         type: SELECT_TERM,
@@ -66,17 +69,10 @@ export const triggerTimeOverlaps = (isOverlaps) => {
 }
 
 export const startBooking = () => {
+
     return (dispatch, getState) => {
-
+        const state = getState();
         const  schedule = getState().schedule;
-
-        // return console.log(         
-        //     'course:',schedule.courseSelected,
-        //     'day:', schedule.daySelected,
-        //     'room:', schedule.roomSelected,
-        //     'start_time:', schedule.startTimeSelected,
-        //     'end_time:', schedule.endTimeSelected
-        // );
 
         axios.post('/api/course_booking', {
             term: schedule.termSelected,
@@ -86,9 +82,30 @@ export const startBooking = () => {
             start_time: schedule.startTimeSelected,
             end_time: schedule.endTimeSelected
         }).then( res => {
+
             console.log(res);
+
+            if(res.data.is_error) {
+                return window.alert(res.data.error_message)
+            }
+
             const data = res.data.data;
+            
+            dispatch(
+                fetchCourses({ term: schedule.termSelected, responsed: 1 })
+            );
+
+            dispatch(
+                fetchOwnCourses({
+                    teacher: state.user.teacher_id,
+                    term: schedule.termSelected,
+                    responsed: 0
+                })
+            )
+            
+
             window.alert("จองตารางเรียบร้อยแล้ว")
+
         }, error => {
             console.error(error);
             window.alert("Error " + error.toString());

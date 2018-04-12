@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS `courses` (
   `study_room_id` int(11) DEFAULT NULL,
   `teacher_id` int(11) NOT NULL,
   `term_id` int(11) NOT NULL,
-  `start_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
   `day` int(11) DEFAULT NULL,
   `student_group_id` int(11) NOT NULL,
   `approved` int(1) unsigned NOT NULL DEFAULT '0',
@@ -35,13 +35,13 @@ CREATE TABLE IF NOT EXISTS `courses` (
 INSERT INTO `courses` (`course_id`, `subject_id`, `study_room_id`, `teacher_id`, `term_id`, `start_time`, `end_time`, `day`, `student_group_id`, `approved`, `status`, `created_at`, `updated_at`, `teacher_accepted`) VALUES
 	(1, 1, NULL, 8, 2, NULL, NULL, 0, 1, 0, 'D', '2018-04-03 12:09:23', '2018-04-03 12:13:08', 0),
 	(3, 1, NULL, 8, 2, NULL, NULL, NULL, 1, 0, 'A', '2018-04-03 12:09:23', '2018-04-03 12:09:23', 0),
-	(4, 1, 1, 8, 2, '2018-04-02 13:14:12', '2018-04-02 13:14:13', 1, 1, 1, 'A', '2018-04-03 12:09:23', '2018-04-03 21:32:16', 1),
+	(4, 1, 1, 8, 2, '13:00:00', '17:30:00', 1, 1, 1, 'A', '2018-04-03 12:09:23', '2018-04-08 22:46:51', 1),
 	(5, 1, NULL, 1, 2, NULL, NULL, NULL, 1, 0, 'A', '2018-04-03 12:09:27', '2018-04-03 12:09:27', 0),
 	(6, 1, NULL, 8, 2, NULL, NULL, NULL, 1, 0, 'D', '2018-04-03 12:29:17', '2018-04-03 12:31:27', 0),
 	(7, 2, NULL, 2, 2, NULL, NULL, NULL, 2, 0, 'D', '2018-04-03 12:40:56', '2018-04-03 20:23:10', 0),
 	(8, 1, NULL, 8, 2, NULL, NULL, NULL, 2, 0, 'A', '2018-04-03 20:24:00', '2018-04-03 20:24:00', 0),
-	(9, 2, NULL, 8, 2, NULL, NULL, NULL, 2, 0, 'A', '2018-04-03 20:24:07', '2018-04-03 20:24:07', 0),
-	(10, 2, NULL, 8, 2, NULL, NULL, NULL, 3, 0, 'A', '2018-04-03 20:24:12', '2018-04-03 20:24:12', 0);
+	(9, 2, 2, 8, 2, '11:00:00', '12:00:00', 1, 2, 1, 'A', '2018-04-03 20:24:07', '2018-04-12 00:15:53', 1),
+	(10, 2, 3, 8, 2, '09:00:00', '10:00:00', 1, 3, 0, 'A', '2018-04-03 20:24:12', '2018-04-12 00:15:12', 1);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 
 -- Dumping structure for table teacher_schedule.roles

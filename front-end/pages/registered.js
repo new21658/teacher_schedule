@@ -1,8 +1,16 @@
 import wrapper from "../components/Page";
 
+import ControlPanel from "../components/registered/ControlPanel"
+
+import CourseList from "../components/registered/CourseList"
+
+
 const Registered = () => {
     return (
-        <h1>REgistered Page</h1>
+        <div className="container">
+            <ControlPanel />
+            <CourseList />
+        </div>
     );
 }
 

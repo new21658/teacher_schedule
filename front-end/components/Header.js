@@ -5,7 +5,7 @@ const Header = (props) => {
     <div className="container-fluid">
         <div className="row tch-header">
             <div className="col-sm-6">
-                    <a className="tch-link" style={{fontSize: '2em' ,color: 'rgba(0, 0, 0, 0.5)'}}><color className="tch-text-light">Course</color> Scheduling</a>
+                    <a className="tch-link" style={{fontSize: '2em' , color: 'white'}}><color className="tch-text-light">Course Scheduling</color></a>
             </div>
             <div className="col-sm-6">
                 <p className="text-right">

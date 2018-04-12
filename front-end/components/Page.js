@@ -9,7 +9,7 @@ import axios from "axios";
 import { receiveUser } from "../redux/actions/userAction";
 import { receiveTerm } from "../redux/actions/termAction";
 import { receiveRoom } from "../redux/actions/roomAction";
-import { receiveOwnCourses } from "../redux/actions/ownCourseAction";
+import { fetchOwnCourses } from "../redux/actions/ownCourseAction";
 import { receiveCourses } from "../redux/actions/courseAction"
 
 if(typeof window !== "undefined") {
@@ -46,10 +46,15 @@ const wrapper = (Content) => {
                     store.dispatch(receiveUser(data));
                     console.log("teacher id: ", data.teacher_id);
                     if(data.teacher_id !== undefined || data.teacher_id !== null) {
-                        axios.get('/api/course_by_teacher/' + data.teacher_id).then((res) => {
-                            const data = res.data.data;
-                            store.dispatch(receiveOwnCourses(data));
-                        });
+                        store.dispatch(fetchOwnCourses({
+                            status: 'A',
+                            teacher: data.teacher_id,
+                            responsed: 0
+                        }));
+                        // axios.get('/api/course_by_teacher/' + data.teacher_id).then((res) => {
+                        //     const data = res.data.data;
+                        //     store.dispatch(receiveOwnCourses(data));
+                        // });
                     }
                 });
                 axios.get('/api/term_all').then((res) => {

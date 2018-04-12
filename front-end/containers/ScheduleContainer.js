@@ -30,21 +30,32 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+
     dispatch: dispatch,
+
+    
     selectTerm: term => {
+
       dispatch(selectTerm(term));
+
       axios
-        .get("/api/course_all?status=A&approved=1&term=" + term)
+        .get("/api/course_all?status=A&responsed=1&term=" + term)
         .then(res => {
           const data = res.data.data;
           dispatch(receiveCourses(data));
         });
+
     },
+
     changeCourse: course => {
+
       dispatch(changeCourse(course));
+
     },
     changeRoom: room => {
+
       dispatch(changeRoom(room))
+
     }
   };
 };

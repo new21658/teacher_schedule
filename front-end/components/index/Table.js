@@ -7,6 +7,7 @@ const Table = (props) => {
     let width = 60;
     let widthOfTable = 60 * props.intervals.length;
 
+    // Methods
     const mapTimstampToMinute = (ts) => {
         return (ts / 1000) / 60;
     } 
@@ -41,6 +42,7 @@ const Table = (props) => {
             const startFormated = inv.start.toFormat('HH:mm');
             const endFormated = inv.end.toFormat('HH:mm');
             return (
+                    // Render Empty box
                     <OverlayTrigger trigger="focus" key={index}   placement="top" overlay={(
                         <Popover id="popover-positioned-top" >
                             {
@@ -67,6 +69,7 @@ const Table = (props) => {
                     { day }
                 </div>
                 {
+                    // Highlight Selected time
                     (() => {
                         const schedule = props.schedule;
                         if(schedule.daySelected == -1 || schedule.startTimeSelected == -1 || schedule.endTimeSelected == -1) {
@@ -85,12 +88,13 @@ const Table = (props) => {
                                 "highlight-table-selected",
                                 schedule.isOverlaps ? "active" : ""
                             ].join(" ")}>
-                            { luxonStart.toFormat('HH:mm') + "-" + luxonEnd.toFormat('HH:mm') }
+                            <small>{ luxonStart.toFormat('HH:mm') + "-" + luxonEnd.toFormat('HH:mm') }</small>
                             </div>) : null
                         );
                     })()
                 }
                 {
+                    // Hightlight Booked Time
                     props.courses.map((course, _index) => {
                         const widthPx = mapTimeToPx(course.start_time, course.end_time);
                         const shouldRender = course.day == dayOfWeek;
@@ -105,7 +109,7 @@ const Table = (props) => {
                             <OverlayTrigger placement="top" overlay={tooltip}>
                             <div 
                                 key={_index} 
-                                style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className="highlight-table">
+                                style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className={["highlight-table", !course.approved ? "highlight-table-muted" : "" ].join(" ")}>
                                 <span>{ course.room.study_room_code }</span>
                             </div>
                             </OverlayTrigger>

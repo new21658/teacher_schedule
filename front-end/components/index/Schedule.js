@@ -112,13 +112,9 @@ class Schedule extends Component {
                 <div className="panel panel-default">
                     <div className="panel-heading"><h1>ตารางสอน</h1></div>
                     <div className="panel-body">
-                    <AddModal hideAddModal={this.hideAddModal} toggleModal={this.toggleModal} show={this.state.showAddModal} />
-                    <ControlPanel 
-                        toggleModal={this.toggleModal} 
-                        selectTerm={this.props.selectTerm} 
-                        terms={this.props.terms} />
                     <AddPanel 
                         booking={this.props.booking}
+                        selectTerm={this.props.selectTerm} 
                         changeCourse={this.props.changeCourse}
                         changeDay={this.props.changeDay}
                         changeStartTime={this.props.changeStartTime}
@@ -129,6 +125,7 @@ class Schedule extends Component {
                         endTime={this.state.endTime}
                         selectStartTime={this.selectStartTime}
                         selectEndTime={this.selectEndTime}
+                        terms={this.props.terms}
                         schedule={this.props.schedule}
                         rooms={this.props.rooms} 
                         subjects={subjects}

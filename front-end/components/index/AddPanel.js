@@ -12,6 +12,7 @@ export default class AddPanel extends Component {
             startTime: null
         };
 
+        this.onChangeTerm = this.onChangeTerm.bind(this);
         this.selectStartTime = this.selectStartTime.bind(this);
         this.selectEndTime = this.selectEndTime.bind(this)
         this.isChangeTimeValid = this.isChangeTimeValid.bind(this);
@@ -74,6 +75,11 @@ export default class AddPanel extends Component {
         this.props.changeRoom(evt.target.value);
     }
 
+    onChangeTerm = (evt) => {
+        // console.log(evt.currentTarget.value);
+        this.props.selectTerm(evt.currentTarget.value)
+    }
+
     render() {
 
         const isDaySelected = (day, matchedDay) => {
@@ -119,6 +125,12 @@ export default class AddPanel extends Component {
                 <option key={index} value={room.study_room_id} >{ "ห้อง " + room.study_room_code + ' ประเภท ' + room.study_room_type + " " + room.study_room_location }</option>
             )
         })
+
+        const mapTerms = this.props.terms.map((term, i) => {
+            return (
+                <option key={i} value={term.term_id}>{"ปี " + term.term_year + " เทอม " + term.term}</option>
+            );
+        });
                  
 
 
@@ -126,7 +138,14 @@ export default class AddPanel extends Component {
             <div className="panel-container">
                 <form onSubmit={this.onBooking} className="form">
                     <div className="row">
-                        <div className="col-sm-6">
+                        <div className="col-sm-4">
+                            <label className="label-control">เทอม</label>
+                            <select onChange={this.onChangeTerm} className="form-control">
+                                <option value={-1}>กรุณาเลือกเทอม</option>
+                                { mapTerms }
+                            </select>
+                        </div>
+                        <div className="col-sm-4">
                             <label className="label-control">วิชา</label>
                             <div className="form-group">
                                 <select onChange={this.onChangeCourse} className="form-control">
@@ -137,21 +156,21 @@ export default class AddPanel extends Component {
                                 </select>
                             </div>
                         </div>
-                        <div className="col-sm-6 text-right">
-                            <label style={{minWidth: "50px"}} className="label-control"></label>
-                            <div className="form-group">
-                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-4">
                             <label className="label-control">ห้อง</label>
                             <select onChange={this.onChangeRoom}  className="form-control">
                                 { mapRooms.length < 1 ? <option>ไม่พบห้อง</option> : <option value={-1}>กรุณาเลือกห้อง</option> }
                                 { mapRooms }
                             </select>
                         </div>
+                        {/* <div className="col-sm-6 text-right">
+                            <label style={{minWidth: "50px"}} className="label-control"></label>
+                            <div className="form-group">
+                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
+                            </div>
+                        </div> */}
+                    </div>
+                    <div className="row">
                         <div className="col-sm-3">
                             <label style={{minWidth: "50px"}} className="label-control">วัน</label>
                             <select value={this.props.schedule.daySelected} onChange={this.onChangeDay} className="form-control">
@@ -173,6 +192,15 @@ export default class AddPanel extends Component {
                                 </select>
                             </div>
                         </div>
+                        <div className="col-sm-5 text-right">
+                                <label style={{minWidth: "50px"}} className="label-control"></label>
+                                <div className="form-group">
+                                    <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
+                                </div>
+                        </div>
+                    </div>
+                    <div className="row">
+
                     </div>
                     
                 </form>
@@ -184,7 +212,6 @@ export default class AddPanel extends Component {
                         max-width: 1140px;
                         margin: 0 auto 1em auto;
                         margin-top: 20px !important;
-                        background-color: whitesmoke;
                         padding: 1em;
                     }
                 

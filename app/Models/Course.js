@@ -26,6 +26,7 @@ class Course extends Model {
 
     static async thisTimeIsAvailable(term, room, day, start, end) {
         return ( await Course.query()
+        .where('courses.status', '=', 'A')
         .where('courses.term_id', '=', term)
         .where('courses.study_room_id', '=', room)
         .where('courses.day', '=', day)
