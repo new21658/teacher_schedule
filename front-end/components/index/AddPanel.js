@@ -93,8 +93,6 @@ export default class AddPanel extends Component {
             return timeString == matchedInvTime.end.toFormat('HH:mm');
         }
 
-        console.log('AddPanel\'s props', this.props);
-
         const mapDaysList = this.props.days.map((day, index) => (
             <option 
                 key={index} value={index+1}>{ day }</option>)
@@ -116,8 +114,8 @@ export default class AddPanel extends Component {
             );
         });
 
-        const mapSubjects = this.props.subjects.map((subject, index) => (
-            <option key={index} value={subject.course_id}>{ subject.subject_name + " (" + subject.subject_code + ")" }</option>
+        const mapCourses = this.props.ownCourses.map((course, index) => (
+            <option key={index} value={course.course_id}>{ course.subject.subject_name + " (" + course.subject.subject_code + ")" + " กลุ่ม " + course.group.student_group_name }</option>
         ));
 
         const mapRooms = this.props.rooms.map((room, index) => {
@@ -150,9 +148,9 @@ export default class AddPanel extends Component {
                             <div className="form-group">
                                 <select onChange={this.onChangeCourse} className="form-control">
                                     {
-                                      mapSubjects.length < 1 ? <option value="-1">ไม่พบวิชา</option> : <option value="-1">เลือกวิชา</option>
+                                      mapCourses.length < 1 ? <option value="-1">ไม่พบวิชา</option> : <option value="-1">เลือกวิชา</option>
                                     }
-                                    { mapSubjects }
+                                    { mapCourses }
                                 </select>
                             </div>
                         </div>

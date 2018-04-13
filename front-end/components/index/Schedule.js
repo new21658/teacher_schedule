@@ -95,10 +95,10 @@ class Schedule extends Component {
 
     render() {
 
-        const subjects = this.props.ownCourses.map((c) => {
-            c.subject.course_id = c.course_id;
-            return c.subject;
-        });
+        // const subjects = this.props.ownCourses.map((c) => {
+        //     c.subject.course_id = c.course_id;
+        //     return c.subject;
+        // });
 
         const mapCourses = this.props.courses.length > 0 ? this.props.courses.map((c) => {
             c = Object.assign({}, c); // copy new obj
@@ -128,7 +128,7 @@ class Schedule extends Component {
                         terms={this.props.terms}
                         schedule={this.props.schedule}
                         rooms={this.props.rooms} 
-                        subjects={subjects}
+                        ownCourses={this.props.ownCourses}
                         days={this.days} />
                     <Table
                         schedule={this.props.schedule}
