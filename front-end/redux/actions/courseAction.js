@@ -11,11 +11,13 @@ export const receiveCourses = (courses) => {
     }
 }
 
-export const fetchCourses = ({ term, responsed }) => {
+export const fetchCourses = (args) => {
 
     return (dispatch) => {
 
-        axios.get("/api/course_all?term=" + term + "&responsed=" + (responsed == 0 ? 0 : 1)).then((res) => {
+        axios.get("/api/course_all", {
+            params: { ...args }
+        }).then((res) => {
 
             const data = res.data;
 

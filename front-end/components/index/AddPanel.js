@@ -66,7 +66,7 @@ export default class AddPanel extends Component {
             this.props.schedule.endTimeSelected == -1 ||
             this.props.schedule.roomSelected == -1 ||
             this.props.schedule.courseSelected == -1
-          )  return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง");
+          )  return window.alert("ไม่สามารถจองได้ กรุณาตรวจสอบข้อมูล");
         if(this.props.schedule.isOverlaps) return window.alert("เวลานี้ถูกจองแล้ว กรุณาเลือกเวลาอื่น")
         this.props.booking()
     }
@@ -128,7 +128,7 @@ export default class AddPanel extends Component {
 
         const mapTerms = this.props.terms.map((term, i) => {
             return (
-                <option key={i} value={term.term_id}>{"ปี " + term.term_year + " เทอม " + term.term}</option>
+                <option key={i} value={term.term_id}>{"ปี " + (parseInt(term.term_year) + 543) + " เทอม " + term.term}</option>
             );
         });
                  
@@ -138,14 +138,14 @@ export default class AddPanel extends Component {
             <div className="panel-container">
                 <form onSubmit={this.onBooking} className="form">
                     <div className="row">
-                        <div className="col-sm-4">
+                        <div className="col-sm-2">
                             <label className="label-control">เทอม</label>
-                            <select onChange={this.onChangeTerm} className="form-control">
+                            <select defaultValue={this.props.schedule.termSelected} onChange={this.onChangeTerm} className="form-control">
                                 <option value={-1}>กรุณาเลือกเทอม</option>
                                 { mapTerms }
                             </select>
                         </div>
-                        <div className="col-sm-4">
+                        <div className="col-sm-2">
                             <label className="label-control">วิชา</label>
                             <div className="form-group">
                                 <select onChange={this.onChangeCourse} className="form-control">
@@ -156,29 +156,21 @@ export default class AddPanel extends Component {
                                 </select>
                             </div>
                         </div>
-                        <div className="col-sm-4">
+                        <div className="col-sm-2">
                             <label className="label-control">ห้อง</label>
                             <select onChange={this.onChangeRoom}  className="form-control">
                                 { mapRooms.length < 1 ? <option>ไม่พบห้อง</option> : <option value={-1}>กรุณาเลือกห้อง</option> }
                                 { mapRooms }
                             </select>
                         </div>
-                        {/* <div className="col-sm-6 text-right">
-                            <label style={{minWidth: "50px"}} className="label-control"></label>
-                            <div className="form-group">
-                                <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
-                            </div>
-                        </div> */}
-                    </div>
-                    <div className="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-2">
                             <label style={{minWidth: "50px"}} className="label-control">วัน</label>
                             <select value={this.props.schedule.daySelected} onChange={this.onChangeDay} className="form-control">
                                 <option value={-1}>กรุณาเลือกวัน</option>
                                 { mapDaysList }
                             </select>
                         </div>
-                        <div className="col-sm-4">
+                        <div className="col-sm-3">
                             <label style={{minWidth: "50px"}} className="label-control">เวลา</label>
                             <div className="input-group">
                                 <select value={this.props.schedule.startTimeSelected} onChange={this.onChangeStartTime} className="form-control">
@@ -192,12 +184,14 @@ export default class AddPanel extends Component {
                                 </select>
                             </div>
                         </div>
-                        <div className="col-sm-5 text-right">
+                        <div className="col-sm-1 text-right">
                                 <label style={{minWidth: "50px"}} className="label-control"></label>
                                 <div className="form-group">
                                     <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
                                 </div>
                         </div>
+                    </div>
+                    <div className="row">
                     </div>
                     <div className="row">
 

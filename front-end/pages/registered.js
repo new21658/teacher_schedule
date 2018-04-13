@@ -8,7 +8,6 @@ import CourseList from "../components/registered/CourseList"
 const Registered = () => {
     return (
         <div className="container">
-            <ControlPanel />
             <CourseList />
         </div>
     );

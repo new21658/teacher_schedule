@@ -4,14 +4,25 @@ export const RECEIVE_OWN_COURSES = 'RECEIVE_OWN_COURSES';
 
 import axios from "axios";
 
-export const fetchOwnCourses = ({ term, teacher, status, responsed  }) => {
 
-    return (dispatch) => {
+
+export const receiveOwnCourses = (courses) => {
+    return {
+        type: RECEIVE_OWN_COURSES,
+        payload: courses
+    }
+}
+
+export const fetchOwnCourses = (args) => {
+
+    return (dispatch, getState) => {
         // console.log("/api/course_all?term=" + (term || "") + "&teacher=" + (teacher || "") + "&status=" + (status || "A") + "&responsed=" + (responsed));
-        axios.get("/api/course_all?term=" 
-            + (term || "") + "&teacher=" + (teacher || "") 
-            + "&status=" + (status || "A") 
-            + "&responsed=" + (responsed == 0 ? 0 : 1)).then(res => {
+        dispatch({ 
+            type: FETCH_OWN_COURSES
+         })
+        axios.get("/api/course_all", {
+            params: { ...args, teacher: getState().user.teacher_id, status: "A" }
+        }).then(res => {
 
             const data = res.data;
 
@@ -23,10 +34,7 @@ export const fetchOwnCourses = ({ term, teacher, status, responsed  }) => {
 
             }
             
-            dispatch({
-                type: RECEIVE_OWN_COURSES,
-                payload: data.data
-            })
+            dispatch(receiveOwnCourses(data.data))
 
         }),
 
@@ -38,12 +46,5 @@ export const fetchOwnCourses = ({ term, teacher, status, responsed  }) => {
 
     return {
         type: FETCH_OWN_COURSES
-    }
-}
-
-export const receiveOwnCourses = (courses) => {
-    return {
-        type: RECEIVE_OWN_COURSES,
-        payload: courses
     }
 }

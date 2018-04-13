@@ -45,17 +45,17 @@ const wrapper = (Content) => {
                     const data = res.data.data;
                     store.dispatch(receiveUser(data));
                     console.log("teacher id: ", data.teacher_id);
-                    if(data.teacher_id !== undefined || data.teacher_id !== null) {
-                        store.dispatch(fetchOwnCourses({
-                            status: 'A',
-                            teacher: data.teacher_id,
-                            responsed: 0
-                        }));
-                        // axios.get('/api/course_by_teacher/' + data.teacher_id).then((res) => {
-                        //     const data = res.data.data;
-                        //     store.dispatch(receiveOwnCourses(data));
-                        // });
-                    }
+                    // if(data.teacher_id !== undefined || data.teacher_id !== null) {
+                    //     store.dispatch(fetchOwnCourses({
+                    //         status: 'A',
+                    //         teacher: data.teacher_id,
+                    //         responsed: 0
+                    //     }));
+                    //     // axios.get('/api/course_by_teacher/' + data.teacher_id).then((res) => {
+                    //     //     const data = res.data.data;
+                    //     //     store.dispatch(receiveOwnCourses(data));
+                    //     // });
+                    // }
                 });
                 axios.get('/api/term_all').then((res) => {
                     const data = res.data.data;

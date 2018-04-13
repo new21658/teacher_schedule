@@ -14,13 +14,14 @@ import {
 import { receiveCourses } from "../redux/actions/courseAction";
 import axios from "axios";
 import { checkTimeOverlaps } from "../redux/utilities/index";
+import { fetchOwnCourses } from "../redux/actions/ownCourseAction"
 
 const mapStateToProps = state => {
   return {
     terms: state.terms,
     courses: state.courses,
     ownCourses: state.ownCourses.filter(c => {
-      return state.schedule.termSelected == c.term_id;
+      return state.schedule.termSelected == c.term_id && c.teacher_responsed == 0;
     }),
     rooms: state.rooms,
     user: state.user,
@@ -37,6 +38,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     selectTerm: term => {
 
       dispatch(selectTerm(term));
+      dispatch(fetchOwnCourses({ 
+        term: term
+       }));
 
       axios
         .get("/api/course_all?status=A&responsed=1&term=" + term)

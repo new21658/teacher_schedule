@@ -98,8 +98,7 @@ export const startBooking = () => {
             dispatch(
                 fetchOwnCourses({
                     teacher: state.user.teacher_id,
-                    term: schedule.termSelected,
-                    responsed: 0
+                    term: schedule.termSelected
                 })
             )
             

@@ -19,7 +19,7 @@ export default class Menu extends Component {
           </Link>
           <Link href="/registered">
           <NavItem className={this.props.url.pathname === '/registered' ? "active" : ''} eventKey={2}>
-            วิชาที่ลงทะเบียนแล้ว
+            รายวิชา
           </NavItem>
           </Link>
         </Nav>
