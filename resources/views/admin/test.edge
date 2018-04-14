@@ -39,6 +39,7 @@
                             <th class="text-center">ลำดับ</th>
                             <th>รหัส</th>
                             <th>วิชา</th>
+                            <th>อาจารย์คุมสอบ</th>
                             <th>กลุ่ม</th>
                             <th>วันที่สอบ</th>
                             <th>เวลา</tH>
@@ -55,10 +56,11 @@
                                 <td class="text-center">@{{ ++index }}</td>
                                 <td>@{{ item.subject.subject_code }}</td>
                                 <td>@{{ item.subject.subject_name }}</td>
+                                <td>@{{ item.teacher.teacher_name }}</td>
                                 <td>@{{ item.group.student_group_name }}</td>
                                 <td>@{{ item.date }}</td>
                                 <td>@{{ item.start_time + "-" + item.end_time }}</td>
-                                <td>@{{ item.room.study_room_name }}</td>
+                                <td>@{{ item.room.study_room_code }}</td>
                                 <td>@{{ item.type }}</td>
                                 <td>@{{ item.range_start + "-" + item.range_end }}</td>
                                 <td><button
@@ -69,6 +71,11 @@
                                     <i class="fas fa-trash"></i> ลบ</button>
                                 </td>
                                 <td><button @click="on_clik_edit($event)" :data-id="item.study_room_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                        </template>
+                        <template v-else>
+                            <tr>
+                                <td colspan="12" class="text-center text-muted">ไม่พบข้อมูล</td>
                             </tr>
                         </template>
                     </tbody>
@@ -85,30 +92,95 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">เพิ่มห้องเรียน</h4>
+        <h4 class="modal-title">เพิ่มห้องสอบ</h4>
       </div>
       <div class="modal-body">
         <form @submit.prevent="add_item_submit($event)" class="form form-horizontal">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <input data-vv-as="room code" name="code" v-validate="'required'" type="text" class="form-control" placeholder="หมายเลขห้อง" />
-                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="subject">
+                      <option value="-1">เลือกเทอม</option>
+                      <option v-for="(term, index) in terms" :value="term.term_id" >@{{ 'ปี ' + (parseInt(term.term_year) + 543) + " เทอม " + term.term }}</option>
+                    </select>
+                    <p v-if="errors.has('subject')" class="help-text text-danger">@{{ errors.first('subject') }}</p>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <input data-vv-as="location" name="location" v-validate="'required'" type="text" class="form-control" placeholder="ตำแหน่งที่ต้อง" />
-                    <p v-if="errors.has('location')" class="help-text text-danger">@{{ errors.first('location') }}</p>
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="subject">
+                      <option value="-1">เลือกวิชา</option>
+                      <option v-for="(subject, index) in subjects" :value="subject.subject_id">@{{ subject.subject_name + " (" + subject.subject_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('subject')" class="help-text text-danger">@{{ errors.first('subject') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="room">
+                      <option value="-1">เลือกห้องสอบ</option>
+                      <option v-for="(room, index) in rooms" :value="room.study_room_id">@{{ room.study_room_code }}</option>
+                    </select>
+                    <p v-if="errors.has('room')" class="help-text text-danger">@{{ errors.first('room') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="teacher">
+                      <option value="-1">อาจารย์คุมสอบ</option>
+                      <option v-for="(teacher, index) in teachers" :value="teacher.teacher_id">@{{ teacher.teacher_name + " (" + teacher.teacher_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="group">
+                      <option value="-1">กลุ่ม</option>
+                      <option v-for="(group, index) in groups" :value="group.student_group_id">@{{ group.student_group_name }}</option>
+                    </select>
+                    <p v-if="errors.has('group')" class="help-text text-danger">@{{ errors.first('group') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                    <input type="text" name="date" class="datepicker form-control" placeholder="วันที่สอบ" />
+                    <span class="input-group-addon">เวลา</span>
+                    <select @change="on_start_time_change($event)" v-model="start_selected" v-validate="'required|not_in:-1'" name="start" class="form-control">
+                        <option value="-1">เวลาเริ่มต้น</option>
+                        <option v-for="(time, index) in time_list" :value="time.start.toFormat('HH:mm')" >@{{ time.start.toFormat("HH:mm") }}</option>
+                    </select>
+                    <span class="input-group-addon">ถึง</span>
+                    <select @change="on_end_time_change($event)" v-model="end_selected" v-validate="'required|not_in:-1'" name="end" class="form-control">
+                        <option value="-1">เวลาสิ้นสุด</option>
+                        <option v-for="(time, index) in time_list" :value="time.end.toFormat('HH:mm')" >@{{ time.end.toFormat("HH:mm") }}</option>
+                    </select>
+                    </div>
+                    <p v-if="errors.has('date')" class="help-text text-danger">@{{ errors.first('date') }}</p>
+                    <p v-if="errors.has('start')" class="help-text text-danger">@{{ errors.first('start') }}</p>
+                    <p v-if="errors.has('end')" class="help-text text-danger">@{{ errors.first('end') }}</p>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
                     <select v-validate="'required|not_in:-1'" class="form-control" name="type">
-                      <option value="-1">เลือกประเภทห้อง</option>
-                      <option value="ห้องเรียน">ห้องเรียน</option>
-                      <option value="ห้องแลป">ห้องแลป</option>
+                      <option value="-1">การสอบ</option>
+                      <option value="Mid">กลางภาค</option>
+                      <option value="Final">ปลายภาค</option>
                     </select>
-                    <p v-if="errors.has('type')" class="help-text text-danger">@{{ errors.first('location') }}</p>
+                    <p v-if="errors.has('type')" class="help-text text-danger">@{{ errors.first('type') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <span class="input-group-addon">ลำดับ</span>
+                        <input type="number" min="1" class="form-control" name="range_start" placeholder="เริ่มต้น" />
+                        <span class="input-group-addon">ถึง</span>
+                        <input type="number" min="1" class="form-control" name="range_end" placeholder="สิ้นสุด" />
+                    </div>
+                    <p v-if="errors.has('range_start')" class="help-text text-danger">@{{ errors.first('range_start') }}</p>
+                    <p v-if="errors.has('range_end')" class="help-text text-danger">@{{ errors.first('range_end') }}</p>
                 </div>
             </div>
             <button class="hidden" id="add_button"></button>
@@ -116,7 +188,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
-        <button type="button" onclick="$('#add_button').click()" class="btn btn-success">เพิ่มห้อง</button>
+        <button type="button" onclick="$('#add_button').click()" class="btn btn-success">เพิ่ม</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -174,9 +246,17 @@
 
 
 @section('script')
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.th.min.js"></script>
+
 <script>
 
     window.TERMS = {{{ terms }}}
+    window.GROUPS = {{{ groups }}}
+    window.ROOMS = {{{ rooms }}}
+    window.SUBJECTS = {{{ subjects }}}
+    window.TEACHERS = {{{ teachers }}}
 
     Vue.use(VeeValidate);
 
@@ -185,11 +265,58 @@
         data: function() {
             return {
                 terms: TERMS,
+                groups: GROUPS,
+                rooms: ROOMS,
+                subjects: SUBJECTS,
+                teachers: TEACHERS,
                 items: [],
-                term_selected: -1
+                term_selected: -1,
+
+                start_selected: -1,
+                end_selected: -1
             };
         },
+        computed: {
+            time_list: function() {
+                var dt = luxon.DateTime;
+                var inv = luxon.Interval;
+                var start = dt.fromObject({ hours: 6 });
+                var end = dt.fromObject({ hours: 23, minutes: 59 })
+                var interval = inv.fromDateTimes(start, end);
+                return interval.splitBy({ minutes: 15 });
+            }
+        },
         methods: {
+            on_start_time_change: function(evt) {
+
+                var dt = luxon.DateTime;
+
+                if(this.start_selected != -1 && this.end_selected != -1) {
+                    if(dt.fromFormat(evt.target.value, 'HH:mm') < dt.fromFormat(this.end_selected, 'HH:mm')) {
+                        return this.start_selected = evt.target.value;
+                    } else {
+                        window.swal("Error", "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด", "error");
+                        return this.start_selected = -1;
+                    }
+                } else {
+                    return this.start_selected = evt.target.value;
+                }
+            },
+            on_end_time_change: function(evt) {
+
+                var dt = luxon.DateTime;
+
+                if(this.start_selected != -1 && this.end_selected != -1) {
+                    if(dt.fromFormat(this.start_selected, 'HH:mm') < dt.fromFormat(evt.target.value, 'HH:mm')) {
+                        return this.end_selected = evt.target.value;
+                    } else {
+                        window.swal("Error", "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด", "error");
+                        return this.end_selected = -1;
+                    }
+                } else {
+                    return this.end_selected = evt.target.value;
+                }
+            },
             on_clik_edit: function(evt) {
                 console.log("item_id", evt.currentTarget.dataset.id);
                 this.$emit('edit', evt.currentTarget.dataset.id);
@@ -254,18 +381,20 @@
             add_item_submit: function(evt) {
                 var self = this;
                 this.$validator.validateAll().then(function(passed) {
+
                     if(!passed) {
                        return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง")
                     }
+
                     var data = new FormData(evt.target);
-                    axios.post('{{ route("admin_add_study_room") }}', data).then(function(res) {
+                    axios.post('{{ route("admin_add_test") }}', data).then(function(res) {
                         console.log(res);
                         var data = res.data;
                         if(data.is_error) {
                             window.swal("Error", data.error_message, "error");
                             return console.log(data.error_message);
                         }
-                        window.swal("Success", "เพิ่มวิชาเรียบร้อยแล้ว", "success");
+                        window.swal("Success", "เพิ่มเรียบร้อยแล้ว", "success");
                         $('#add_modal').modal('hide');
                         self.fetch_items();
                     });
@@ -280,6 +409,12 @@
                     self.fetch_items();
                 });
             })
+        },
+        mounted: function() {
+            $('.datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                language: 'th'
+            });
         }
     });
 

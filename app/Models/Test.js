@@ -23,6 +23,9 @@ class Test extends Model {
     room() {
         return this.belongsTo('App/Models/StudyRoom', 'study_room_id', 'study_room_id')
     }
+    teacher() {
+        return this.belongsTo('App/Models/Teacher', 'teacher_id', 'teacher_id')
+    }
 
 }
 
