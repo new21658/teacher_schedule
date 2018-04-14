@@ -57,11 +57,11 @@ const wrapper = (Content) => {
                     //     // });
                     // }
                 });
-                axios.get('/api/term_all').then((res) => {
+                axios.get('/api/term_all?status=A').then((res) => {
                     const data = res.data.data;
                     store.dispatch(receiveTerm(data));
                 });
-                axios.get('/api/study_room_all').then((res) => {
+                axios.get('/api/study_room_all?status=A').then((res) => {
                     const data = res.data.data;
                     store.dispatch(receiveRoom(data));
                 });

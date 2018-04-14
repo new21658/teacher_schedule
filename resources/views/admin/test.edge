@@ -1,0 +1,335 @@
+@layout('admin.master')
+@section('body')
+
+
+<div id="root_app" class="container">
+<div class="row">
+    <h2 class="col-sm-12 page-header">จัดการตารางสอบ</h2>
+    <div class="tch-panel-control-fluid row">
+    <div class="col-sm-3">
+        <div class="input-group">
+            <span class="input-group-addon">เทอม</span>
+            <select @change="on_select_term($event)" class="form-control">
+                <option value="-1">เลือกเทอม</option>
+                <option v-for="(term, index) in terms" :value="term.term_id" >@{{ 'ปี ' + (parseInt(term.term_year) + 543) + " เทอม " + term.term }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <form @submit.prevent="search_items($event)">
+        <div class="input-group">
+            <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ... " />
+            <span class="input-group-btn">
+                <button class="btn btn-default">ค้นหา <i class="fa fa-search"></i></butotn>
+            <span>
+        </div>
+        </form>
+    </div>
+    <div class="col-sm-6 text-right">
+        <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-plus text-success"></i> เพิ่ม</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="tch-shadow-sm  panel panel-default">
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>รหัส</th>
+                            <th>วิชา</th>
+                            <th>กลุ่ม</th>
+                            <th>วันที่สอบ</th>
+                            <th>เวลา</tH>
+                            <th>ห้อง</th>
+                            <th>การสอบ</th>
+                            <th>ช่วงลำดับ</th>
+                            <th>ลบ</th>
+                            <th>แก้ไข</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="items.length > 0">
+                            <tr v-for="(item, index) in items" :key="index">
+                                <td class="text-center">@{{ ++index }}</td>
+                                <td>@{{ item.subject.subject_code }}</td>
+                                <td>@{{ item.subject.subject_name }}</td>
+                                <td>@{{ item.group.student_group_name }}</td>
+                                <td>@{{ item.date }}</td>
+                                <td>@{{ item.start_time + "-" + item.end_time }}</td>
+                                <td>@{{ item.room.study_room_name }}</td>
+                                <td>@{{ item.type }}</td>
+                                <td>@{{ item.range_start + "-" + item.range_end }}</td>
+                                <td><button
+                                    :data-status="item.status == 'A' ? 'D' : 'A'"
+                                    :data-id="item.study_room_id"
+                                    @click="update_status($event)"
+                                    class="btn btn-xs btn-danger">
+                                    <i class="fas fa-trash"></i> ลบ</button>
+                                </td>
+                                <td><button @click="on_clik_edit($event)" :data-id="item.study_room_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div id="add_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">เพิ่มห้องเรียน</h4>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="add_item_submit($event)" class="form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="room code" name="code" v-validate="'required'" type="text" class="form-control" placeholder="หมายเลขห้อง" />
+                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input data-vv-as="location" name="location" v-validate="'required'" type="text" class="form-control" placeholder="ตำแหน่งที่ต้อง" />
+                    <p v-if="errors.has('location')" class="help-text text-danger">@{{ errors.first('location') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="type">
+                      <option value="-1">เลือกประเภทห้อง</option>
+                      <option value="ห้องเรียน">ห้องเรียน</option>
+                      <option value="ห้องแลป">ห้องแลป</option>
+                    </select>
+                    <p v-if="errors.has('type')" class="help-text text-danger">@{{ errors.first('location') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="add_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#add_button').click()" class="btn btn-success">เพิ่มห้อง</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+</div>
+
+
+<div id="update_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">แก้ไขห้อง</h4>
+      </div>
+      <div v-if="item != null" class="modal-body">
+        <form @submit.prevent="update_item_submit($event)" class="form form-horizontal">
+            <input type="hidden" name="id" :value="item.study_room_id" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input v-model="item.study_room_code" data-vv-as="study room code" name="code" v-validate="'required'" type="text" class="form-control" placeholder="หมายเลขห้อง" />
+                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input v-model="item.study_room_location" data-vv-as="study room location" name="location" v-validate="'required'" type="text" class="form-control" placeholder="ตำแหน่งที่ตั้ง" />
+                    <p v-if="errors.has('location')" class="help-text text-danger">@{{ errors.first('location') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="type">
+                      <option value="-1">เลือกประเภทห้อง</option>
+                      <option :selected="item.study_room_type == 'ห้องเรียน'" value="ห้องเรียน">ห้องเรียน</option>
+                      <option :selected="item.study_room_type == 'ห้องแลป'" value="ห้องแลป">ห้องแลป</option>
+                    </select>
+                   <p v-if="errors.has('type')" class="help-text text-danger">@{{ errors.first('type') }}</p>
+                </div>
+            </div>
+            <button class="hidden" id="edit_button"></button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+        <button type="button" onclick="$('#edit_button').click()" class="btn btn-success">แก้ไขข้อมูล</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+@endsection
+
+
+@section('script')
+<script>
+
+    window.TERMS = {{{ terms }}}
+
+    Vue.use(VeeValidate);
+
+    var root_app = new Vue({
+        el: '#root_app',
+        data: function() {
+            return {
+                terms: TERMS,
+                items: [],
+                term_selected: -1
+            };
+        },
+        methods: {
+            on_clik_edit: function(evt) {
+                console.log("item_id", evt.currentTarget.dataset.id);
+                this.$emit('edit', evt.currentTarget.dataset.id);
+            },
+            on_select_term: function(evt) {
+                this.term_selected = evt.target.value;
+                this.fetch_items();
+            },
+            search_items: function(evt) {
+                var self = this;
+                axios.get('{{ route("admin_study_room_search") }}?search=' + evt.target.search.value).then(function(res) {
+                  var data = res.data;
+                  if(data.is_error) {
+                    console.log(data.error_message);
+                    return window.swal("Error", data.error_message);
+                  }
+                  self.items = data.data;
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    return window.swal("Error", error.toString());
+                });
+            },
+            fetch_items: function() {
+                var self = this;
+                NProgress.start();
+                axios.get('{{ route("admin_test_all") }}', {
+                    params: {
+                        status: 'A',
+                        term: self.term_selected
+                    }
+                }).then(function(res) {
+                    NProgress.done();
+                    console.log(res);
+                    var data = res.data;
+                    if(data.is_error) {
+                        window.swal("Error", data.error_message, "error");
+                        console.log(data.error_message);
+                        return;
+                    }
+                    self.items = data.data;
+                });
+            },
+            update_status: function(evt) {
+                var self = this;
+                var status = evt.currentTarget.dataset.status;
+                var id = evt.currentTarget.dataset.id;
+                axios.post('{{ route("admin_update_status_study_room") }}', { id: id, status: status })
+                .then(function(res) {
+                    var data = res.data;
+                    if(data.is_error) {
+                        console.log(data.error_message);
+                        return window.swal("Error", data.error_message, "error");
+                    }
+                    window.swal("Success", "อัพเดทสถานะเรียบร้อยแล้ว", "success");
+                    self.fetch_items();
+                }).catch(function(error) {
+                    console.log(error);
+                    window.swal("Error", error, "error");
+                });
+            },
+            add_item_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) {
+                       return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+                    }
+                    var data = new FormData(evt.target);
+                    axios.post('{{ route("admin_add_study_room") }}', data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            window.swal("Error", data.error_message, "error");
+                            return console.log(data.error_message);
+                        }
+                        window.swal("Success", "เพิ่มวิชาเรียบร้อยแล้ว", "success");
+                        $('#add_modal').modal('hide');
+                        self.fetch_items();
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            this.fetch_items();
+            this.$nextTick(function() {
+                update_modal.$on('updated', function() {
+                    self.fetch_items();
+                });
+            })
+        }
+    });
+
+
+
+
+
+
+    var update_modal = new Vue({
+        el: '#update_modal',
+        data: function() {
+            return {
+                item: null
+            }
+        },
+        methods: {
+            update_item_submit: function(evt) {
+                var self = this;
+                this.$validator.validateAll().then(function(passed) {
+                    if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
+                    var data = new FormData(evt.target);
+                    axios.post("{{ route('admin_update_study_room') }}", data).then(function(res) {
+                        console.log(res);
+                        var data = res.data;
+                        if(data.is_error) {
+                            console.log(data.error_message);
+                            return window.swal("Error", data.error_message, "error");
+                        }
+                        window.swal("Success", "อัพเดทเรียบร้อยแล้ว", "success");
+                        $('#update_modal').modal('hide');
+                        self.$emit('updated');
+                    });
+                });
+            }
+        },
+        created: function() {
+            var self = this;
+            root_app.$on('edit', function(id) {
+                self.item = root_app.$data.items.find(function(_item) {
+                    console.log(_item);
+                    return _item.study_room_id == id;
+                });
+                console.log(self.item);
+                $('#update_modal').modal('show');
+            });
+        }
+
+    })
+
+</script>
+
+
+@endsection

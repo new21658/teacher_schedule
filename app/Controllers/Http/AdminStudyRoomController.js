@@ -9,10 +9,15 @@ class AdminStudyViewController {
   async index({ view }) {
     return view.render("admin.study_room");
   }
-  async studyRoomAll() {
+  async studyRoomAll({ request }) {
     try{
 
-      var items = await StudyRoom.all();
+      const q = request.get(),
+      status = q.status || '';
+
+      var items = await StudyRoom.query()
+      .where('status', 'like', `%${status}%`)
+      .fetch()
       return json_res(items);
 
     } catch(ex) {

@@ -26,13 +26,13 @@ class AdminCourseController {
   async index({ view }) {
 
     try {
-      const terms = await Term.all();
+      const terms = await Term.query().where('status', 'A').fetch();
 
-      const teachers = await Teacher.all();
+      const teachers = await Teacher.query().where('status', 'A').fetch();
 
-      const groups = await StudentGroup.all();
+      const groups = await StudentGroup.query().where('status', 'A').fetch();
 
-      const subjects = await Subject.all();
+      const subjects = await Subject.query().where('status', 'A').fetch();
 
       return view.render("admin/course", {
         terms: JSON.stringify(terms),

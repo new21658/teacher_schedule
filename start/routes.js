@@ -31,8 +31,6 @@ nextApp.prepare().then(function() {
             Route.get('/user_data', 'UserController.user_data').as('user_data');
 
             Route.get('/course_all', 'AdminCourseController.courseAll').as('admin_course_all');
-            // Route.get('/course_all_with_approved', 'AdminCourseController.courseAllWithApproved').as('admin_course_all_with_approved');
-            // Route.get('/course_all_with_not_approved', 'AdminCourseController.courseAllWithNotApproved').as('admin_course_all_with_not_approved');
             Route.get('/course_by_teacher/:id', 'AdminCourseController.courseByTeacher').as('admin_course_by_teacher')
             Route.get('/course_by_term/:id', 'AdminCourseController.courseByTerm').as('admin_course_by_term');
             Route.post('/course_add', 'AdminCourseController.addCourse').as('admin_add_course');
@@ -40,6 +38,8 @@ nextApp.prepare().then(function() {
             Route.post('/course_booking', 'AdminCourseController.booking').as('admin_course_booking');
             Route.post('/course_approve', 'AdminCourseController.approveCourse').as('admin_course_approve_course');
             Route.post('/course_update_status', 'AdminCourseController.updateStatus').as('admin_course_update_status');
+
+            Route.get('/test_all', 'AdminTestController.testAll').as('admin_test_all');
 
             Route.get('/user_all', 'AdminUserController.userAll').as('admin_user_all');
             Route.get('/user_search', 'AdminUserController.userSearch').as('admin_user_search');
@@ -74,13 +74,16 @@ nextApp.prepare().then(function() {
         }).prefix('api');
         
         Route.group(function() {
+
             Route.get('/', 'AdminHomeController.index').as('admin_index');
             Route.get('/course', 'AdminCourseController.index').as('admin_course');
+            Route.get('/test', 'AdminTestController.index').as('admin_test');
             Route.get('/user', 'AdminUserController.index').as('admin_user');
             Route.get('/subject', 'AdminSubjectController.index').as('admin_subject');
             Route.get('/study_room', 'AdminStudyRoomController.index').as('admin_study_room');
             Route.get('/term', 'AdminTermController.index').as('admin_term');
             Route.get('/student_group', 'AdminStudentGroupController.index').as('admin_student_group');
+
         }).middleware(['detectAdmin']).prefix('/admin');
 
         // Route.get('/', 'HomeController.index').as('user_index').middleware(['detectUser']);

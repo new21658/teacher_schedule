@@ -13,7 +13,23 @@ class AdminTermController {
 
   async termAll({ request }) {
     try {
-      let terms = await Term.all();
+
+      let q = request.get()
+      let year = q.year || ''
+      let term = q.term || ''
+      let start = q.start || ''
+      let end = q.end || ''
+      let status = q.status || ''
+
+      let terms = await Term.query()
+      .where('term_year', 'like', `%${year}%`)
+      .where('term', 'like', `%${term}%`)
+      .where('register_start', 'like', `%${start}%`)
+      .where('register_end', 'like', `%${end}%`)
+      .where('status', 'like', `%${status}%`)
+      .orderByRaw('year(term_year) desc')
+      .orderBy('term', 'DESC')
+      .fetch();
       return json_res(terms);
 
     } catch(ex) {
