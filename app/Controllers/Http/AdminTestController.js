@@ -1,5 +1,7 @@
 'use strict'
 
+const { DateTime } = use("luxon")
+
 const Test = use("App/Models/Test");
 
 const Term = use("App/Models/Term");
@@ -7,6 +9,8 @@ const Group = use('App/Models/StudentGroup')
 const Room = use('App/Models/StudyRoom')
 const Subject = use('App/Models/Subject')
 const Teacher = use('App/Models/Teacher')
+
+const { validate } = use("Validator")
 
 const { json_res, json_res_error } = use("App/Utils/Response");
 
@@ -68,13 +72,21 @@ class AdminTestController {
     }
 
     async addTest({ request }) {
+        // return request.all();
         try {
           let validation = await validate(request.all(), {
             // ==== keep on tomorow ====
-            // year: 'required',
-            // term: 'required',
-            // start_date: 'required',
-            // end_date: 'required'
+            term: "required",
+            subject: "required",
+            room: "required",
+            teacher: "required",
+            group: "required",
+            date: "required",
+            start: "required",
+            end: "required",
+            type: "required",
+            range_start: "required",
+            range_end: "required"
           });
 
           if(validation.fails()) {
@@ -82,15 +94,22 @@ class AdminTestController {
             return json_res_error(message);
           }
     
-          var term = new Term();
-          var format = "dd-LL-yyyy";
-          term.term_year = DateTime.fromString(request.input('year').trim(), 'yyyy').toSQL();
-          term.term = request.input('term').trim();
-          term.register_start = DateTime.fromString(request.input('start_date').trim(), format).toSQL();
-          term.register_end = DateTime.fromString(request.input('end_date').trim(), format).toSQL();
-          await term.save();
+          var test = new Test();
+          test.term_id = request.input("term")
+          test.subject_id = request.input("subject")
+          test.study_room_id = request.input("room")
+          test.teacher_id = request.input("teacher")
+          test.type = request.input("type");
+          test.student_group_id = request.input("group")
+          test.date = DateTime.fromFormat(request.input("date"), "dd/LL/yyyy").toSQL();
+          test.start_time = request.input("start")
+          test.end_time = request.input("end")
+          test.range_start = request.input("range_start")
+          test.range_end = request.input("range_end")
+
+          await test.save()
     
-          return json_res("Term Added");
+          return json_res("Test Added");
     
         } catch(ex) {
           return json_res_error(ex.toString());

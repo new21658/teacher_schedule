@@ -28,7 +28,9 @@ class AdminCourseController {
     try {
       const terms = await Term.query().where('status', 'A').fetch();
 
-      const teachers = await Teacher.query().where('status', 'A').fetch();
+      const teachers = await Teacher.query().whereHas('user', function(qb) {
+        qb.where('status', 'A')
+    }).fetch();
 
       const groups = await StudentGroup.query().where('status', 'A').fetch();
 

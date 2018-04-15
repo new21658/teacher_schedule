@@ -15,7 +15,15 @@
             </select>
         </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
+        <div class="btn-group">
+        <button :class="['btn', 'btn-default', type_selected == 'Mid' ? 'active' : '' ]" @click="on_type_selected($event)" data-value="Mid">
+         กลางภาค</button>
+        <button :class="['btn', 'btn-default', type_selected == 'Final' ? 'active' : '']" @click="on_type_selected($event)" data-value="Final">
+         ปลายภาค</button>
+         </div>
+    </div>
+    <div class="col-sm-4">
         <form @submit.prevent="search_items($event)">
         <div class="input-group">
             <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ... " />
@@ -25,7 +33,7 @@
         </div>
         </form>
     </div>
-    <div class="col-sm-6 text-right">
+    <div class="col-sm-3 text-right">
         <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-plus text-success"></i> เพิ่ม</button>
     </div>
 </div>
@@ -52,7 +60,7 @@
                     </thead>
                     <tbody>
                         <template v-if="items.length > 0">
-                            <tr v-for="(item, index) in items" :key="index">
+                            <tr v-for="(item, index) in items_filtered" :key="index">
                                 <td class="text-center">@{{ ++index }}</td>
                                 <td>@{{ item.subject.subject_code }}</td>
                                 <td>@{{ item.subject.subject_name }}</td>
@@ -61,7 +69,7 @@
                                 <td>@{{ item.date }}</td>
                                 <td>@{{ item.start_time + "-" + item.end_time }}</td>
                                 <td>@{{ item.room.study_room_code }}</td>
-                                <td>@{{ item.type }}</td>
+                                <td>@{{ item.type == 'Final' ? 'ปลายภาค' : 'กลางภาค' }}</td>
                                 <td>@{{ item.range_start + "-" + item.range_end }}</td>
                                 <td><button
                                     :data-status="item.status == 'A' ? 'D' : 'A'"
@@ -98,11 +106,11 @@
         <form @submit.prevent="add_item_submit($event)" class="form form-horizontal">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select v-validate="'required|not_in:-1'" class="form-control" name="subject">
+                    <select v-validate="'required|not_in:-1'" class="form-control" name="term">
                       <option value="-1">เลือกเทอม</option>
                       <option v-for="(term, index) in terms" :value="term.term_id" >@{{ 'ปี ' + (parseInt(term.term_year) + 543) + " เทอม " + term.term }}</option>
                     </select>
-                    <p v-if="errors.has('subject')" class="help-text text-danger">@{{ errors.first('subject') }}</p>
+                    <p v-if="errors.has('term')" class="help-text text-danger">@{{ errors.first('term') }}</p>
                 </div>
             </div>
             <div class="form-group">
@@ -272,11 +280,19 @@
                 items: [],
                 term_selected: -1,
 
+                type_selected: 'Final',
+
                 start_selected: -1,
                 end_selected: -1
             };
         },
         computed: {
+            items_filtered: function() {
+                var self = this;
+                return this.items.filter(function(item) {
+                    return item.type == self.type_selected;
+                })
+            },
             time_list: function() {
                 var dt = luxon.DateTime;
                 var inv = luxon.Interval;
@@ -287,6 +303,9 @@
             }
         },
         methods: {
+            on_type_selected: function(evt) {
+                this.type_selected = evt.target.dataset.value;
+            },
             on_start_time_change: function(evt) {
 
                 var dt = luxon.DateTime;

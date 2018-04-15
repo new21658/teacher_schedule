@@ -1,6 +1,7 @@
 'use strict'
 
 const Model = use('Model')
+const { DateTime } = use("luxon")
 
 class Test extends Model {
 
@@ -9,6 +10,22 @@ class Test extends Model {
     }
     static get primaryKey() {
         return 'test_id'
+    }
+
+    getDate(date) {
+        return DateTime.fromJSDate(date).toFormat("dd/LL/yyyy");
+    }
+
+    getStartTime(time) {
+        return this.formatTime(time)
+    }
+
+    getEndTime(time) {
+        return this.formatTime(time)
+    }
+
+    formatTime(time) {
+        return DateTime.fromFormat(time, "HH:mm:ss").toFormat("HH:mm");
     }
 
     term() {
