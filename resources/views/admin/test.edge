@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-if="items.length > 0">
+                        <template v-if="items_filtered.length > 0">
                             <tr v-for="(item, index) in items_filtered" :key="index">
                                 <td class="text-center">@{{ ++index }}</td>
                                 <td>@{{ item.subject.subject_code }}</td>
@@ -73,12 +73,12 @@
                                 <td>@{{ item.range_start + "-" + item.range_end }}</td>
                                 <td><button
                                     :data-status="item.status == 'A' ? 'D' : 'A'"
-                                    :data-id="item.study_room_id"
+                                    :data-id="item.test_id"
                                     @click="update_status($event)"
                                     class="btn btn-xs btn-danger">
                                     <i class="fas fa-trash"></i> ลบ</button>
                                 </td>
-                                <td><button @click="on_clik_edit($event)" :data-id="item.study_room_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
+                                <td><button @click="on_clik_edit($event)" :data-id="item.test_id" class="btn btn-default"><i class="fas fa-edit"></i></button></td>
                             </tr>
                         </template>
                         <template v-else>
@@ -206,6 +206,8 @@
 </div>
 
 
+
+
 <div id="update_modal" class="modal animated fadeIn" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -215,27 +217,92 @@
       </div>
       <div v-if="item != null" class="modal-body">
         <form @submit.prevent="update_item_submit($event)" class="form form-horizontal">
-            <input type="hidden" name="id" :value="item.study_room_id" />
+            <input type="hidden" name="id" :value="item.test_id" />
             <div class="form-group">
                 <div class="col-sm-12">
-                    <input v-model="item.study_room_code" data-vv-as="study room code" name="code" v-validate="'required'" type="text" class="form-control" placeholder="หมายเลขห้อง" />
-                    <p v-if="errors.has('code')" class="help-text text-danger">@{{ errors.first('code') }}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <input v-model="item.study_room_location" data-vv-as="study room location" name="location" v-validate="'required'" type="text" class="form-control" placeholder="ตำแหน่งที่ตั้ง" />
-                    <p v-if="errors.has('location')" class="help-text text-danger">@{{ errors.first('location') }}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <select v-validate="'required|not_in:-1'" class="form-control" name="type">
-                      <option value="-1">เลือกประเภทห้อง</option>
-                      <option :selected="item.study_room_type == 'ห้องเรียน'" value="ห้องเรียน">ห้องเรียน</option>
-                      <option :selected="item.study_room_type == 'ห้องแลป'" value="ห้องแลป">ห้องแลป</option>
+                    <select v-model="item.term_id" v-validate="'required|not_in:-1'" class="form-control" name="term">
+                      <option value="-1">เลือกเทอม</option>
+                      <option v-for="(term, index) in terms" :value="term.term_id" >@{{ 'ปี ' + (parseInt(term.term_year) + 543) + " เทอม " + term.term }}</option>
                     </select>
-                   <p v-if="errors.has('type')" class="help-text text-danger">@{{ errors.first('type') }}</p>
+                    <p v-if="errors.has('term')" class="help-text text-danger">@{{ errors.first('term') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-model="item.subject_id" v-validate="'required|not_in:-1'" class="form-control" name="subject">
+                      <option value="-1">เลือกวิชา</option>
+                      <option v-for="(subject, index) in subjects" :value="subject.subject_id">@{{ subject.subject_name + " (" + subject.subject_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('subject')" class="help-text text-danger">@{{ errors.first('subject') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-model="item.study_room_id" v-validate="'required|not_in:-1'" class="form-control" name="room">
+                      <option value="-1">เลือกห้องสอบ</option>
+                      <option v-for="(room, index) in rooms" :value="room.study_room_id">@{{ room.study_room_code }}</option>
+                    </select>
+                    <p v-if="errors.has('room')" class="help-text text-danger">@{{ errors.first('room') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-model="item.teacher_id" v-validate="'required|not_in:-1'" class="form-control" name="teacher">
+                      <option value="-1">อาจารย์คุมสอบ</option>
+                      <option v-for="(teacher, index) in teachers" :value="teacher.teacher_id">@{{ teacher.teacher_name + " (" + teacher.teacher_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-model="item.student_group_id" v-validate="'required|not_in:-1'" class="form-control" name="group">
+                      <option value="-1">กลุ่ม</option>
+                      <option v-for="(group, index) in groups" :value="group.student_group_id">@{{ group.student_group_name }}</option>
+                    </select>
+                    <p v-if="errors.has('group')" class="help-text text-danger">@{{ errors.first('group') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                    <input v-model="item.date" type="text" name="date" class="datepicker form-control" placeholder="วันที่สอบ" />
+                    <span class="input-group-addon">เวลา</span>
+                    <select @change="on_start_time_change($event)" v-model="item.start_time" v-validate="'required|not_in:-1'" name="start" class="form-control">
+                        <option value="-1">เวลาเริ่มต้น</option>
+                        <option v-for="(time, index) in time_list" :value="time.start.toFormat('HH:mm')" >@{{ time.start.toFormat("HH:mm") }}</option>
+                    </select>
+                    <span class="input-group-addon">ถึง</span>
+                    <select @change="on_end_time_change($event)" v-model="item.end_time" v-validate="'required|not_in:-1'" name="end" class="form-control">
+                        <option value="-1">เวลาสิ้นสุด</option>
+                        <option v-for="(time, index) in time_list" :value="time.end.toFormat('HH:mm')" >@{{ time.end.toFormat("HH:mm") }}</option>
+                    </select>
+                    </div>
+                    <p v-if="errors.has('date')" class="help-text text-danger">@{{ errors.first('date') }}</p>
+                    <p v-if="errors.has('start')" class="help-text text-danger">@{{ errors.first('start') }}</p>
+                    <p v-if="errors.has('end')" class="help-text text-danger">@{{ errors.first('end') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select v-model="item.type" v-validate="'required|not_in:-1'" class="form-control" name="type">
+                      <option value="-1">การสอบ</option>
+                      <option value="Mid">กลางภาค</option>
+                      <option value="Final">ปลายภาค</option>
+                    </select>
+                    <p v-if="errors.has('type')" class="help-text text-danger">@{{ errors.first('type') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <span class="input-group-addon">ลำดับ</span>
+                        <input v-model="item.range_start" type="number" min="1" class="form-control" name="range_start" placeholder="เริ่มต้น" />
+                        <span class="input-group-addon">ถึง</span>
+                        <input v-model="item.range_end" type="number" min="1" class="form-control" name="range_end" placeholder="สิ้นสุด" />
+                    </div>
+                    <p v-if="errors.has('range_start')" class="help-text text-danger">@{{ errors.first('range_start') }}</p>
+                    <p v-if="errors.has('range_end')" class="help-text text-danger">@{{ errors.first('range_end') }}</p>
                 </div>
             </div>
             <button class="hidden" id="edit_button"></button>
@@ -310,30 +377,30 @@
 
                 var dt = luxon.DateTime;
 
-                if(this.start_selected != -1 && this.end_selected != -1) {
-                    if(dt.fromFormat(evt.target.value, 'HH:mm') < dt.fromFormat(this.end_selected, 'HH:mm')) {
-                        return this.start_selected = evt.target.value;
+                if(this.item.start_time != -1 && this.item.end_time != -1) {
+                    if(dt.fromFormat(evt.target.value, 'HH:mm') < dt.fromFormat(this.item.end_time, 'HH:mm')) {
+                        return this.item.start_time = evt.target.value;
                     } else {
                         window.swal("Error", "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด", "error");
-                        return this.start_selected = -1;
+                        return this.item.start_time = -1;
                     }
                 } else {
-                    return this.start_selected = evt.target.value;
+                    return this.item.start_time = evt.target.value;
                 }
             },
             on_end_time_change: function(evt) {
 
                 var dt = luxon.DateTime;
 
-                if(this.start_selected != -1 && this.end_selected != -1) {
-                    if(dt.fromFormat(this.start_selected, 'HH:mm') < dt.fromFormat(evt.target.value, 'HH:mm')) {
-                        return this.end_selected = evt.target.value;
+                if(this.item.start_time != -1 && this.item.end_time != -1) {
+                    if(dt.fromFormat(this.item.start_time, 'HH:mm') < dt.fromFormat(evt.target.value, 'HH:mm')) {
+                        return this.item.end_time = evt.target.value;
                     } else {
                         window.swal("Error", "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด", "error");
-                        return this.end_selected = -1;
+                        return this.item.end_time = -1;
                     }
                 } else {
-                    return this.end_selected = evt.target.value;
+                    return this.item.end_time = evt.target.value;
                 }
             },
             on_clik_edit: function(evt) {
@@ -380,10 +447,11 @@
                 });
             },
             update_status: function(evt) {
+                if(!window.confirm("ยืนยันการลบ")) return;
                 var self = this;
                 var status = evt.currentTarget.dataset.status;
                 var id = evt.currentTarget.dataset.id;
-                axios.post('{{ route("admin_update_status_study_room") }}', { id: id, status: status })
+                axios.post('{{ route("admin_test_update_status") }}', { id: id, status: status })
                 .then(function(res) {
                     var data = res.data;
                     if(data.is_error) {
@@ -446,16 +514,64 @@
         el: '#update_modal',
         data: function() {
             return {
-                item: null
+                terms: TERMS,
+                groups: GROUPS,
+                rooms: ROOMS,
+                subjects: SUBJECTS,
+                teachers: TEACHERS,
+                item: null,
+
+                start_selected: -1,
+                end_selected: -1
+            }
+        },
+        computed: {
+            time_list: function() {
+                var dt = luxon.DateTime;
+                var inv = luxon.Interval;
+                var start = dt.fromObject({ hours: 6 });
+                var end = dt.fromObject({ hours: 23, minutes: 59 })
+                var interval = inv.fromDateTimes(start, end);
+                return interval.splitBy({ minutes: 15 });
             }
         },
         methods: {
+            on_start_time_change: function(evt) {
+
+                var dt = luxon.DateTime;
+
+                if(this.start_selected != -1 && this.end_selected != -1) {
+                    if(dt.fromFormat(evt.target.value, 'HH:mm') < dt.fromFormat(this.end_selected, 'HH:mm')) {
+                        return this.start_selected = evt.target.value;
+                    } else {
+                        window.swal("Error", "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด", "error");
+                        return this.start_selected = -1;
+                    }
+                } else {
+                    return this.start_selected = evt.target.value;
+                }
+            },
+            on_end_time_change: function(evt) {
+
+                var dt = luxon.DateTime;
+
+                if(this.start_selected != -1 && this.end_selected != -1) {
+                    if(dt.fromFormat(this.start_selected, 'HH:mm') < dt.fromFormat(evt.target.value, 'HH:mm')) {
+                        return this.end_selected = evt.target.value;
+                    } else {
+                        window.swal("Error", "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด", "error");
+                        return this.end_selected = -1;
+                    }
+                } else {
+                    return this.end_selected = evt.target.value;
+                }
+            },
             update_item_submit: function(evt) {
                 var self = this;
                 this.$validator.validateAll().then(function(passed) {
                     if(!passed) return window.swal("Error", "กรุณาใส่ข้อมูลให้ถูกต้อง");
                     var data = new FormData(evt.target);
-                    axios.post("{{ route('admin_update_study_room') }}", data).then(function(res) {
+                    axios.post("{{ route('admin_update_test') }}", data).then(function(res) {
                         console.log(res);
                         var data = res.data;
                         if(data.is_error) {
@@ -472,12 +588,18 @@
         created: function() {
             var self = this;
             root_app.$on('edit', function(id) {
-                self.item = root_app.$data.items.find(function(_item) {
+                self.item = Object.assign({}, root_app.$data.items.find(function(_item) {
                     console.log(_item);
-                    return _item.study_room_id == id;
-                });
+                    return _item.test_id == id;
+                }));
                 console.log(self.item);
                 $('#update_modal').modal('show');
+            });
+        },
+        mounted: function() {
+            $('.datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                language: 'th'
             });
         }
 

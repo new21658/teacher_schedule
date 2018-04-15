@@ -72,7 +72,6 @@ class AdminTestController {
     }
 
     async addTest({ request }) {
-        // return request.all();
         try {
           let validation = await validate(request.all(), {
             // ==== keep on tomorow ====
@@ -90,7 +89,7 @@ class AdminTestController {
           });
 
           if(validation.fails()) {
-            var message = validation.message()[0].message;
+            var message = validation.messages()[0].message;
             return json_res_error(message);
           }
     
@@ -117,6 +116,70 @@ class AdminTestController {
         }
       }
 
+
+
+
+
+
+      async updateTest({ request }) {
+        try {
+          let validation = await validate(request.all(), {
+            // ==== keep on tomorow ====
+            id: "required",
+            term: "required",
+            subject: "required",
+            room: "required",
+            teacher: "required",
+            group: "required",
+            date: "required",
+            start: "required",
+            end: "required",
+            type: "required",
+            range_start: "required",
+            range_end: "required"
+          });
+
+          if(validation.fails()) {
+            var message = validation.messages()[0].message;
+            return json_res_error(message);
+          }
+    
+          var test = await Test.find(request.input("id"));
+          test.term_id = request.input("term")
+          test.subject_id = request.input("subject")
+          test.study_room_id = request.input("room")
+          test.teacher_id = request.input("teacher")
+          test.type = request.input("type");
+          test.student_group_id = request.input("group")
+          test.date = DateTime.fromFormat(request.input("date"), "dd/LL/yyyy").toSQL();
+          test.start_time = request.input("start")
+          test.end_time = request.input("end")
+          test.range_start = request.input("range_start")
+          test.range_end = request.input("range_end")
+
+          await test.save()
+    
+          return json_res("Test Added");
+    
+        } catch(ex) {
+          return json_res_error(ex.toString());
+          console.log(ex);
+        }
+      }
+
+      async updateStatus({ request }) {
+        try {
+          var test = await Test.find(request.input("id"));
+    
+          test.status = request.input("status");
+    
+          await test.save();
+    
+          return json_res("Status updated");
+        } catch (ex) {
+          return json_res_error(ex.toString());
+        }
+      }
 }
 
 module.exports = AdminTestController

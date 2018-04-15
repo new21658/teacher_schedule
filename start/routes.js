@@ -40,7 +40,9 @@ nextApp.prepare().then(function() {
             Route.post('/course_update_status', 'AdminCourseController.updateStatus').as('admin_course_update_status');
 
             Route.get('/test_all', 'AdminTestController.testAll').as('admin_test_all');
-            Route.post('/test_all', 'AdminTestController.addTest').as('admin_add_test');
+            Route.post('/test_add', 'AdminTestController.addTest').as('admin_add_test');
+            Route.post("/test_update", 'AdminTestController.updateTest').as("admin_update_test")
+            Route.post("/test_update_status", 'AdminTestController.updateStatus').as("admin_test_update_status")
 
             Route.get('/user_all', 'AdminUserController.userAll').as('admin_user_all');
             Route.get('/user_search', 'AdminUserController.userSearch').as('admin_user_search');
