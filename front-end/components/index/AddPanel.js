@@ -120,7 +120,7 @@ export default class AddPanel extends Component {
 
         const mapRooms = this.props.rooms.map((room, index) => {
             return (
-                <option key={index} value={room.study_room_id} >{ "ห้อง " + room.study_room_code + ' ประเภท ' + room.study_room_type + " " + room.study_room_location }</option>
+                <option key={index} value={room.study_room_id} >{ "ห้อง " + room.study_room_code + " " + room.study_room_location + " (" + room.study_room_type + ")" }</option>
             )
         })
 
@@ -144,6 +144,13 @@ export default class AddPanel extends Component {
                             </select>
                         </div>
                         <div className="col-sm-2">
+                            <label className="label-control">ห้อง</label>
+                            <select onChange={this.onChangeRoom}  className="form-control">
+                                { mapRooms.length < 1 ? <option>ไม่พบห้อง</option> : <option value={-1}>กรุณาเลือกห้อง</option> }
+                                { mapRooms }
+                            </select>
+                        </div>
+                        <div className="col-sm-2">
                             <label className="label-control">วิชา</label>
                             <div className="form-group">
                                 <select onChange={this.onChangeCourse} className="form-control">
@@ -153,13 +160,6 @@ export default class AddPanel extends Component {
                                     { mapCourses }
                                 </select>
                             </div>
-                        </div>
-                        <div className="col-sm-2">
-                            <label className="label-control">ห้อง</label>
-                            <select onChange={this.onChangeRoom}  className="form-control">
-                                { mapRooms.length < 1 ? <option>ไม่พบห้อง</option> : <option value={-1}>กรุณาเลือกห้อง</option> }
-                                { mapRooms }
-                            </select>
                         </div>
                         <div className="col-sm-2">
                             <label style={{minWidth: "50px"}} className="label-control">วัน</label>
