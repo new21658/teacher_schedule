@@ -92,7 +92,7 @@ export const startBooking = () => {
             const data = res.data.data;
             
             dispatch(
-                fetchCourses({ term: schedule.termSelected, responsed: 1 })
+                fetchCourses({ term: schedule.termSelected, responsed: 1, room: schedule.roomSelected })
             );
 
             dispatch(

@@ -16,12 +16,11 @@ export const receiveOwnCourses = (courses) => {
 export const fetchOwnCourses = (args) => {
 
     return (dispatch, getState) => {
-        // console.log("/api/course_all?term=" + (term || "") + "&teacher=" + (teacher || "") + "&status=" + (status || "A") + "&responsed=" + (responsed));
         dispatch({ 
             type: FETCH_OWN_COURSES
          })
         axios.get("/api/course_all", {
-            params: { ...args, teacher: getState().user.teacher_id, status: "A" }
+            params: { ...args, teacher: getState().user.teacher_id || '', status: "A" }
         }).then(res => {
 
             const data = res.data;
@@ -41,10 +40,5 @@ export const fetchOwnCourses = (args) => {
         error => {
             console.error(error)
         }
-
-    }
-
-    return {
-        type: FETCH_OWN_COURSES
     }
 }

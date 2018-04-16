@@ -110,7 +110,7 @@ const Table = (props) => {
                             <div 
                                 key={_index} 
                                 style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className={["highlight-table", !course.approved ? "highlight-table-muted" : "" ].join(" ")}>
-                                <span>{ course.room.study_room_code }</span>
+                                <span>{ "ห้อง " + course.room.study_room_code }</span>
                             </div>
                             </OverlayTrigger>
                             : null
