@@ -9,6 +9,8 @@ const Subject = use("App/Models/Subject");
 const luxon = use("luxon");
 const DateTime = luxon.DateTime;
 
+// Helpers
+
 const withValid = courses => {
   if (!Array.isArray(courses)) {
     courses = [courses];
@@ -20,6 +22,48 @@ const withValid = courses => {
   });
   return courses;
 };
+
+async function bookingCourse (courseId, term, room, day, start, end) {
+
+    let thisTimeIsAvailable = await Course.thisTimeIsAvailable(
+      term,
+      room,
+      day,
+      start,
+      end
+    );
+
+    if (!thisTimeIsAvailable) {
+      throw new Error("This time has booked by someone else.");
+    }
+
+
+    let course = await Course.find(courseId);
+
+    course.study_room_id = room
+
+    course.day = day;
+
+    course.start_time = DateTime.fromFormat(
+      start,
+      "HH:mm"
+    ).toFormat("HH:mm");
+
+    course.end_time = DateTime.fromFormat(
+      end,
+      "HH:mm"
+    ).toFormat("HH:mm");
+
+    course.teacher_responsed = 1;
+
+    await course.save();
+
+    return true;
+
+}
+
+// end Helpers
+
 
 class AdminCourseController {
 
@@ -187,38 +231,11 @@ class AdminCourseController {
       let start = req.input("start_time");
       let end = req.input("end_time");
 
-      let thisTimeIsAvailable = await Course.thisTimeIsAvailable(
-        term,
-        room,
-        day,
-        start,
-        end
-      );
+      let isOk = await bookingCourse(courseId, term, room, day, start, end);
 
-      if (!thisTimeIsAvailable) {
-        throw new Error("This time has booked by someone else.");
-      }
-
-
-      let course = await Course.find(courseId);
-
-      course.study_room_id = room
-
-      course.day = day;
-
-      course.start_time = DateTime.fromFormat(
-        start,
-        "HH:mm"
-      ).toSQL();
-
-      course.end_time = DateTime.fromFormat(
-        end,
-        "HH:mm"
-      ).toSQL();
-
-      course.teacher_responsed = 1;
-
-      await course.save();
+      if(isOk) {
+        return json_res("Course Updated");
+      } 
 
       return json_res("Course Updated");
 

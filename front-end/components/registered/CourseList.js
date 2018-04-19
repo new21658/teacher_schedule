@@ -33,7 +33,7 @@ class CourseList extends Component {
         const mapItems = this.props.ownCourses.map((item, index) => {
             return (
                 <div key={index}>
-                    <div className="col-sm-3 tch-card">
+                    <div style={{ height: "280px" }} className="col-sm-3 tch-card">
                         <div className="tch-card-body" >
                             <div className="tch-card-item">
                             <label className="tch-card-item-label">สถานะ</label> { item.approved == 1 ? 

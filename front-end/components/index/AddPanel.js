@@ -185,7 +185,7 @@ export default class AddPanel extends Component {
                         <div className="col-sm-1 text-right">
                                 <label style={{minWidth: "50px"}} className="label-control"></label>
                                 <div className="form-group">
-                                    <button className="btn btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
+                                    <button className="btn btn-lg btn-success"><i className="fas fa-plus-circle"></i> จอง</button>
                                 </div>
                         </div>
                     </div>

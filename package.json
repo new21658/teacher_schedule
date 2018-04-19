@@ -8,7 +8,8 @@
     "build": "cd front-end && next build && cd ..",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "node ace test"
+    "test": "node ace test",
+    "build:start": "npm run build && npm run start"
   },
   "keywords": [
     "adonisjs",

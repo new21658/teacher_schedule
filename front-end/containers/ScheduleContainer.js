@@ -23,6 +23,7 @@ function fetchCoursesByTermAndRoom(teacher, room, dispatch) {
   console.log("teacher", teacher, "room", room);
      dispatch(fetchCourses({
       term: teacher, 
+      status: 'A',
       responsed: 1, 
       room: room
      }))
@@ -76,6 +77,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 
       dispatchProps.dispatch(fetchOwnCourses({ 
         term: term,
+        status: 'A',
         responsed: 0
        }));
 

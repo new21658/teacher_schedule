@@ -1,0 +1,70 @@
+@layout("report.master")
+
+@section('body')
+
+<div class="container">
+
+    <div class="row">
+        <h4 class="text-center">การสอบ{{ type == 'Final' ? 'ปลายภาค' : 'กลางภาค' }} ปีการศึกษา {{ parseInt(term.term_year) + 543 }}/{{ term.term }}</h4>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped">
+                <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>วันที่สอบ</th>
+                            <th>เวลา</th>
+                            <th>รหัส</th>
+                            <th>วิชา</th>
+                            <!--<th>อาจารย์คุมสอบ</th> -->
+                            <th>กลุ่ม</th>
+                            <th>ห้อง</th>
+                            <th>การสอบ</th>
+                            <th>ลำดับ</th>
+                        </tr>
+                </thead>
+                <tbody>
+                @if(tests && tests.length > 0)
+                    @each(test in tests)
+                    <tr class="small">
+                        <td class="text-center">{{ ($loop.index + 1) }}</td>
+                        <td>{{ test.date }}</td>
+                        <td class="text-center">{{ test.start_time }} <br /> ถึง <br /> {{ test.end_time }}</td>
+                        <td>{{ test.subject.subject_code }}</td>
+                        <td style="max-width: 120px;">{{ test.subject.subject_name }}</td>
+                        <td>{{ test.group.student_group_name }}</td>
+                        <td>{{ test.room.study_room_code }}</td>
+                        <td>{{ test.type == 'Final' ? 'ปลายภาค' : 'กลางภาค' }}</td>
+                        <td>{{ test.range_start + "-" + test.range_end }}</td>
+                    </tr>
+                    @endeach
+                @else
+                    <tr><td colspan="9" class="text-center">ไม่พบข้อมูล</td></tr>
+                @endif
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection
+
+@section('script')
+<script type="text/javascript">
+(function() {
+
+    window.print();
+    window.setTimeout(function() {
+        window.close();
+    }, 50);
+
+})();
+</script>
+
+@endsection

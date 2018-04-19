@@ -58,6 +58,8 @@ class AdminTestController {
         .with('teacher')
         .where('status', 'like', `%${status}%`)
         .where('term_id', 'like', `%${term}%`)
+        .orderBy("date")
+        .orderBy("start_time")
         .fetch()
 
         return json_res(tests);
@@ -71,6 +73,40 @@ class AdminTestController {
         }
     }
 
+    async report({ request, view }) {
+
+      try {
+
+        const q = request.get();
+
+        const term = await Term.find(q.term);
+
+        const tests = await Test.query()
+        .where('term_id', '=', q.term)
+        .where('type', '=', q.type)
+        .with('subject')
+        .with('term')
+        .with("group")
+        .with("room")
+        .orderBy('date')
+        .orderBy('start_time ')
+        .fetch()
+
+        return view.render('report/test', {
+          request: request,
+          parseInt: parseInt,
+          type: q.type,
+          term: term.toJSON(),
+          tests: JSON.parse(JSON.stringify(tests))
+        });
+
+      } catch(ex) {
+        return ex.toString();
+      }
+
+    }
+
+
     async addTest({ request }) {
         try {
           let validation = await validate(request.all(), {
@@ -78,7 +114,7 @@ class AdminTestController {
             term: "required",
             subject: "required",
             room: "required",
-            teacher: "required",
+            //teacher: "required",
             group: "required",
             date: "required",
             start: "required",
@@ -92,15 +128,28 @@ class AdminTestController {
             var message = validation.messages()[0].message;
             return json_res_error(message);
           }
+
+          let isOverlaps = await Test.isTimeOverlaps(
+            request.input("term"), 
+            request.input("type"),
+            request.input("date"), 
+            request.input("start"), 
+            request.input("end"), 
+            request.input("room")
+          );
+
+          if(isOverlaps) {
+            return json_res_error("This time has already booked");
+          }
     
           var test = new Test();
           test.term_id = request.input("term")
           test.subject_id = request.input("subject")
           test.study_room_id = request.input("room")
-          test.teacher_id = request.input("teacher")
+          // test.teacher_id = request.input("teacher")
           test.type = request.input("type");
           test.student_group_id = request.input("group")
-          test.date = DateTime.fromFormat(request.input("date"), "dd/LL/yyyy").toSQL();
+          test.date = DateTime.fromFormat(request.input("date"), "dd/LL/yyyy").toFormat("yyyy-LL-dd");
           test.start_time = request.input("start")
           test.end_time = request.input("end")
           test.range_start = request.input("range_start")
@@ -151,7 +200,7 @@ class AdminTestController {
           test.teacher_id = request.input("teacher")
           test.type = request.input("type");
           test.student_group_id = request.input("group")
-          test.date = DateTime.fromFormat(request.input("date"), "dd/LL/yyyy").toSQL();
+          test.date = DateTime.fromFormat(request.input("date"), "dd/LL/yyyy").toFormat("yyyy-LL-dd");
           test.start_time = request.input("start")
           test.end_time = request.input("end")
           test.range_start = request.input("range_start")

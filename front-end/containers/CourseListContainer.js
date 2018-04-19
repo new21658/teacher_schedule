@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { selectTerm } from "../redux/actions/scheduleAction";
 import { fetchOwnCourses } from "../redux/actions/ownCourseAction"
-import { receiveCourses } from "../redux/actions/courseAction";
+import { receiveCourses, fetchCourses } from "../redux/actions/courseAction";
 import axios from "axios"
 
 
@@ -26,13 +26,18 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(fetchOwnCourses({ 
               term: term
              }));
+
+             dispatch(fetchCourses({
+                term: term,
+                responsed: 1
+             }));
       
-            axios
-              .get("/api/course_all?status=A&responsed=1&term=" + term)
-              .then(res => {
-                const data = res.data.data;
-                dispatch(receiveCourses(data));
-              });
+            // axios
+            //   .get("/api/course_all?status=A&responsed=1&term=" + term)
+            //   .then(res => {
+            //     const data = res.data.data;
+            //     dispatch(receiveCourses(data));
+            //   });
 
         },
     }

@@ -25,6 +25,12 @@ nextApp.prepare().then(function() {
         Route.get('/login', 'LoginController.index').as('login_page').middleware(['redirectIfLoggedIn']);
         Route.post('/login', 'LoginController.login').as('login').middleware(['redirectIfLoggedIn']);
         Route.get('/logout', 'LoginController.logout').as('logout');
+
+        Route.group(function() {
+
+            Route.get('/test', 'AdminTestController.report').as('test_report');
+
+        }).prefix("report");
         
         Route.group(function() {
 

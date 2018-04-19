@@ -13,10 +13,10 @@ export const receiveCourses = (courses) => {
 
 export const fetchCourses = (args) => {
 
-    return (dispatch) => {
+    return (dispatch, getState) => {
 
         axios.get("/api/course_all", {
-            params: { ...args }
+            params: { ...args, room: args.room || getState().schedule.roomSelected || '', status: 'A' }
         }).then((res) => {
 
             const data = res.data;

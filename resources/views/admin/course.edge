@@ -13,7 +13,7 @@
             </select>
         </div>
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
         <form @submit.prevent="search_items($event)">
         <div class="input-group">
             <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ... " />
@@ -22,9 +22,9 @@
             <span>
         </div>
         </form>
-    </div>
-    <div class="col-sm-6 text-right">
-        <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-plus-circle text-success"></i> เพิ่ม</button>
+    </div> -->
+    <div class="col-sm-9 text-right">
+        <button onclick="$('#add_modal').modal('show')" class="btn btn-lg btn-default"><i class="fas fa-plus text-success"></i> เพิ่ม</button>
     </div>
 </div>
 <div class="row">
@@ -181,19 +181,6 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select  name="teacher" v-validate="'required|not_in:-1'" class="form-control">
-                        <option value="-1">เลือกอาจารย์</option>
-                        <option 
-                            v-for="(item, index) in teachers" 
-                            :key="index" 
-                            :value="item.teacher_id" >
-                            @{{ item.teacher_name + " (" + item.teacher_code + ")" }}</option>
-                    </select>
-                    <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
                     <select name="subject" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกวิชา</option>
                         <option 
@@ -216,6 +203,19 @@
                             @{{ item.student_group_name }}</option>
                     </select>
                     <p v-if="errors.has('group')" class="help-text text-danger">@{{ errors.first('group') }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <select  name="teacher" v-validate="'required|not_in:-1'" class="form-control">
+                        <option value="-1">เลือกอาจารย์</option>
+                        <option 
+                            v-for="(item, index) in teachers" 
+                            :key="index" 
+                            :value="item.teacher_id" >
+                            @{{ item.teacher_name + " (" + item.teacher_code + ")" }}</option>
+                    </select>
+                    <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
                 </div>
             </div>
             <button class="hidden" id="add_button"></button>

@@ -23,7 +23,7 @@
          ปลายภาค</button>
          </div>
     </div>
-    <div class="col-sm-4">
+    <!-- <div class="col-sm-4">
         <form @submit.prevent="search_items($event)">
         <div class="input-group">
             <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ... " />
@@ -32,9 +32,10 @@
             <span>
         </div>
         </form>
-    </div>
-    <div class="col-sm-3 text-right">
-        <button onclick="$('#add_modal').modal('show')" class="btn btn-default"><i class="fas fa-plus text-success"></i> เพิ่ม</button>
+    </div> -->
+    <div class="col-sm-7 text-right">
+        <button v-if="term_selected != -1 && type_selected != -1" class="btn btn-lg btn-default" @click="on_print()"><i class="fa fa-print"></i> พิมพ์</button>
+        <button onclick="$('#add_modal').modal('show')" class="btn btn-lg btn-default"><i class="fas fa-plus text-success"></i> เพิ่ม</button>
     </div>
 </div>
 <div class="row">
@@ -45,15 +46,15 @@
                     <thead>
                         <tr>
                             <th class="text-center">ลำดับ</th>
+                            <th>วันที่สอบ</th>
+                            <th>เวลา</th>
                             <th>รหัส</th>
                             <th>วิชา</th>
-                            <th>อาจารย์คุมสอบ</th>
+                            <!--<th>อาจารย์คุมสอบ</th> -->
                             <th>กลุ่ม</th>
-                            <th>วันที่สอบ</th>
-                            <th>เวลา</tH>
                             <th>ห้อง</th>
                             <th>การสอบ</th>
-                            <th>ช่วงลำดับ</th>
+                            <th>ลำดับ</th>
                             <th>ลบ</th>
                             <th>แก้ไข</th>
                         </tr>
@@ -62,12 +63,12 @@
                         <template v-if="items_filtered.length > 0">
                             <tr v-for="(item, index) in items_filtered" :key="index">
                                 <td class="text-center">@{{ ++index }}</td>
-                                <td>@{{ item.subject.subject_code }}</td>
-                                <td>@{{ item.subject.subject_name }}</td>
-                                <td>@{{ item.teacher.teacher_name }}</td>
-                                <td>@{{ item.group.student_group_name }}</td>
                                 <td>@{{ item.date }}</td>
                                 <td>@{{ item.start_time + "-" + item.end_time }}</td>
+                                <td>@{{ item.subject.subject_code }}</td>
+                                <td>@{{ item.subject.subject_name }}</td>
+                                <!-- <td>@{{ item.teacher.teacher_name }}</td> -->
+                                <td>@{{ item.group.student_group_name }}</td>
                                 <td>@{{ item.room.study_room_code }}</td>
                                 <td>@{{ item.type == 'Final' ? 'ปลายภาค' : 'กลางภาค' }}</td>
                                 <td>@{{ item.range_start + "-" + item.range_end }}</td>
@@ -131,7 +132,7 @@
                     <p v-if="errors.has('room')" class="help-text text-danger">@{{ errors.first('room') }}</p>
                 </div>
             </div>
-            <div class="form-group">
+            <!--  <div class="form-group">
                 <div class="col-sm-12">
                     <select v-validate="'required|not_in:-1'" class="form-control" name="teacher">
                       <option value="-1">อาจารย์คุมสอบ</option>
@@ -139,7 +140,7 @@
                     </select>
                     <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <select v-validate="'required|not_in:-1'" class="form-control" name="group">
@@ -347,7 +348,7 @@
                 items: [],
                 term_selected: -1,
 
-                type_selected: 'Final',
+                type_selected: -1,
 
                 start_selected: -1,
                 end_selected: -1
@@ -370,6 +371,9 @@
             }
         },
         methods: {
+            on_print: function() {
+                window.open("/report/test?term=" + this.term_selected + "&type=" + this.type_selected);
+            },
             on_type_selected: function(evt) {
                 this.type_selected = evt.target.dataset.value;
             },
