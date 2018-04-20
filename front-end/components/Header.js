@@ -9,7 +9,11 @@ const Header = (props) => {
             </div>
             <div className="col-sm-6">
                 <p className="text-right">
-                    <span>สวัสดี! คุณ { props.name } &nbsp;&nbsp;&nbsp;<a href="/logout" style={{ padding: "1em" }} className="tch-link tch-link-light"><i className="fas fa-power-off"></i></a></span>
+                    {
+                        props.isLoggedIn ? (
+                        <span>สวัสดี! คุณ { props.name } &nbsp;&nbsp;&nbsp;<a href="/logout" style={{ padding: "1em" }} className="tch-link tch-link-light"><i className="fas fa-power-off"></i></a></span>
+                        ) : '' 
+                    }
                 </p>
             </div>
         </div>

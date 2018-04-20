@@ -2,31 +2,42 @@
 @section('body')
     <div id="root_app" class="container">
         <div class="row">
-               <div style="margin-top: 100px; max-width: 450px; min-width: 300px; border-radius: 20px 20px 0 0;" class="col-sm-4 col-xs-10 col-sm-offset-4 col-xs-offset-1 tch-shadow-lg panel panel-default">
-        <div class="panel-body">
-            <h3>Course <color class="tch-text-primary">Scheduling</color></h3>
-            <h4><i class="fas fa-calendar-alt"></i> ระบบจัดการตารางสอนและตารางสอบ</h4>
-            <hr/>
-            <form @submit.prevent="submit($event)" class="form form-horizontal">
-                {{ csrfField() }}
-                <div class="form-group">
-                    <input ref="inp_username" v-validate="'required'" type="text" class="form-control" name="username" placeholder="ชื่อผู้ใช้" />
-                    <p v-if="errors.has('username')" class="help-text text-danger">@{{ errors.first('username') }}</p>
+            <div style="margin-top: 100px; max-width: 450px; min-width: 300px; border-radius: 20px 20px 0 0;" class="col-sm-4 col-xs-10 col-sm-offset-4 col-xs-offset-1 tch-shadow-lg panel panel-default">
+                <div class="panel-body">
+                    <h3>Course <color class="tch-text-primary">Scheduling</color></h3>
+                    <h4><i class="fas fa-calendar-alt"></i> ระบบจัดการตารางสอนและตารางสอบ</h4>
+                    <hr/>
+                    <form @submit.prevent="submit($event)" method="POST" class="form form-horizontal">
+                        {{ csrfField() }}
+                        <div class="form-group">
+                            <input ref="inp_username" v-validate="'required'" type="text" class="form-control" name="username" placeholder="ชื่อผู้ใช้" />
+                            <p v-if="errors.has('username')" class="help-text text-danger">@{{ errors.first('username') }}</p>
+                        </div>
+                        <div class="form-group">
+                            <input v-validate="'required'" id="inp_password" type="password" class="form-control" name="password" placeholder="รหัสผ่าน" />
+                            <p v-if="errors.has('password')" class="help-text text-danger">@{{ errors.first('password') }}</p>
+                        </div>
+                        <div class="form-group">
+                            <p v-if="username_invalid" class="help-text text-danger">ชื่อผู้ใช้หรือหรัสผ่านไม่ถูกต้อง</p>
+                        </div>
+                        <div class="form-group text-right">
+                            <button class="col-sm-12 btn btn-lg btn-success tch-btn-primary"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</button>
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <a href="/schedule" class="col-sm-12 btn btn-lg  btn-primary"><i class="far fa-calendar-alt"></i> ดูตารางเรียน</a>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <input v-validate="'required'" id="inp_password" type="password" class="form-control" name="password" placeholder="รหัสผ่าน" />
-                    <p v-if="errors.has('password')" class="help-text text-danger">@{{ errors.first('password') }}</p>
-                </div>
-                <div class="form-group">
-                    <p v-if="username_invalid" class="help-text text-danger">ชื่อผู้ใช้หรือหรัสผ่านไม่ถูกต้อง</p>
-                </div>
-                <div class="form-group text-right">
-                    <button class="btn btn-success tch-btn-primary"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</button
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <div class="row">
+            
+        
         </div>
+
+
     </div>
 @endsection
 @section('script')

@@ -6,7 +6,7 @@ export default (props) => {
         props.selectTerm(evt.target.value)
     }
 
-    const mapTerms = props.terms.map(t => (<option value={t.term_id}>{"ปี " + (parseInt(t.term_year)+543) + " เทอม " + t.term  }</option>))
+    const mapTerms = props.terms.map((t, i) => (<option key={i} value={t.term_id}>{"ปี " + (parseInt(t.term_year)+543) + " เทอม " + t.term  }</option>))
     
     return (
         <div className="flex-box" style={{ marginTop: "50px", marginBottom: "30px", }}>

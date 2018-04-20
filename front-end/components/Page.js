@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import Head from "next/head";
 import Header from "../containers/HeaderContainer";
-import Menu from "./Menu";
+import Menu from "../containers/MenuContainer";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 import axios from "axios";
@@ -12,7 +12,7 @@ import { receiveRoom } from "../redux/actions/roomAction";
 import { fetchOwnCourses } from "../redux/actions/ownCourseAction";
 import { receiveCourses } from "../redux/actions/courseAction"
 
-if(typeof window !== "undefined") {
+if (typeof window !== "undefined") {
     window.store = store;
 }
 
@@ -24,52 +24,24 @@ const wrapper = (Content) => {
                 console.log("Page's props ", this.props);
                 return (
                     <Provider store={store}>
-                    <div>
-                        <Head>
-                            <title>Course Scheduling</title>
-                            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-                            <link rel="stylesheet" href="/_next/static/style.css" />
-                            <link rel="stylesheet" href="/style/dist/tch-style.css" />
-                            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous" />
-                        </Head>
-                        <Header { ...this.props } />
-                        <Menu { ...this.props } />
-                        <Content { ...this.props } />
-                    </div>
+                        <div>
+                            <Head>
+                                <title>Course Scheduling</title>
+                                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+                                <link rel="stylesheet" href="/_next/static/style.css" />
+                                <link rel="stylesheet" href="/style/dist/tch-style.css" />
+                                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous" />
+                            </Head>
+                            <Header {...this.props} />
+                            <Menu {...this.props} />
+                            <Content {...this.props} />
+                        </div>
                     </Provider>
                 )
             }
-            componentWillMount() {
-                if(typeof window !== 'undefined') {
-                axios.get('/api/user_data').then(function(res) {
-                    const data = res.data.data;
-                    store.dispatch(receiveUser(data));
-                    console.log("teacher id: ", data.teacher_id);
-                    // if(data.teacher_id !== undefined || data.teacher_id !== null) {
-                    //     store.dispatch(fetchOwnCourses({
-                    //         status: 'A',
-                    //         teacher: data.teacher_id,
-                    //         responsed: 0
-                    //     }));
-                    //     // axios.get('/api/course_by_teacher/' + data.teacher_id).then((res) => {
-                    //     //     const data = res.data.data;
-                    //     //     store.dispatch(receiveOwnCourses(data));
-                    //     // });
-                    // }
-                });
-                axios.get('/api/term_all?status=A').then((res) => {
-                    const data = res.data.data;
-                    store.dispatch(receiveTerm(data));
-                });
-                axios.get('/api/study_room_all?status=A').then((res) => {
-                    const data = res.data.data;
-                    store.dispatch(receiveRoom(data));
-                });
-            }
-            }
         }
     );
-} 
+}
 
 
 

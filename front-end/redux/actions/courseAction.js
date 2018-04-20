@@ -16,7 +16,7 @@ export const fetchCourses = (args) => {
     return (dispatch, getState) => {
 
         axios.get("/api/course_all", {
-            params: { ...args, room: args.room || getState().schedule.roomSelected || '', status: 'A' }
+            params: { ...args, term: args.term || getState().schedule.termSelected || -1, room: args.room || getState().schedule.roomSelected || -1, status: 'A' }
         }).then((res) => {
 
             const data = res.data;

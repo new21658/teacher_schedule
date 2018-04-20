@@ -31,13 +31,6 @@ const mapDispatchToProps = (dispatch) => {
                 term: term,
                 responsed: 1
              }));
-      
-            // axios
-            //   .get("/api/course_all?status=A&responsed=1&term=" + term)
-            //   .then(res => {
-            //     const data = res.data.data;
-            //     dispatch(receiveCourses(data));
-            //   });
 
         },
     }

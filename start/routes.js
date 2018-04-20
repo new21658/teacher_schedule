@@ -20,6 +20,7 @@ const nextApp = next({ dev: process.env.NODE_ENV === 'development',  dir: './fro
 const handle = nextApp.getRequestHandler();
 
 nextApp.prepare().then(function() {
+
         console.log('next app prepend...');
 
         Route.get('/login', 'LoginController.index').as('login_page').middleware(['redirectIfLoggedIn']);
@@ -98,12 +99,20 @@ nextApp.prepare().then(function() {
         }).middleware(['detectAdmin']).prefix('/admin');
 
         // Route.get('/', 'HomeController.index').as('user_index').middleware(['detectUser']);
+
+        Route.get('/schedule', function({ request, response }) {
+            return handle(request.request, response.response);
+        });
+
+        Route.get('/mypage', function({ request, response }) {
+            return handle(request.request, response.response);
+        })
         
         // Next Js
         Route.get('*', function({ request, response, params }) {
             console.log("***");
             return handle(request.request, response.response);
-        }).middleware(['detectUser']);
+        })
         
 
     

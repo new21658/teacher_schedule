@@ -26,53 +26,10 @@ class Schedule extends Component {
             showAddModal: false,
             startTime: DateTime.local().toFormat("HH:mm"),
             endTime: DateTime.local().plus({ hours: 1 }).toFormat("HH:mm"),
-            // courses: (() => {
-            //     return [
-            //         {
-            //         start_time: DateTime.fromObject({ hours: 7 }),
-            //         end_time: DateTime.fromObject({ hours: 10 }),
-            //         day: 1
-            //     },
-            //     {
-            //         start_time: DateTime.fromObject({ hours: 8 }),
-            //         end_time: DateTime.fromObject({ hours: 12, minutes: 30 }),
-            //         day: 3
-            //     },
-            //     {
-            //         start_time: DateTime.fromObject({ hours: 7 }),
-            //         end_time: DateTime.fromObject({ hours: 7, minutes: 45 }),
-            //         day: 5
-            //     }
-            // ]
-            // })()
         }
-        this.toggleModal = this.toggleModal.bind(this);
-        this.showAddModal = this.showAddModal.bind(this);
-        this.hideAddModal = this.hideAddModal.bind(this);
         this.selectStartTime = this.selectStartTime.bind(this);
         this.selectEndTime = this.selectEndTime.bind(this);
         this.selectTime = this.selectTime.bind(this);
-    }
-
-    showAddModal() {
-        this.setState((state) => {
-            console.log("state", state);
-            return Object.assign({}, state, { showAddModal: true }); 
-        });
-    }
-
-    hideAddModal() {
-        this.setState((state) => {
-            console.log("state", state);
-            return Object.assign({}, state, { showAddModal: false }); 
-        });
-    }
-
-    toggleModal() {
-        this.setState((state) => {
-            console.log("state", state);
-            return Object.assign({}, state, { showAddModal: !state.showAddModal }); 
-        });
     }
 
     selectStartTime(time) {
@@ -131,6 +88,7 @@ class Schedule extends Component {
                         ownCourses={this.props.ownCourses}
                         days={this.days} />
                     <Table
+                        timeSelectable={true}
                         schedule={this.props.schedule}
                         selectTime={this.selectTime}
                         startTime={this.startTime}

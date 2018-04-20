@@ -123,18 +123,6 @@ class AdminCourseController {
         .andWhere("courses.teacher_id", "like", "%" + teacher + "%")
         .fetch();
 
-        // console.log(Course.query()
-        // .where("courses.status", "like", "%" + status + "%")
-        // .andWhere("courses.approved", "like", "%" + approved + "%")
-        // .andWhere("courses.teacher_responsed", "like", "%" + responsed + "%")
-        // .andWhere("courses.term_id", "like", "%" + term + "%")
-        // .andWhere(function() {
-        //   this.where('courses.study_room_id', 'like', '%' + room + '%')
-        //   this.orWhere('courses.study_room_id', 'IS', 'NULL')
-        // })
-        // .andWhere("courses.teacher_id", "like", "%" + teacher + "%")
-        // .toString())
-
       courses = withValid(courses.toJSON());
 
       return json_res(courses);
