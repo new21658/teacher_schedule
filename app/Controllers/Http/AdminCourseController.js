@@ -143,6 +143,45 @@ class AdminCourseController {
     }
   }
 
+  async report({ request, view }) {
+
+    try {
+
+      const q = request.get();
+
+      const term = await Term.find(q.term);
+
+      const courses = await Course.query()
+      .where('courses.term_id', '=', q.term)
+      .where('courses.status', '=', q.status || 'A')
+      .where('courses.approved', '=', q.approved || 1)
+      .where('courses.teacher_responsed', '=', q.responsed || 1)
+      .with('subject')
+      .with('term')
+      .with('group')
+      .with('room')
+      .with('teacher')
+      .orderBy('courses.teacher_id')
+      .orderBy('courses.day')
+      .orderBy('courses.start_time')
+      // .leftJoin('terms', 'terms.term_id', '=', 'courses.term_id')
+      // .orderBy('terms.term', 'DESC')
+      // .orderBy('terms.term_year')
+      .fetch()
+
+      return view.render('report/course', {
+        request: request,
+        parseInt: parseInt,
+        term: term.toJSON(),
+        day_of_week: ['', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์'],
+        courses: JSON.parse(JSON.stringify(courses))
+      });
+
+    } catch(ex) {
+      return ex.toString();
+    }
+  }
+
 
   async courseByTeacher({ params }) {
     try {

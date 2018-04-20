@@ -34,7 +34,7 @@
         </form>
     </div> -->
     <div class="col-sm-7 text-right">
-        <button v-if="term_selected != -1 && type_selected != -1" class="btn btn-lg btn-default" @click="on_print()"><i class="fa fa-print"></i> พิมพ์</button>
+        <button :disabled="term_selected == -1 || type_selected == -1" class="btn btn-lg btn-default" @click="on_print()"><i class="fa fa-print"></i> พิมพ์</button>
         <button onclick="$('#add_modal').modal('show')" class="btn btn-lg btn-default"><i class="fas fa-plus text-success"></i> เพิ่ม</button>
     </div>
 </div>

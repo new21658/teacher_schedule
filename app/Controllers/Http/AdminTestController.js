@@ -84,6 +84,7 @@ class AdminTestController {
         const tests = await Test.query()
         .where('term_id', '=', q.term)
         .where('type', '=', q.type)
+        .where('status', '=', q.status || 'A')
         .with('subject')
         .with('term')
         .with("group")

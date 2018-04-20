@@ -5,8 +5,13 @@
 <div class="container">
 
     <div class="row">
-        <h4 class="text-center">การสอบ{{ type == 'Final' ? 'ปลายภาค' : 'กลางภาค' }} ปีการศึกษา {{ parseInt(term.term_year) + 543 }}/{{ term.term }}</h4>
+        <h4 class="text-center">การสอบ{{ type == 'Final' ? 'ปลายภาค' : 'กลางภาค' }}</h4>
+        <div class="text-center">
+            <strong>ปีการศึกษา {{ parseInt(term.term_year) + 543 }}/{{ term.term }}</strong>
+        </div>
     </div>
+
+    <hr />
 
 
     <div class="row">
@@ -14,7 +19,7 @@
             <table class="table table-striped">
                 <thead>
                         <tr>
-                            <th class="text-center">ลำดับ</th>
+                            <th class="text-center">#</th>
                             <th>วันที่สอบ</th>
                             <th>เวลา</th>
                             <th>รหัส</th>

@@ -28,6 +28,8 @@ nextApp.prepare().then(function() {
 
         Route.group(function() {
 
+            Route.get('/course', 'AdminCourseController.report').as('course_report');
+
             Route.get('/test', 'AdminTestController.report').as('test_report');
 
         }).prefix("report");

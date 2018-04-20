@@ -95,7 +95,8 @@
     <div class="tch-shadow-sm panel panel-default">
         <div class="panel-body">
             <div class="table-responsive">
-                <h2 class="text-left"><i class="text-success fas fa-check-circle"></i> อนุมัติแล้ว</h2>
+                <h2 class="col-sm-6 text-left"><i class="text-success fas fa-check-circle"></i> อนุมัติแล้ว</h2>
+                <div class="col-sm-6 text-right"><button :disabled="selected_term == -1" @click="on_print($event)" class="btn btn-lg btn-default"><i class="fa fa-print"></i> พิมพ์</button></div>
                 <hr />
                 <table class="table table-hover">
                     <thead>
@@ -347,6 +348,9 @@
             }
         },
         methods: {
+            on_print: function() {  
+                window.open("/report/course?term=" + this.selected_term);
+            },
             on_select_term: function(evt) {
                 var id = evt.target.value;
                 if(id == -1) return;

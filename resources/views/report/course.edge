@@ -1,0 +1,70 @@
+@layout("report.master")
+
+@section('body')
+
+<div class="container">
+
+    <div class="row">
+        <h4 class="text-center">ตารางสอน</h4>
+        <div class="text-center">
+        <strong>ปีการศึกษา {{ parseInt(term.term_year) + 543 }}/{{ term.term }}</strong>
+        </div>
+    </div>
+
+    <hr />
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped">
+                <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>รหัสวิชา</th>
+                            <th>ชื่อวิชา</th>
+                            <th>ผู้สอน</th>
+                            <th>กลุ่ม</th>
+                            <th>วัน</th>
+                            <th>เวลา</th>
+                        </tr>
+                </thead>
+                <tbody>
+                @if(courses && courses.length > 0)
+                    @each(course in courses)
+                    <tr class="small">
+                        <td class="text-center">{{ ($loop.index + 1) }}</td>
+                        <td>{{ course.subject.subject_code }}</td>
+                        <td>{{ course.subject.subject_name }}</td>
+                        <td>{{ course.teacher.teacher_code }}</td>
+                        <td>{{ course.group.student_group_name }}</td>
+                        <td>{{ day_of_week[course.day] }}</td>
+                        <td>{{ course.start_time + "-" + course.end_time }}</td>
+                    </tr>
+                    @endeach
+                @else
+                    <tr><td colspan="9" class="text-center">ไม่พบข้อมูล</td></tr>
+                @endif
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection
+
+@section('script')
+<script type="text/javascript">
+(function() {
+
+    window.print();
+    window.setTimeout(function() {
+        window.close();
+    }, 50);
+
+})();
+</script>
+
+@endsection
