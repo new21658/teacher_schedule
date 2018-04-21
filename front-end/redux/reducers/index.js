@@ -6,6 +6,8 @@ import { RECEIVE_COURSES } from "../actions/courseAction"
 import { FETCH_OWN_COURSES, RECEIVE_OWN_COURSES } from "../actions/ownCourseAction"
 
 import schedule from "./scheduleReducer"
+import test from "./testReducer"
+import testSchedule from "./testScheduleReducer"
 
 let user = (state={}, action) => {
     console.log("user action:", action);
@@ -69,5 +71,7 @@ export default combineReducers({
     ownCourses: ownCourses,
     rooms: rooms,
     schedule: schedule,
-    loader: loader
+    loader: loader,
+    tests: test,
+    testSchedule: testSchedule
 });

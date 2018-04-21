@@ -11,6 +11,10 @@ export default (props) => {
     )
 
 
+    const onChangeTerm = (evt) => props.changeTerm(evt.target.value)
+    
+    const onChangeRoom = (evt) => props.changeRoom(evt.target.value)
+
 
 
     return (
@@ -20,7 +24,7 @@ export default (props) => {
                     <div className="col-sm-4">
                         <div className="form-group">
                             <label className="label-control">เลือกเทอม</label>
-                            <select className="form-control">
+                            <select onChange={onChangeTerm} className="form-control">
                                 <option value={-1}>เลือกเทอม</option>
                                 { mapTermsOptios }
                             </select>
@@ -29,7 +33,7 @@ export default (props) => {
                     <div className="col-sm-4">
                         <div className="form-group">
                             <label className="label-control">เลือกห้อง</label>
-                            <select className="form-control">
+                            <select onChange={onChangeRoom} className="form-control">
                                 <option value={-1}>เลือกห้อง</option>
                                 { mapRoomsOptions }
                             </select>

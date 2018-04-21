@@ -3,7 +3,7 @@ import React from "react";
 const Header = (props) => {
     return (
     <div className="container-fluid">
-        <div className="row tch-header">
+        <div className={['row', props.isLoggedIn ? 'tch-header' : 'tch-header-blue'].join(' ')}>
             <div className="col-sm-6">
                     <a className="tch-link" style={{fontSize: '2em' , color: 'white'}}><color className="tch-text-light">Course Scheduling</color></a>
             </div>

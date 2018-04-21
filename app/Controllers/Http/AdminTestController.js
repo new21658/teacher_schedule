@@ -48,7 +48,8 @@ class AdminTestController {
         const q = request.get()
 
         let status = q.status || '';
-        let term = q.term || ''
+        let term = q.term || '';
+        let type = q.type || '';
 
         let tests = await Test.query()
         .with('term')
@@ -58,6 +59,7 @@ class AdminTestController {
         .with('teacher')
         .where('status', 'like', `%${status}%`)
         .where('term_id', 'like', `%${term}%`)
+        .where('type', 'like', `%${type}%`)
         .orderBy("date")
         .orderBy("start_time")
         .fetch()

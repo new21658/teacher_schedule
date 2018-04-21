@@ -36,11 +36,15 @@ class Schedule extends Component {
 
         return (
             <div className="col-sm-12">
-                <ControlPanel terms={this.props.terms} rooms={this.props.rooms} />
-                <div className="table-responsive panel panel-default">
+                <ControlPanel
+                    changeTerm={this.props.changeTerm}
+                    changeRoom={this.props.changeRoom} 
+                    terms={this.props.terms} 
+                    rooms={this.props.rooms} />
+                <div className="tch-shadow-sm table-responsive panel panel-default">
                     <div className="panel-body">
                         <Table
-                            timeSelectable={true}
+                            timeSelectable={false}
                             schedule={this.props.schedule}
                             selectTime={this.selectTime}
                             startTime={this.startTime}

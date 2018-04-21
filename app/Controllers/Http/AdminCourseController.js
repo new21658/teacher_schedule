@@ -70,7 +70,11 @@ class AdminCourseController {
   async index({ view }) {
 
     try {
-      const terms = await Term.query().where('status', 'A').fetch();
+      const terms = await Term.query()
+      .where('status', 'A')
+      .orderBy('term', 'DESC')
+      .orderBy('term_year')
+      .fetch();
 
       const teachers = await Teacher.query().whereHas('user', function(qb) {
         qb.where('status', 'A')

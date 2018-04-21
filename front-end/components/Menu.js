@@ -25,9 +25,16 @@ const NoneProtectedMenu = (props) => {
       <NavItem href="/login">
         <i className="fas fa-arrow-left"></i> เข้าสู่ระบบ
       </NavItem>
-      <NavItem href="/testSchedule">
+      <Link href="/schedule">
+      <NavItem className={props.url.pathname === '/schedule' ? "active" : ''} >
+        <i className="fas fa-calendar"></i> ตารางสอน
+      </NavItem>
+      </Link>
+      <Link href="/testSchedule">
+      <NavItem className={props.url.pathname === '/testSchedule' ? "active" : ''} >
         <i className="fas fa-calendar"></i> ตารางสอบ
       </NavItem>
+      </Link>
     </Nav>
   )
 }

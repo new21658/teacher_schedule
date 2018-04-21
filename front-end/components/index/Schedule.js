@@ -66,7 +66,7 @@ class Schedule extends Component {
 
         return (
             <div>
-                <div className="panel panel-default">
+                <div className="tch-shadow-sm panel panel-default">
                     <div className="panel-heading"><h1>ตารางสอน</h1></div>
                     <div className="panel-body">
                     <AddPanel 

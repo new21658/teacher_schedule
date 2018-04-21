@@ -33,7 +33,7 @@ class Index extends Component {
     render() {
         return (
         <div className="container">
-            <h2>ตารางสอน</h2>
+            <h3>ตารางสอน</h3>
             <hr />
             <div className="row">
                 <Schedule 

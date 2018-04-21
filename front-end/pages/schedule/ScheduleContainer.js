@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 
-import { changeTerm, changeRoom } from "../../redux/actions/scheduleAction"
+import { selectTerm, changeRoom } from "../../redux/actions/scheduleAction"
 import { fetchCourses } from "../../redux/actions/courseAction"
 
 
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         changeTerm: function(term) {
-            dispatch(changeTerm(term))
+            dispatch(selectTerm(term))
             dispatch(fetchCourses({ term: term }))
         },
         changeRoom: function(room) {

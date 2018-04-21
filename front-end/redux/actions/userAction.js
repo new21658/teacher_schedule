@@ -17,7 +17,7 @@ export const fetchUser = () => {
                 return window.location.replace("/login");
             }
             const data = res.data.data;
-            if(data.rold_id != 1) return window.location.replace("/login");
+            if(data.role_id != 1) return window.location.replace("/login");
             dispatch(receiveUser(data));
             console.log("teacher id: ", data.teacher_id);
         });

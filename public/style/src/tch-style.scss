@@ -71,6 +71,11 @@ $schedule_width: 1140px;
     color: white;
 }
 
+.tch-header-blue {
+    @extend .tch-header;
+    background-color: #337ab7;
+}
+
 .tch-header-dark {
     @extend .tch-header;
     background-color: $color_dark;
@@ -98,6 +103,7 @@ $schedule_width: 1140px;
     background-color: $color_primary !important;
     color: rgba(255, 255, 255, 1) !important;
 }
+
 
 .tch-navbar-toggle span {
     background-color: black;

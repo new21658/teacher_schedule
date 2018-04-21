@@ -12,7 +12,7 @@ export default (props) => {
         <div className="flex-box" style={{ marginTop: "50px", marginBottom: "30px", }}>
             <h2 className="col-sm-1">ค้นหา</h2>
             <div className="col-sm-4">
-                <select defaultValue={props.selected} onChange={onChangeTerm} className="input-lg form-control">
+                <select onChange={onChangeTerm} className="input-lg form-control">
                         <option value={-1}>กรุณาเลือกเทอม</option>
                         { mapTerms }
                 </select>

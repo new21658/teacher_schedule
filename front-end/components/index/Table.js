@@ -83,17 +83,20 @@ class Table extends Component {
                             data-end_time={endFormated} 
                             className="schedule-col" style={{ width: width + "px" }}>
                             </div>
-                    </OverlayTrigger>) :  (<div
-                            index={_index}
+                    </OverlayTrigger>) :  (
+                            <div
+                            key={_index}
                             tabIndex={0}
                             data-day={dayOfWeek}
                             data-start_time={startFormated} 
                             data-end_time={endFormated} 
                             className="schedule-col" style={{ width: width + "px" }}>
-                            </div>)
+                            </div>
+                            )
                         
                     )
             });
+
             return (
                 <div key={index} className="schedule-row">
                     <div className="schedule-col-h" style={{ width: width + "px" }}>
@@ -112,7 +115,6 @@ class Table extends Component {
                             return (
                                 shouldRender ? (
                                 <div 
-                                key={index} 
                                 style={{ width: widthPx, marginLeft: mapOffsetTime(luxonStart) }} 
                                 className={[
                                     "highlight-table-selected",
@@ -130,7 +132,9 @@ class Table extends Component {
                             const shouldRender = course.day == dayOfWeek;
                             const tooltip = (
                                 <Tooltip id="tooltip">
-                                <strong>วิชา { course.subject.subject_code }</strong> อาจารย์ { course.teacher.teacher_code }
+                                    วิชา { course.subject.subject_name } ({ course.subject.subject_code })<br/>
+                                    อาจารย์ { course.teacher.teacher_name } ({ course.teacher.teacher_code }) <br/>
+                                    กลุ่ม { course.group.student_group_name }
                                 </Tooltip>
                             );
                             
@@ -140,7 +144,7 @@ class Table extends Component {
                                 <div 
                                     key={_index} 
                                     style={{ width: widthPx, marginLeft: mapOffsetTime(course.start_time) }} className={["highlight-table", !course.approved ? "highlight-table-muted" : "" ].join(" ")}>
-                                    <span>{ "ห้อง " + course.room.study_room_code }</span>
+                                    <span>{ "ห้อง " + course.room.study_room_code }</span> <br/>
                                 </div>
                                 </OverlayTrigger>
                                 : null
@@ -154,6 +158,11 @@ class Table extends Component {
 
         return (
             <div className="row">
+                <p className="col-sm-12 text-center">
+                    <strong style={{ color: "rgba(0, 153, 51, 0.8)" }}><i className="fas fa-dot-circle"></i>  จองเรียบร้อยแล้ว</strong>
+                    &nbsp; &nbsp;
+                    <strong style={{ color: "rgba(5, 5, 5, 0.8)" }}><i className="fas fa-dot-circle"></i> รอการอนุมัติ</strong>
+                </p>
                 {
                     schedule.startTimeSelected != -1 ?
                     schedule.endTimeSelected != -1 ?

@@ -2,7 +2,7 @@
 @section('body')
     <div id="root_app" class="container">
         <div class="row">
-            <div style="margin-top: 100px; max-width: 450px; min-width: 300px; border-radius: 20px 20px 0 0;" class="col-sm-4 col-xs-10 col-sm-offset-4 col-xs-offset-1 tch-shadow-lg panel panel-default">
+            <div style="margin-top: 100px; max-width: 450px; min-width: 300px; border-radius: 20px 20px 0 0;" class="col-xs-12 col-sm-4 col-xs-10 col-sm-offset-4 col-xs-offset-1 tch-shadow-lg panel panel-default">
                 <div class="panel-body">
                     <h3>Course <color class="tch-text-primary">Scheduling</color></h3>
                     <h4><i class="fas fa-calendar-alt"></i> ระบบจัดการตารางสอนและตารางสอบ</h4>
@@ -20,12 +20,14 @@
                         <div class="form-group">
                             <p v-if="username_invalid" class="help-text text-danger">ชื่อผู้ใช้หรือหรัสผ่านไม่ถูกต้อง</p>
                         </div>
+                        <p><i class="fas fa-users"></i> สำหรับอาจารย์ และเจ้าหน้าที่</p>
                         <div class="form-group text-right">
-                            <button class="col-sm-12 btn btn-lg btn-success tch-btn-primary"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</button>
+                            <button class="col-xs-12 btn btn-lg btn-success tch-btn-primary"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</button>
                         </div>
                         <hr/>
+                        <p><i class="fas fa-graduation-cap"></i> สำหรับนักศึกษา และบุคคลทั่วไป</p>
                         <div class="form-group">
-                            <a href="/schedule" class="col-sm-12 btn btn-lg  btn-primary"><i class="far fa-calendar-alt"></i> ดูตารางเรียน</a>
+                            <a href="/schedule" class="col-xs-12 btn btn-lg  btn-primary"><i class="far fa-calendar-alt"></i> ดูตารางสอน/สอบ</a>
                         </div>
                     </form>
                 </div>

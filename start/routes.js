@@ -100,13 +100,6 @@ nextApp.prepare().then(function() {
 
         // Route.get('/', 'HomeController.index').as('user_index').middleware(['detectUser']);
 
-        Route.get('/schedule', function({ request, response }) {
-            return handle(request.request, response.response);
-        });
-
-        Route.get('/mypage', function({ request, response }) {
-            return handle(request.request, response.response);
-        })
         
         // Next Js
         Route.get('*', function({ request, response, params }) {

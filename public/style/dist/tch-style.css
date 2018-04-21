@@ -56,10 +56,14 @@ body {
   color: white;
 }
 
-.tch-header, .tch-header-dark {
+.tch-header, .tch-header-dark, .tch-header-blue {
   background-color: #009933;
   line-height: 100px;
   color: white;
+}
+
+.tch-header-blue {
+  background-color: #337ab7;
 }
 
 .tch-header-dark {
@@ -186,7 +190,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .tch-header, .tch-header-dark {
+  .tch-header, .tch-header-blue, .tch-header-dark {
     line-height: 50px;
   }
 
