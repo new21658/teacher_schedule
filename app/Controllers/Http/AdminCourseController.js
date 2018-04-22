@@ -8,7 +8,9 @@ const StudentGroup = use("App/Models/StudentGroup");
 const Subject = use("App/Models/Subject");
 const luxon = use("luxon");
 const DateTime = luxon.DateTime;
-
+const sgMail = use('@sendgrid/mail');
+const _ = require("lodash")
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // Helpers
 
 const withValid = courses => {
@@ -60,6 +62,20 @@ async function bookingCourse (courseId, term, room, day, start, end) {
 
     return true;
 
+}
+
+async function sendNotificationToUserByEmail (title, term, subject, group, emails) {
+    emails = _.uniq(emails);
+    const msg = {
+      from: 'teacher_schedule@ex.com',
+      to: emails,
+      subject: title,
+      html: `
+        <strong>กรุณาลงทะเบียนคอร์ส ปีการศึกษา ${term} ในรายวิชา ${subject} กลุ่ม ${group}</strong>
+        <a href="http://127.0.0.1:3333">ลงทะเบียน</a>
+      `,
+    };
+    sgMail.send(msg);
 }
 
 // end Helpers
@@ -207,19 +223,47 @@ class AdminCourseController {
     }
   }
 
-  async addCourse({ request }) {
-    try {
-      let req = request;
-      let course = new Course();
-      course.term_id = req.input("term");
-      course.teacher_id = req.input("teacher");
-      course.subject_id = req.input("subject");
-      course.student_group_id = req.input("group");
 
-      await course.save();
+  async addCourse({ request }) {
+
+    try {
+
+      const req = request;
+      let teachers = req.input('teachers');
+      let data = teachers.map((teacher) => {
+        return {
+          term_id: req.input('term'),
+          subject_id: req.input('subject'),
+          student_group_id: req.input('group'),
+          teacher_id: teacher
+        }
+      })
+      
+      let courses = await Course.createMany(data);
+
+      const sendEmail = req.input('send_email');
+
+      if(sendEmail) {
+          let term = await Term.find(req.input('term'));
+          const subject = await Subject.find(req.input('subject'));
+          const group = await StudentGroup.find(req.input('group'));
+          const teacher_ids = courses.map(function(c) { return c.teacher_id })
+          teachers = await Teacher.query().whereIn("teacher_id", teacher_ids).with('user').fetch();
+          const emails = teachers.toJSON().map(function(t) {
+            return t.user.email
+          })
+          term = JSON.parse(JSON.stringify(term));
+          await sendNotificationToUserByEmail(
+            "แจ้งเตือน: ลงทะเบียนจองห้อง", 
+            term.term + "/" + term.term_year, 
+            subject.subject_name, 
+            group.student_group_name, 
+            emails)
+      }
 
       return json_res("Course Added");
     } catch (ex) {
+
       return json_res_error(ex.toString());
     }
   }

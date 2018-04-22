@@ -168,7 +168,7 @@
         <form @submit.prevent="add_item_submit($event)" class="form form-horizontal">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="term" v-validate="'required|not_in:-1'" class="form-control">
+                    <select v-model="term" name="term" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกเทอมการศึกษา</option>
                         <option 
                             v-for="(item, index) in terms" 
@@ -182,7 +182,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="subject" v-validate="'required|not_in:-1'" class="form-control">
+                    <select v-model="subject" name="subject" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกวิชา</option>
                         <option 
                             v-for="(item, index) in subjects" 
@@ -195,7 +195,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="group" v-validate="'required|not_in:-1'" class="form-control">
+                    <select v-model="group" name="group" v-validate="'required|not_in:-1'" class="form-control">
                         <option value="-1">เลือกกลุ่ม</option>
                         <option 
                             v-for="(item, index) in groups" 
@@ -208,16 +208,48 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select  name="teacher" v-validate="'required|not_in:-1'" class="form-control">
-                        <option value="-1">เลือกอาจารย์</option>
-                        <option 
-                            v-for="(item, index) in teachers" 
-                            :key="index" 
-                            :value="item.teacher_id" >
-                            @{{ item.teacher_name + " (" + item.teacher_code + ")" }}</option>
-                    </select>
+                    <div class="input-group">
+                        <select ref="teacher_input"  name="teacher" class="form-control">
+                            <option value="-1">เลือกอาจารย์</option>
+                            <option 
+                                v-for="(item, index) in filtered_teachers" 
+                                :key="index" 
+                                :value="item.teacher_name + '|' + item.teacher_id" >
+                                @{{ item.teacher_name + " (" + item.teacher_code + ")" }}</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button @click.prevent="on_add_teacher_to_list" class="btn btn-default"><i class="fa fa-plus"></i> เพิ่มลงลิสต์</button>
+                        </span>
+                    </div>
                     <p v-if="errors.has('teacher')" class="help-text text-danger">@{{ errors.first('teacher') }}</p>
                 </div>
+            </div>
+            <div style="padding: 5px; margin-bottom: 1em; border: 1px solid rgba(0,0,0,0.1); background-color: whitesmoke;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>อาจารย์</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="selected_teacher_list.length > 0" v-for="(item, index) in selected_teacher_list" :key="item.id">
+                            <td>@{{ ++index }}</td>
+                            <td>@{{ item.title }}</td>
+                            <td class="text-right"><button class="btn btn-danger" type="button" @click.prevnet="on_remove_teacher_from_list(item.id)"><i class="far fa-trash-alt"></i> ลบ</button></td>
+                        </tr>
+                        <tr v-else>
+                            <td colspan="3" class="text-center">ว่าง</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-10 label-control">
+                    <input v-model="send_email" type="checkbox" name="send_email" />
+                    &nbsp; แจ้งเตือนด้วย Email
+                </label>
             </div>
             <button class="hidden" id="add_button"></button>
         </form>
@@ -278,7 +310,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <select name="subject" v-validate="'required|not_in:-1'" class="form-control">
+                    <select name="subject" class="form-control">
                         <option value="-1">เลือกวิชา</option>
                         <option 
                             v-for="(_item, index) in subjects" 
@@ -336,10 +368,24 @@
                 teachers: TEACHERS,
                 subjects: SUBJECTS,
                 groups: GROUPS,
-                items: []
+                items: [],
+                // bind to add-form
+                term: -1,
+                subject: -1,
+                group: -1,
+                selected_teacher_list: [],
+                send_email: false
             };
         },
         computed: {
+            filtered_teachers: function() {
+                var self = this;
+                return this.teachers.filter(function(item) {
+                    return !self.selected_teacher_list.find(function(_item) {
+                        return _item.teacher == item.teacher_id
+                    })
+                })
+            },
             course_with_not_approved: function() {
                 return this.items.filter((item) => item.approved == 0);
             },
@@ -348,6 +394,22 @@
             }
         },
         methods: {
+            on_add_teacher_to_list: function() {
+                var teacher = this.$refs.teacher_input.value.split('|');
+                if(teacher[0] == -1) return;
+                var id = this.selected_teacher_list.length + 1;
+                this.selected_teacher_list = this.selected_teacher_list.concat({
+                    id: id,
+                    title: teacher[0],
+                    teacher: teacher[1]
+                });
+                console.log("selected_teacher_list", this.selected_teacher_list)
+            },
+            on_remove_teacher_from_list: function(id) {
+                this.selected_teacher_list = this.selected_teacher_list.filter(function(item) {
+                    return item.id !== id
+                })
+            },
             on_print: function() {  
                 window.open("/report/course?term=" + this.selected_term);
             },
@@ -441,7 +503,19 @@
                     if(!passed) {
                        return window.alert("กรุณากรอกข้อมูลให้ถูกต้อง")
                     }
-                    var data = new FormData(evt.target);
+
+                    if(self.selected_teacher_list.length < 1) {
+                        return self.$validator.errors.add("teacher", "please select teacher")
+                    }
+                    
+                    var data = {
+                        term: self.term,
+                        subject: self.subject,
+                        group: self.group,
+                        teachers: self.selected_teacher_list.map(function(t) { return t.teacher }),
+                        send_email: self.send_email
+                    }
+
                     axios.post('{{ route("admin_add_course") }}', data).then(function(res) {
                         console.log(res);
                         var data = res.data;
