@@ -7,7 +7,7 @@
     <div class="col-sm-6">
         <form @submit.prevent="search_items($event)">
         <div class="input-group">
-            <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก หมายเลขห้อง ตำแหน่ง ประเภท" />
+            <input name="search" type="text" class="form-control" placeholder="ค้นหาจาก ปีการศึกษา eg. 2018" />
             <span class="input-group-btn">
                 <button class="btn btn-default">ค้นหา <i class="fa fa-search"></i></butotn>
             <span>
@@ -299,7 +299,7 @@
                             window.swal("Error", data.error_message, "error");
                             return console.log(data.error_message);
                         }
-                        window.swal("Success", "เพิ่มวิชาเรียบร้อยแล้ว", "success");
+                        window.swal("Success", "เพิ่มเทอมเรียบร้อยแล้ว", "success");
                         $('#add_modal').modal('hide');
                         self.fetch_items();
                     });

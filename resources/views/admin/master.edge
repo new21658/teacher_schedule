@@ -11,6 +11,7 @@
 </head>
 
 <body>
+
     
     @include('admin.header')
     @include('admin.nav')
@@ -19,8 +20,16 @@
     @!section('header') 
     @!section('admin.nav')
     @!section('body')
+
+
     @include('script')
     @!section('script')
+
+
+    @include('admin._script')
+    @!section('private_script')
+
+
 </body>
 
 </html>

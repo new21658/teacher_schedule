@@ -66,6 +66,7 @@ async function bookingCourse (courseId, term, room, day, start, end) {
 
 async function sendNotificationToUserByEmail (title, term, subject, group, emails) {
     emails = _.uniq(emails);
+    try{
     const msg = {
       from: 'teacher_schedule@ex.com',
       to: emails,
@@ -76,6 +77,9 @@ async function sendNotificationToUserByEmail (title, term, subject, group, email
       `,
     };
     sgMail.send(msg);
+  } catch(ex) {
+    console.error(ex.toString());
+  }
 }
 
 // end Helpers
