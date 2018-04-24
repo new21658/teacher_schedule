@@ -16,4 +16,11 @@ yarn.lock
 
 # The development sqlite file
 database/development.sqlite
-sendgrid.env
+#sendgrid.env
+
+
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

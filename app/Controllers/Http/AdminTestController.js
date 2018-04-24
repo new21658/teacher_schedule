@@ -19,7 +19,11 @@ class AdminTestController {
     async index({ view }) {
         try{
 
-            const terms = await Term.query().where('status', '=', 'A').fetch();
+            const terms = await Term.query()
+            .where('status', '=', 'A')
+            .orderBy('term_year', 'DESC')
+            .orderBy('term', 'DESC')
+            .fetch();
             const groups = await Group.query().where('status', '=', 'A').fetch();
             const rooms = await Room.query().where('status', '=', 'A').fetch();
             const subjects = await Subject.query().where('status', '=', 'A').fetch();

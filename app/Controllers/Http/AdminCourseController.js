@@ -92,8 +92,8 @@ class AdminCourseController {
     try {
       const terms = await Term.query()
       .where('status', 'A')
+      .orderBy('term_year', 'DESC')
       .orderBy('term', 'DESC')
-      .orderBy('term_year')
       .fetch();
 
       const teachers = await Teacher.query().whereHas('user', function(qb) {
