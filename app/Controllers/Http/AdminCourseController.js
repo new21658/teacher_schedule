@@ -1,6 +1,7 @@
 "use strict";
 
 const { json_res, json_res_error } = use("App/Utils/Response");
+const DB = use("Database");
 const Course = use("App/Models/Course");
 const Term = use("App/Models/Term");
 const Teacher = use("App/Models/Teacher");
@@ -92,7 +93,7 @@ class AdminCourseController {
     try {
       const terms = await Term.query()
       .where('status', 'A')
-      .orderBy('term_year', 'DESC')
+      .orderBy(DB.raw('year(term_year)'), 'DESC')
       .orderBy('term', 'DESC')
       .fetch();
 

@@ -1,9 +1,8 @@
 'use strict'
 
 const { DateTime } = use("luxon")
-
+const DB = use('Database');
 const Test = use("App/Models/Test");
-
 const Term = use("App/Models/Term");
 const Group = use('App/Models/StudentGroup')
 const Room = use('App/Models/StudyRoom')
@@ -21,7 +20,7 @@ class AdminTestController {
 
             const terms = await Term.query()
             .where('status', '=', 'A')
-            .orderBy('term_year', 'DESC')
+            .orderBy(DB.raw('year(term_year)'), 'DESC')
             .orderBy('term', 'DESC')
             .fetch();
             const groups = await Group.query().where('status', '=', 'A').fetch();
