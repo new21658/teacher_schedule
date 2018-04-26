@@ -9,7 +9,6 @@ class UserController {
             let user = await auth.getUser();
             return json_res(user);
         } catch(ex) {
-            console.log(ex);
             return json_res_error(ex.toString());
         }
     }

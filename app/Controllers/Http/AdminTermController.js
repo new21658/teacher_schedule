@@ -125,7 +125,7 @@ class AdminTermController {
       var format = "dd-LL-yyyy";
       var toSQLFormat = 'yyyy-LL-dd'
 
-      let isTermDupplicate = isTermIsDuplicated(request.input('year'), request.input('yerm'));
+      let isTermDupplicate = await isTermIsDuplicated(request.input('year'), request.input('term'));
 
       if(isTermDupplicate) {
         return json_res_error("This term has already exist");
