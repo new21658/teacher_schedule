@@ -69,12 +69,12 @@ async function sendNotificationToUserByEmail (title, term, subject, group, email
     emails = _.uniq(emails);
     try{
     const msg = {
-      from: 'teacher_schedule@ex.com',
+      from: 'teachermaiexl@ced.com',
       to: emails,
       subject: title,
       html: `
         <strong>กรุณาลงทะเบียนคอร์ส ปีการศึกษา ${term} ในรายวิชา ${subject} กลุ่ม ${group}</strong>
-        <a href="http://127.0.0.1:3333">ลงทะเบียน</a>
+        <a href="teacherschedule-env.r8nhbumyhm.ap-southeast-1.elasticbeanstalk.com/">ลงทะเบียน</a>
       `,
     };
     sgMail.send(msg);
