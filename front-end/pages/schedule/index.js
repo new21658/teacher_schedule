@@ -19,8 +19,6 @@ class Index extends Component {
     render() {
         return (
         <div className="container">
-            <h3>ตารางสอน</h3>
-            <hr />
             <div className="row">
                 <Schedule /> 
             </div>

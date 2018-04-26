@@ -88,6 +88,8 @@ class CourseList extends Component {
 
         return (
             <div>
+                <h1><span style={{ borderBottom: "3px solid #009933" }}>รายวิชา</span></h1>
+                <br/>
                 <ControlPanel selectTerm={this.props.selectTerm} terms={this.props.terms} selected={this.props.schedule.termSelected} />
                 <div className="row">
                     {mapItems.length > 0 ? mapItems : <h3 className="text-muted text-center">ไม่พบรายวิชา</h3>}

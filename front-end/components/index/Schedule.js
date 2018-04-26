@@ -67,8 +67,9 @@ class Schedule extends Component {
         return (
             <div>
                 <div className="tch-shadow-sm panel panel-default">
-                    <div className="panel-heading"><h1>ตารางสอน</h1></div>
                     <div className="panel-body">
+                    <h1><span style={{ borderBottom: "3px solid #009933" }}>ตารางสอน</span></h1>
+                    <br/>
                     <AddPanel 
                         booking={this.props.booking}
                         selectTerm={this.props.selectTerm} 

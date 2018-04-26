@@ -12,10 +12,6 @@ class TestSchedule extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    <h3>ตารางสอบ</h3>
-                </div>
-                <hr/>
-                <div className="row">
                     <TestTable />
                 </div>
             </div>

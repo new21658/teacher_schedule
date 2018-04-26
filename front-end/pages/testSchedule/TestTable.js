@@ -8,7 +8,7 @@ class TestTable extends Component {
         const mapTests = this.props.tests.map((test, index) => {
             return (
                 <tr key={index}>
-                    <td>{ (++index) }</td>
+                    <td>{(++index)}</td>
                     <td>{test.date}</td>
                     <td>{test.start_time + "-" + test.end_time}</td>
                     <td>{test.subject.subject_code}</td>
@@ -30,17 +30,18 @@ class TestTable extends Component {
 
         return (
             <div className="col-sm-12">
-
-                <ControlPanel  
-                    termSelected={this.props.testSchedule.termSelected}
-                    typeSelected={this.props.testSchedule.typeSelected}
-                    terms={this.props.terms} 
-                    changeTerm={this.props.changeTerm} 
-                    changeType={this.props.changeType}  />
-
-
                 <div className="panel panel-default">
-                    <div className="panel-body">
+                    <div className="tch-shadow-sm panel-body">
+                        <h1><span style={{ borderBottom: "3px solid #009933" }}>ตารางสอบ</span></h1>
+                        <br />
+                        <br />
+                        <ControlPanel
+                            termSelected={this.props.testSchedule.termSelected}
+                            typeSelected={this.props.testSchedule.typeSelected}
+                            terms={this.props.terms}
+                            changeTerm={this.props.changeTerm}
+                            changeType={this.props.changeType} />
+                        <br />
                         <div className="table-responsive">
                             <table className="table table-hover table-striped">
                                 <thead>

@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
 import Table from "../../components/index/Table"
 import { DateTime, Interval } from "luxon"
 import ControlPanel from "./ControlPanel"
@@ -16,13 +16,13 @@ class Schedule extends Component {
         this.timeList = Interval.fromDateTimes(this.startTime, this.endTime).splitBy({ minutes: 15 });
 
         this.intervals = (() => {
-            return Interval.fromDateTimes(this.startTime, 
-           this.endTime).splitBy({ hours: 1 })
+            return Interval.fromDateTimes(this.startTime,
+                this.endTime).splitBy({ hours: 1 })
         })()
 
 
 
-    } 
+    }
 
 
     render() {
@@ -36,23 +36,26 @@ class Schedule extends Component {
 
         return (
             <div className="col-sm-12">
-                <ControlPanel
-                    termSelected={this.props.schedule.termSelected}
-                    roomSelected={this.props.schedule.roomSelected}
-                    changeTerm={this.props.changeTerm}
-                    changeRoom={this.props.changeRoom} 
-                    terms={this.props.terms} 
-                    rooms={this.props.rooms} />
                 <div className="tch-shadow-sm table-responsive panel panel-default">
                     <div className="panel-body">
+                        <h1><span style={{ borderBottom: "3px solid #009933" }}>ตารางสอน</span></h1>
+                        <br />
+                        <br />
+                        <ControlPanel
+                            termSelected={this.props.schedule.termSelected}
+                            roomSelected={this.props.schedule.roomSelected}
+                            changeTerm={this.props.changeTerm}
+                            changeRoom={this.props.changeRoom}
+                            terms={this.props.terms}
+                            rooms={this.props.rooms} />
                         <Table
                             timeSelectable={false}
                             schedule={this.props.schedule}
                             selectTime={this.selectTime}
                             startTime={this.startTime}
-                            endTime={this.endTime} 
-                            courses={mapCourses} 
-                            days={this.days} 
+                            endTime={this.endTime}
+                            courses={mapCourses}
+                            days={this.days}
                             intervals={this.intervals} />
                     </div>
                 </div>
