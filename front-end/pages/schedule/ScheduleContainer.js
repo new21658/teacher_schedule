@@ -6,6 +6,7 @@ import { fetchCourses } from "../../redux/actions/courseAction"
 
 const mapStateToProps = (state) => {
     return {
+        schedule: state.schedule,
         courses: state.courses,
         terms: state.terms,
         rooms: state.rooms

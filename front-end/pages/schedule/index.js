@@ -12,20 +12,6 @@ class Index extends Component {
 
     constructor(props) {
         super(props)
-
-        this.state = {
-            courses: [],
-            schedule: {
-                termSelected: -1,
-                daySelected: -1,
-                startTimeSelected: -1,
-                endTimeSelected: -1,
-                courseSelected: -1,
-                roomSelected: -1,
-                isOverlaps: false
-            }
-        }
-
     }
 
 
@@ -36,10 +22,7 @@ class Index extends Component {
             <h3>ตารางสอน</h3>
             <hr />
             <div className="row">
-                <Schedule 
-                    courses={this.state.courses}
-                    schedule={this.state.schedule}
-                /> 
+                <Schedule /> 
             </div>
         </div>
         )

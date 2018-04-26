@@ -37,6 +37,8 @@ class Schedule extends Component {
         return (
             <div className="col-sm-12">
                 <ControlPanel
+                    termSelected={this.props.schedule.termSelected}
+                    roomSelected={this.props.schedule.roomSelected}
                     changeTerm={this.props.changeTerm}
                     changeRoom={this.props.changeRoom} 
                     terms={this.props.terms} 
