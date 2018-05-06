@@ -38,7 +38,7 @@ class Schedule extends Component {
             <div className="col-sm-12">
                 <div className="tch-shadow-sm table-responsive panel panel-default">
                     <div className="panel-body">
-                        <h1><span style={{ borderBottom: "3px solid #009933" }}>ตารางสอน</span></h1>
+                        <h1><span style={{ borderBottom: "3px solid #009933" }}>ตารางการใช้ห้องเรียน</span></h1>
                         <br />
                         <br />
                         <ControlPanel
