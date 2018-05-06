@@ -27,7 +27,7 @@ const NoneProtectedMenu = (props) => {
       </NavItem>
       <Link href="/schedule">
       <NavItem className={props.url.pathname === '/schedule' ? "active" : ''} >
-        <i className="fas fa-calendar"></i> ตารางสอน
+        <i className="fas fa-calendar"></i> ตารางการใช้ห้องเรียน
       </NavItem>
       </Link>
       <Link href="/testSchedule">
