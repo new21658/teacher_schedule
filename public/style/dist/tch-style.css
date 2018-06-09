@@ -104,7 +104,7 @@ body {
 }
 
 .tch-panel-control {
-  max-width: 1140px;
+  max-width: 1000px;
 }
 
 .tch-bg-dark {
@@ -145,7 +145,7 @@ body {
 }
 
 .schedule {
-  width: 1140px;
+  width: 1000px;
   margin: 0 auto;
   padding: 0em 0 1em 0;
 }
@@ -198,3 +198,5 @@ body {
     padding: 1.3em;
   }
 }
+
+/*# sourceMappingURL=dist/tch-style.css.map */

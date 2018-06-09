@@ -59,6 +59,7 @@ export default class AddPanel extends Component {
 
     onBooking = (evt) => {
         evt.preventDefault();
+        console.log("schedulces > courseSelected >>> ", this.props.schedule.courseSelected)
         if (
             this.props.schedule.termSelected == -1 ||
             this.props.schedule.daySelected == -1 ||
@@ -153,7 +154,7 @@ export default class AddPanel extends Component {
                         <div className="col-sm-2">
                             <label className="label-control">วิชา</label>
                             <div className="form-group">
-                                <select onChange={this.onChangeCourse} className="form-control">
+                                <select value={this.props.schedule.courseSelected} onChange={this.onChangeCourse} className="form-control">
                                     {
                                       mapCourses.length < 1 ? <option value="-1">ไม่พบวิชา</option> : <option value="-1">เลือกวิชา</option>
                                     }

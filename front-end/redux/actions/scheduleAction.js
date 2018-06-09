@@ -105,6 +105,10 @@ export const startBooking = () => {
                     term: schedule.termSelected
                 })
             )
+
+            dispatch(
+                changeCourse(-1)
+            )
             
 
             window.alert("จองตารางเรียบร้อยแล้ว")

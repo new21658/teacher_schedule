@@ -37,10 +37,10 @@
                         <template v-if="items.length > 0">
                             <tr v-for="(item, index) in items" :key="index">
                                 <td class="text-center">@{{ ++index }}</td>
-                                <td>@{{ item.term_year }}</td>
+                                <td>@{{ (parseInt(item.term_year) + 543) }}</td>
                                 <td>@{{ item.term }}</td>
-                                <td>@{{ item.register_start }}</td>
-                                <td>@{{ item.register_end }}</td>
+                                <td>@{{ parseRegisterDate(item.register_start) }}</td>
+                                <td>@{{ parseRegisterDate(item.register_end) }}</td>
                                 <td><button
                                     :data-status="item.status == 'A' ? 'D' : 'A'"
                                     :data-id="item.term_id"
@@ -78,7 +78,7 @@
                 <div class="col-sm-12">
                     <select v-validate="'required|not_in:-1'" name="year" class="form-control">
                       <option value="-1">เลือกปีการศึกษา</option>
-                      <option v-for="(y, i) in years" :value="y" :key="i" >@{{ y }}</option>
+                      <option v-for="(y, i) in years" :value="y" :key="i" >@{{ (parseInt(y) + 543) }}</option>
                     </select>
                     <p v-if="errors.has('year')" class="help-text text-danger">@{{ errors.first('year') }}</p>
                 </div>
@@ -223,6 +223,12 @@
           // }
         },
         methods: {
+            parseRegisterDate: function(date) {
+                let splited = date.split("-")
+                let year = parseInt(splited[splited.length - 1]) + 543
+                return [splited[0], splited[1], year].join("-")
+                //return luxon.DateTime.fromFormat(date, "dd-LL-yyyy").plus({ years: 543 }).toFormat("dd-LL-yyyy")
+            },
             on_clik_edit: function(evt) {
                 console.log("item_id", evt.currentTarget.dataset.id);
                 this.$emit('edit', evt.currentTarget.dataset.id);

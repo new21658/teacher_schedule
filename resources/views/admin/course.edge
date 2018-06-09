@@ -2,7 +2,7 @@
 @section('body')
 <div id="root_app" class="container">
 <div class="row">
-    <h2 class="col-sm-12 page-header">จัดการคอร์ส</h2>
+    <h2 class="col-sm-12 page-header">จัดการขบวนวิชา</h2>
     <div class="tch-panel-control-fluid row">
     <div class="col-sm-3">
         <div class="input-group">
@@ -175,7 +175,7 @@
                             :key="index" 
                             :value="item.term_id" 
                             :selected="selected_term == item.term_id">
-                            @{{ 'ปี ' + item.term_year + " เทอม " + item.term }}</option>
+                            @{{ 'ปี ' + (parseInt(item.term_year) + 543) + " เทอม " + item.term }}</option>
                     </select>
                     <p v-if="errors.has('term')" class="help-text text-danger">@{{ errors.first('term') }}</p>
                 </div>

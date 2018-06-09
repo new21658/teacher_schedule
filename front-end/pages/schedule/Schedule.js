@@ -11,7 +11,7 @@ class Schedule extends Component {
         super(props)
 
         this.startTime = DateTime.fromObject({ hours: 6 });
-        this.endTime = DateTime.fromObject({ hours: 23, minutes: 59 });
+        this.endTime = DateTime.fromObject({ hours: 21, minutes: 59 });
         this.days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         this.timeList = Interval.fromDateTimes(this.startTime, this.endTime).splitBy({ minutes: 15 });
 
